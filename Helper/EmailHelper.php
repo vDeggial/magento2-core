@@ -35,13 +35,15 @@ class EmailHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $this->storeManager = $storeManager;
     }
     
-    protected function send($from = [], $to = [], $templateId = null, $vars = [], $store = null, $area = \Magento\Framework\App\Area::AREA_FRONTEND) {
+    protected function send($from, $to, $templateId, $vars, $store = null, $area = \Magento\Framework\App\Area::AREA_FRONTEND) {
         try
         {
             if (!$store)
             {
                 $store = $this->storeManager->getStore()->getStoreId();
             }
+            
+            
             $this->inlineTranslation->suspend();
             $this->transportBuilder
                     ->setTemplateIdentifier($templateId)
@@ -51,7 +53,7 @@ class EmailHelper extends \Magento\Framework\App\Helper\AbstractHelper
                     ])
                     ->setTemplateVars($vars)
                     ->setFrom($from)
-                    ->addTo($to['email'], $to['name']);
+                    ->addTo($to);
             $transport = $this->transportBuilder->getTransport();
             $transport->sendMessage();
             
