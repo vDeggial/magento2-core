@@ -2,6 +2,8 @@
 
 namespace Hapex\Core\Helper;
 use Magento\Framework\App\Helper\Context;
+use Zend\Log\Writer\Stream;
+use Zend\Log\Logger;
 
 class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {
@@ -22,5 +24,13 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     {
         return $this->scopeConfig->getValue($path,\Magento\Store\Model\ScopeInterface::SCOPE_STORE, $scopeCode);
     }
+    
+     public function printLog($filename,$log)
+ {
+       $writer = new Stream(BP . "/var/log/$filename.log");
+       $logger = new Logger();
+       $logger->addWriter($writer);
+       $logger->info($log);
+ }
 
 }
