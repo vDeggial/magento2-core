@@ -1,6 +1,12 @@
 <?php
 namespace Hapex\Core\Helper;
 
+use Magento\Framework\App\Helper\Context;
+use Magento\Framework\Escaper;
+use Magento\Framework\Mail\Template\TransportBuilder;
+use Magento\Framework\Translate\Inline\StateInterface;
+use Magento\Store\Model\ScopeInterface;
+
 class EmailHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {
     protected $scopeConfig;
@@ -9,14 +15,16 @@ class EmailHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     protected $logger;
     
+    protected $escaper;
+
     protected $transportBuilder;
 
     protected $storeManager;
 
     public function __construct(
-        \Magento\Framework\App\Helper\Context $context,
-        \Magento\Framework\Translate\Inline\StateInterface $inlineTranslation,
-        \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder,
+        Context $context,
+        StateInterface $inlineTranslation,
+        TransportBuilder $transportBuilder,
         \Magento\Store\Model\StoreManagerInterface $storeManager
     ) {
         parent::__construct($context);

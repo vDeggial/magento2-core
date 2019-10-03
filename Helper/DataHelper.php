@@ -1,14 +1,20 @@
 <?php
 
 namespace Hapex\Core\Helper;
+use Magento\Framework\App\Helper\Context;
 use Zend\Log\Writer\Stream;
 use Zend\Log\Logger;
+use Zend\Log\Formatter;
 
 class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {
-    public function __construct(\Magento\Framework\App\Helper\Context $context) {
+    
+    public function __construct(
+        \Magento\Framework\App\Helper\Context $context
+    ) {
         parent::__construct($context);
     }
+    
     
     public function getConfigFlag($path, $scopeCode = null)
     {
@@ -21,11 +27,14 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     }
     
      public function printLog($filename,$log)
-    {
+ {
        $writer = new Stream(BP . "/var/log/$filename.log");
        $logger = new Logger();
+       $formatter = new Formatter\Simple();
+       $formatter->setDateTimeFormat("Y-m-d H:i:s T");
+       $writer->setFormatter($formatter);
        $logger->addWriter($writer);
        $logger->info($log);
-    }
+ }
 
 }
