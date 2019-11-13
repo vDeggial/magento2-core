@@ -7,7 +7,7 @@ use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Framework\Translate\Inline\StateInterface;
 use Magento\Store\Model\ScopeInterface;
 
-class EmailHelper extends \Magento\Framework\App\Helper\AbstractHelper
+class EmailHelper extends BaseHelper
 {
     protected $scopeConfig;
 
