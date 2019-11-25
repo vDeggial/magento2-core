@@ -51,7 +51,7 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
     
     public function sendOutput($output)
     {
-        echo $output;
+        print($output);
     }
     
     protected function getCurrentDate()
