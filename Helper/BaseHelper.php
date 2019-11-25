@@ -49,6 +49,12 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
        $logger->info($log);
     }
     
+    protected function getCurrentDate()
+    {
+        $timezone = $this->generateClassObject("Magento\Framework\Stdlib\DateTime\TimezoneInterface");
+        return !is_null($timezone) ? $timezone->date() : null;
+    }
+    
     protected function getSqlTableName($name)
     {
         if ($name)
@@ -106,6 +112,10 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
         {
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
             return $objectManager->get($class);
+        }
+        else
+        {
+            return null;
         }
     }
     
