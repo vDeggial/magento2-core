@@ -49,6 +49,11 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
        $logger->info($log);
     }
     
+    public function sendOutput($output)
+    {
+        echo $output;
+    }
+    
     protected function getCurrentDate()
     {
         $timezone = $this->generateClassObject("Magento\Framework\Stdlib\DateTime\TimezoneInterface");
