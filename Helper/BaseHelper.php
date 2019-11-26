@@ -14,16 +14,16 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
         parent::__construct($context);
     }
     
-    public function getProductStockQty($id)
+    public function getProductStockQty($productId)
     {
         $qty = 0;
         try
         {
-            if ($id)
+            if ($productId)
             {
                 $itemStockTable = $this->getSqlTableName('cataloginventory_stock_item');
                 $productEntityTable = $this->getSqlTableName('catalog_product_entity');
-                $sql = "SELECT stock.qty as qty FROM $itemStockTable stock join $productEntityTable product on stock.product_id = product.entity_id where product.entity_id = $id";
+                $sql = "SELECT stock.qty as qty FROM $itemStockTable stock join $productEntityTable product on stock.product_id = product.entity_id where product.entity_id = $productId";
                 $result = $this->sqlQueryFetchOne($sql);
                 if ($result)
                 {
@@ -57,7 +57,7 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
     protected function getCurrentDate()
     {
         $timezone = $this->generateClassObject("Magento\Framework\Stdlib\DateTime\TimezoneInterface");
-        return !is_null($timezone) ? $timezone->date() : null;
+        return !($timezone === null) ? $timezone->date() : null;
     }
     
     protected function getSqlTableName($name)
@@ -99,15 +99,15 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
         return $this->queryExecute($sql,"fetchRow");
     }
     
-    protected function urlExists($url = "")
+    protected function urlExists($remoteUrl = "")
     {
-        $ch = @curl_init($url);
-        @curl_setopt($ch, CURLOPT_HEADER, TRUE);
-        @curl_setopt($ch, CURLOPT_NOBODY, TRUE);
-        @curl_setopt($ch, CURLOPT_FOLLOWLOCATION, FALSE);
-        @curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        $handle = @curl_init($remoteUrl);
+        @curl_setopt($handle, CURLOPT_HEADER, TRUE);
+        @curl_setopt($handle, CURLOPT_NOBODY, TRUE);
+        @curl_setopt($handle, CURLOPT_FOLLOWLOCATION, FALSE);
+        @curl_setopt($handle, CURLOPT_RETURNTRANSFER, TRUE);
         $status = array();
-        preg_match('/HTTP\/.* ([0-9]+) .*/', @curl_exec($ch) , $status);
+        preg_match('/HTTP\/.* ([0-9]+) .*/', @curl_exec($handle) , $status);
         return ($status[1] == 200);
     }
     
@@ -118,10 +118,8 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
             return $objectManager->get($class);
         }
-        else
-        {
-            return null;
-        }
+        
+        return null;
     }
     
     private function getSqlResource()
