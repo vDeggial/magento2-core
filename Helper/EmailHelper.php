@@ -35,7 +35,7 @@ class EmailHelper extends BaseHelper
         $this->storeManager = $storeManager;
     }
     
-    protected function send($from, $to, $templateId, $vars, $store = null, $area = \Magento\Framework\App\Area::AREA_FRONTEND) {
+    protected function send($sender, $receiver, $templateId, $vars, $store = null, $area = \Magento\Framework\App\Area::AREA_FRONTEND) {
         try
         {
             if (!$store)
@@ -52,8 +52,8 @@ class EmailHelper extends BaseHelper
                         'store' => $store
                     ])
                     ->setTemplateVars($vars)
-                    ->setFrom($from)
-                    ->addTo($to);
+                    ->setFrom($sender)
+                    ->addTo($receiver);
             $transport = $this->transportBuilder->getTransport();
             $transport->sendMessage();
             
