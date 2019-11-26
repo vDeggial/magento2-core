@@ -38,12 +38,8 @@ class EmailHelper extends BaseHelper
     protected function send($sender, $receiver, $templateId, $vars, $store = null, $area = \Magento\Framework\App\Area::AREA_FRONTEND) {
         try
         {
-            if (!$store)
-            {
-                $store = $this->storeManager->getStore()->getStoreId();
-            }
-            
-            
+            $store = !$store ? $this->storeManager->getStore()->getStoreId() : $store;
+
             $this->inlineTranslation->suspend();
             $this->transportBuilder
                     ->setTemplateIdentifier($templateId)
