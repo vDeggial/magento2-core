@@ -16,21 +16,14 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
     
     public function getProductStockQty($productId)
     {
-        $qty = 0;
         try
         {
-            if ($productId)
-            {
-                $itemStockTable = $this->getSqlTableName('cataloginventory_stock_item');
-                $productEntityTable = $this->getSqlTableName('catalog_product_entity');
-                $sql = "SELECT stock.qty as qty FROM $itemStockTable stock join $productEntityTable product on stock.product_id = product.entity_id where product.entity_id = $productId";
-                $result = $this->sqlQueryFetchOne($sql);
-                if ($result)
-                {
-                    $qty = (int)$result;
-                }
-            }
-            return $qty;
+            $itemStockTable = $this->getSqlTableName('cataloginventory_stock_item');
+            $productEntityTable = $this->getSqlTableName('catalog_product_entity');
+            $sql = $itemStockTable && $productEntityTable && $productId ? "SELECT stock.qty as qty FROM $itemStockTable stock join $productEntityTable product on stock.product_id = product.entity_id where product.entity_id = $productId" : null;
+            $result = $sql ? $this->sqlQueryFetchOne($sql) : null;
+                
+            return $result ? (int)$result : 0;
         }
         catch (\Exception $e)
         {
@@ -60,22 +53,12 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
         return !($timezone === null) ? $timezone->date() : null;
     }
     
-    protected function getSqlTableName($name)
+    protected function getSqlTableName($name = null)
     {
-        if ($name)
-        {
-            $resource = $this->getSqlResource();
-            if ($resource)
-            {
-                $tableName = $resource->getTableName($name);
-                if ($resource->getConnection()->isTableExists($tableName))
-                {
-                    return $tableName;
-                }
-            }
-        }
+        $resource = $name ? $this->getSqlResource() : null;
+        $tableName = $resource ? $resource->getTableName($name) : null;
         
-        return "";
+        return $tableName && $resource->getConnection()->isTableExists($tableName) ? $tableName : null;
     }
     
     protected function sqlQuery($sql)
@@ -85,7 +68,7 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
     
     protected function sqlQueryFetchAll($sql, $limit = 0)
     {
-        if ($limit > 0) $sql .= " LIMIT $limit";
+        $sql .= ($limit > 0) ? " LIMIT $limit" : "";
         return $this->queryExecute($sql,"fetchAll");
     }
     
@@ -113,13 +96,8 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
     
     private function generateClassObject($class = "")
     {
-        if (!empty($class))
-        {
-            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-            return $objectManager->get($class);
-        }
-        
-        return null;
+        $objectManager = !empty($class) ? \Magento\Framework\App\ObjectManager::getInstance() : null;
+        return $objectManager ? $objectManager->get($class): null;
     }
     
     private function getSqlResource()
@@ -127,34 +105,33 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
         return $this->generateClassObject("Magento\Framework\App\ResourceConnection");
     }
     
-    private function queryExecute($sql, $command = null)
+    private function queryExecute($sql = null, $command = null)
     {
         try
         {
-            if ($sql)
+            $resource = $sql ? $this->getSqlResource(): null;
+            $connection = $resource ? $resource->getConnection() : null;
+            $result = null;
+            
+            if ($connection)
             {
-                $resource = $this->getSqlResource();
-                $connection = $resource->getConnection();
-                if ($connection)
+                switch ($command)
                 {
-                    switch ($command)
-                    {
-                        case "fetchOne":
-                            return $connection->fetchOne($sql);
-                            break;
-                        case "fetchAll":
-                            return $connection->fetchAll($sql);
-                            break;
-                        case "fetchRow":
-                            return $connection->fetchRow($sql);
-                            break;
-                        default:
-                            return $connection->query($sql);
-                            break;
-                    }
+                    case "fetchOne":
+                        $result =  $connection->fetchOne($sql);
+                        break;
+                    case "fetchAll":
+                        $result = $connection->fetchAll($sql);
+                        break;
+                    case "fetchRow":
+                        $result = $connection->fetchRow($sql);
+                        break;
+                    default:
+                        $result = $connection->query($sql);
+                        break;
                 }
             }
-            return null;
+            return $result;
         }
         catch (\Exception $e)
         {
