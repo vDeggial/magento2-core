@@ -113,23 +113,25 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $connection = $resource ? $resource->getConnection() : null;
             $result = null;
             
-            if ($connection)
+            switch($connection !== null)
             {
-                switch ($command)
-                {
-                    case "fetchOne":
-                        $result =  $connection->fetchOne($sql);
-                        break;
-                    case "fetchAll":
-                        $result = $connection->fetchAll($sql);
-                        break;
-                    case "fetchRow":
-                        $result = $connection->fetchRow($sql);
-                        break;
-                    default:
-                        $result = $connection->query($sql);
-                        break;
-                }
+                case true:
+                    switch ($command)
+                    {
+                        case "fetchOne":
+                            $result =  $connection->fetchOne($sql);
+                            break;
+                        case "fetchAll":
+                            $result = $connection->fetchAll($sql);
+                            break;
+                        case "fetchRow":
+                            $result = $connection->fetchRow($sql);
+                            break;
+                        default:
+                            $result = $connection->query($sql);
+                            break;
+                    }
+                    break;
             }
             return $result;
         }
