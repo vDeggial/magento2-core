@@ -61,6 +61,20 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
         return $tableName && $resource->getConnection()->isTableExists($tableName) ? $tableName : null;
     }
     
+    protected function isCurrentDateWithinRange($fromDate, $toDate)
+    {
+        $afterFromDate = false;
+        $beforeToDate = false;
+
+        $currentDate = $this->getCurrentDate()->format('Y-m-d');
+    
+        $afterFromDate = $fromDate ? strtotime($currentDate) >= strtotime($fromDate) ? true : false : true;
+        
+        $beforeToDate = $toDate ? strtotime($currentDate) <= strtotime($toDate) ? true : false : true;
+                
+        return $afterFromDate && $beforeToDate;
+    }
+    
     protected function sqlQuery($sql)
     {
         return $this->queryExecute($sql);
@@ -92,20 +106,6 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $status = array();
         preg_match('/HTTP\/.* ([0-9]+) .*/', @curl_exec($handle) , $status);
         return ($status[1] == 200);
-    }
-    
-    protected function validateDates($fromDate, $toDate)
-    {
-        $afterFromDate = false;
-        $beforeToDate = false;
-
-        $currentDate = $this->getCurrentDate()->format('Y-m-d');
-    
-        $afterFromDate = $fromDate ? strtotime($currentDate) >= strtotime($fromDate) ? true : false : true;
-        
-        $beforeToDate = $toDate ? strtotime($currentDate) <= strtotime($toDate) ? true : false : true;
-                
-        return $afterFromDate && $beforeToDate;
     }
     
     private function generateClassObject($class = "")
