@@ -94,6 +94,20 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
         return ($status[1] == 200);
     }
     
+    protected function validateDates($fromDate, $toDate)
+    {
+        $afterFromDate = false;
+        $beforeToDate = false;
+
+        $currentDate = $this->getCurrentDate()->format('Y-m-d');
+    
+        $afterFromDate = $fromDate ? strtotime($currentDate) >= strtotime($fromDate) ? true : false : true;
+        
+        $beforeToDate = $toDate ? strtotime($currentDate) <= strtotime($toDate) ? true : false : true;
+                
+        return $afterFromDate && $beforeToDate;
+    }
+    
     private function generateClassObject($class = "")
     {
         $objectManager = !empty($class) ? \Magento\Framework\App\ObjectManager::getInstance() : null;
