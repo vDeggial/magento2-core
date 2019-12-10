@@ -8,12 +8,6 @@ use Zend\Log\Formatter;
 
 class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {
-    public function __construct(
-        \Magento\Framework\App\Helper\Context $context
-    ) {
-        parent::__construct($context);
-    }
-    
     public function getProductStockQty($productId)
     {
         try
@@ -61,7 +55,7 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
         return $tableName && $resource->getConnection()->isTableExists($tableName) ? $tableName : null;
     }
     
-    protected function isCurrentDateWithinRange($fromDate, $toDate)
+    public function isCurrentDateWithinRange($fromDate, $toDate)
     {
         $afterFromDate = false;
         $beforeToDate = false;
