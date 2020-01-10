@@ -41,6 +41,12 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
         print($output);
     }
     
+    protected function generateClassObject($class = "")
+    {
+        $objectManager = !empty($class) ? \Magento\Framework\App\ObjectManager::getInstance() : null;
+        return $objectManager ? $objectManager->get($class): null;
+    }
+    
     protected function getCurrentDate()
     {
         $timezone = $this->generateClassObject("Magento\Framework\Stdlib\DateTime\TimezoneInterface");
@@ -100,12 +106,6 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $status = array();
         preg_match('/HTTP\/.* ([0-9]+) .*/', @curl_exec($handle) , $status);
         return ($status[1] == 200);
-    }
-    
-    private function generateClassObject($class = "")
-    {
-        $objectManager = !empty($class) ? \Magento\Framework\App\ObjectManager::getInstance() : null;
-        return $objectManager ? $objectManager->get($class): null;
     }
     
     private function getSqlResource()
