@@ -22,7 +22,7 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     public function sendOutput($output)
     {
-        print($output);
+        print_r($output);
     }
 
     protected function generateClassObject($class = "")
