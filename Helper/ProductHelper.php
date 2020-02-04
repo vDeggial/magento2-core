@@ -22,4 +22,12 @@ class ProductHelper extends BaseHelper
         }
     }
 
+    public function productExists($productId)
+    {
+        $productEntityTable = $this->getSqlTableName('catalog_product_entity');
+        $sql = $productEntityTable && $productId ? "SELECT * FROM $productEntityTable product where product.entity_id = $productId" : null;
+        $result = $sql ? $this->sqlQueryFetchOne($sql) : null;
+        return $result && !empty($result);
+    }
+
 }
