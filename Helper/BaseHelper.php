@@ -82,14 +82,7 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     protected function urlExists($remoteUrl = "")
     {
-        $handle = @curl_init($remoteUrl);
-        @curl_setopt($handle, CURLOPT_HEADER, TRUE);
-        @curl_setopt($handle, CURLOPT_NOBODY, TRUE);
-        @curl_setopt($handle, CURLOPT_FOLLOWLOCATION, FALSE);
-        @curl_setopt($handle, CURLOPT_RETURNTRANSFER, TRUE);
-        $status = array();
-        preg_match('/HTTP\/.* ([0-9]+) .*/', @curl_exec($handle) , $status);
-        return ($status[1] == 200);
+      return strpos(@get_headers($remoteUrl)[0],'404') === false;
     }
 
     private function getSqlResource()
