@@ -1,7 +1,6 @@
 <?php
 
 namespace Hapex\Core\Helper;
-use Magento\Framework\App\Helper\Context;
 use Zend\Log\Writer\Stream;
 use Zend\Log\Logger;
 use Zend\Log\Formatter;
