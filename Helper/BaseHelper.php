@@ -77,7 +77,7 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
 	protected function getSqlTableName($name = null)
 	{
 		$tableName = null;
-		$tableexists = false;
+		$tableExists = false;
 		try
 		{
 			$resource = $this->getSqlResource();
