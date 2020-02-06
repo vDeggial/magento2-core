@@ -32,7 +32,7 @@ class ProductHelper extends BaseHelper
       try
       {
         $productFactory = $this->generateClassObject("Magento\Catalog\Model\ProductFactory");
-        $product = $productFactory->create()->load($productId);
+        $product = $this->productExists($productId) ? $productFactory->create()->load($productId) : null;
       }
       catch (\Exception $e)
       {
