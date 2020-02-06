@@ -164,11 +164,11 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
 	private function queryExecute($sql = null, $command = null)
 	{
+		$result = null;
 		try
 		{
-			$resource = $sql ? $this->getSqlResource() : null;
-			$connection = $resource ? $resource->getConnection() : null;
-			$result = null;
+			$resource = $this->getSqlResource();
+			$connection = $resource->getConnection();
 
 			switch ($connection !== null)
 			{
@@ -193,11 +193,14 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
 					}
 				break;
 			}
-			return $result;
 		}
 		catch(\Exception $e)
 		{
-			return null;
+			$result =  null;
+		}
+		finally
+		{
+			return $result;
 		}
 	}
 }
