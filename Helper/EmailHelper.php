@@ -1,6 +1,7 @@
 <?php
 namespace Hapex\Core\Helper;
 
+use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Escaper;
 use Magento\Framework\Mail\Template\TransportBuilder;
@@ -21,9 +22,9 @@ class EmailHelper extends BaseHelper
 
 	protected $storeManager;
 
-	public function __construct(Context $context, StateInterface $inlineTranslation, TransportBuilder $transportBuilder, \Magento\Store\Model\StoreManagerInterface $storeManager)
+	public function __construct(Context $context, ObjectManagerInterface $objectManager, StateInterface $inlineTranslation, TransportBuilder $transportBuilder, \Magento\Store\Model\StoreManagerInterface $storeManager)
 	{
-		parent::__construct($context);
+		parent::__construct($context, $objectManager);
 		$this->scopeConfig = $context->getScopeConfig();
 		$this->inlineTranslation = $inlineTranslation;
 		$this->transportBuilder = $transportBuilder;
@@ -36,13 +37,17 @@ class EmailHelper extends BaseHelper
 		try
 		{
 			$store = !$store ? $this->storeManager->getStore()->getStoreId() : $store;
+
 			$this->inlineTranslation->suspend();
 			$this->transportBuilder->setTemplateIdentifier($templateId)->setTemplateOptions(['area' => $area, 'store' => $store])->setTemplateVars($vars)->setFrom($sender)->addTo($receiver);
 			$transport = $this->transportBuilder->getTransport();
 			$transport->sendMessage();
+
 			$this->inlineTranslation->resume();
+
 			return true;
 		}
+
 		catch(\Exception $e)
 		{
 			$this->logger->critical($e);

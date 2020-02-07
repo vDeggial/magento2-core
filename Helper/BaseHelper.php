@@ -3,9 +3,21 @@ namespace Hapex\Core\Helper;
 use Zend\Log\Writer\Stream;
 use Zend\Log\Logger;
 use Zend\Log\Formatter;
+use Magento\Framework\App\ObjectManager;
+use Magento\Framework\ObjectManagerInterface;
+use Magento\Framework\App\Helper\Context;
 
 class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {
+	protected $objectManager;
+
+	public function __construct(Context $context, ObjectManagerInterface $objectManager)
+	{
+		$this->objectManager = $objectManager;
+
+		parent::__construct($context);
+	}
+
 	public function printLog($filename, $log)
 	{
 		try
@@ -43,8 +55,7 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
 		$object = null;
 		try
 		{
-			$objectManager = !empty($class) ? \Magento\Framework\App\ObjectManager::getInstance() : null;
-			$object = $objectManager->get($class);
+			$object = $this->objectManager->get($class);
 		}
 		catch(\Exception $e)
 		{
@@ -196,7 +207,7 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
 		}
 		catch(\Exception $e)
 		{
-			$result =  null;
+			$result = null;
 		}
 		finally
 		{
