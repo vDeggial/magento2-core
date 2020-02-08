@@ -78,8 +78,8 @@ class ProductHelper extends BaseHelper
         $attributeId = 97;
         $enabled = false;
         try {
-            $productEntityIntTable = $this->getSqlTableName('catalog_product_entity_int');
-            $sql = "SELECT entity_id FROM $productEntityIntTable WHERE attribute_id = $attributeId AND $productEntityIntTable.value = 1 and entity_id = $productId";
+            $tableName = $this->getSqlTableName('catalog_product_entity_int');
+            $sql = "SELECT entity_id FROM $tableName WHERE attribute_id = $attributeId AND $tableName.value = 1 and entity_id = $productId";
             $result = $this->sqlQueryFetchOne($sql);
             $enabled = $result && !empty($result);
         } catch (\Exception $e) {
