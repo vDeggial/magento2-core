@@ -73,19 +73,19 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    protected function isProductEnabled($productId)
+    protected function getProductStatus($productId)
     {
         $attributeId = 97;
-        $enabled = false;
+        $status = 0;
         try {
             $tableName = $this->getSqlTableName('catalog_product_entity_int');
-            $sql = "SELECT entity_id FROM $tableName WHERE attribute_id = $attributeId AND $tableName.value = 1 and entity_id = $productId";
+            $sql = "SELECT value FROM $tableName WHERE attribute_id = $attributeId AND entity_id = $productId";
             $result = $this->sqlQueryFetchOne($sql);
-            $enabled = $result && !empty($result);
+            $status = (int)$result;
         } catch (\Exception $e) {
-            $enabled = false;
+            $status = 0;
         } finally {
-            return $enabled;
+            return $status;
         }
     }
 
