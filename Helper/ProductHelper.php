@@ -40,6 +40,11 @@ class ProductHelper extends BaseHelper
         }
     }
 
+    protected function getProductBySku($productSku = null)
+    {
+        return $this->getProduct($this->getProductIdBySku($productSku));
+    }
+
     protected function getProductDescription($productId)
     {
         $description = null;
@@ -53,6 +58,21 @@ class ProductHelper extends BaseHelper
             $description = null;
         } finally {
             return $description;
+        }
+    }
+
+    protected function getProductIdBySku($productSku = null)
+    {
+        $productId = 0;
+        try {
+            $tableName = $this->getSqlTableName('catalog_product_entity');
+            $sql  = "SELECT entity_id FROM $tableName WHERE sku LIKE '$productSku'";
+            $result = $this->sqlQueryFetchOne($sql);
+            $productId = (int)$result;
+        } catch (\Exception $e) {
+            $productId = 0;
+        } finally {
+            return $productId;
         }
     }
 
