@@ -1,5 +1,6 @@
 <?php
 namespace Hapex\Core\Helper;
+
 use Zend\Log\Writer\Stream;
 use Zend\Log\Logger;
 use Zend\Log\Formatter;
@@ -9,204 +10,183 @@ use Magento\Framework\App\Helper\Context;
 
 class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {
-	protected $objectManager;
+    protected $objectManager;
 
-	public function __construct(Context $context, ObjectManagerInterface $objectManager)
-	{
-		$this->objectManager = $objectManager;
+    public function __construct(Context $context, ObjectManagerInterface $objectManager)
+    {
+        $this->objectManager = $objectManager;
 
-		parent::__construct($context);
-	}
+        parent::__construct($context);
+    }
 
-	public function printLog($filename, $log)
-	{
-		try
-		{
-			$writer = new Stream(BP . "/var/log/$filename.log");
-			$logger = new Logger();
-			$formatter = new Formatter\Simple();
-			$formatter->setDateTimeFormat("Y-m-d H:i:s T");
-			$writer->setFormatter($formatter);
-			$logger->addWriter($writer);
-			$logger->info($log);
-			return true;
-		}
-		catch(\Exception $e)
-		{
-			return false;
-		}
-	}
+    public function printLog($filename = null, $message = null)
+    {
+        return $this->writeLogEntry("info", $filename, $message);
+    }
 
-	public function sendOutput($output)
-	{
-		try
-		{
-			print_r($output);
-			return true;
-		}
-		catch(\Exception $e)
-		{
-			return false;
-		}
-	}
+    public function sendOutput($output)
+    {
+        try {
+            print_r($output);
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 
-	protected function generateClassObject($class = "")
-	{
-		$object = null;
-		try
-		{
-			$object = $this->objectManager->get($class);
-		}
-		catch(\Exception $e)
-		{
-			$object = null;
-		}
-		finally
-		{
-			return $object;
-		}
-	}
+    protected function errorLog($message = null)
+    {
+        return $this->writeLogEntry("error", "hapex_error_log", $message);
+    }
 
-	protected function getCurrentDate()
-	{
-		$date = null;
-		try
-		{
-			$timezone = $this->generateClassObject("Magento\Framework\Stdlib\DateTime\TimezoneInterface");
-			$date = $timezone->date();
-		}
-		catch(\Exception $e)
-		{
-			$date = null;
-		}
-		finally
-		{
-			return $date;
-		}
-	}
+    protected function generateClassObject($class = "")
+    {
+        $object = null;
+        try {
+            $object = $this->objectManager->get($class);
+        } catch (\Exception $e) {
+            $object = null;
+        } finally {
+            return $object;
+        }
+    }
 
-	protected function getSqlTableName($name = null)
-	{
-		$tableName = null;
-		$tableExists = false;
-		try
-		{
-			$resource = $this->getSqlResource();
-			$tableName = $resource->getTableName($name);
-			$tableExists = $resource->getConnection()->isTableExists($tableName);
-		}
-		catch(\Exception $e)
-		{
-			$tableName = null;
-			$tableExists = false;
-		}
-		finally
-		{
-			return $tableExists ? $tableName : null;
-		}
-	}
+    protected function getCurrentDate()
+    {
+        $date = null;
+        try {
+            $timezone = $this->generateClassObject("Magento\Framework\Stdlib\DateTime\TimezoneInterface");
+            $date = $timezone->date();
+        } catch (\Exception $e) {
+            $date = null;
+        } finally {
+            return $date;
+        }
+    }
 
-	public function isCurrentDateWithinRange($fromDate, $toDate)
-	{
-		$isWithinRange = false;
-		$afterFromDate = false;
-		$beforeToDate = false;
-		$currentDate = null;
+    protected function getSqlTableName($name = null)
+    {
+        $tableName = null;
+        $tableExists = false;
+        try {
+            $resource = $this->getSqlResource();
+            $tableName = $resource->getTableName($name);
+            $tableExists = $resource->getConnection()->isTableExists($tableName);
+        } catch (\Exception $e) {
+            $tableName = null;
+            $tableExists = false;
+        } finally {
+            return $tableExists ? $tableName : null;
+        }
+    }
 
-		try
-		{
-			$currentDate = $this->getCurrentDate()->format('Y-m-d');
-			$afterFromDate = $fromDate ? strtotime($currentDate) >= strtotime($fromDate) ? true : false : true;
-			$beforeToDate = $toDate ? strtotime($currentDate) <= strtotime($toDate) ? true : false : true;
-			$isWithinRange = $afterFromDate && $beforeToDate;
-		}
-		catch(\Exception $e)
-		{
-			$isWithinRange = false;
-		}
-		finally
-		{
-			return $isWithinRange;
-		}
-	}
+    public function isCurrentDateWithinRange($fromDate, $toDate)
+    {
+        $isWithinRange = false;
+        $afterFromDate = false;
+        $beforeToDate = false;
+        $currentDate = null;
 
-	protected function sqlQuery($sql)
-	{
-		return $this->queryExecute($sql);
-	}
+        try {
+            $currentDate = $this->getCurrentDate()->format('Y-m-d');
+            $afterFromDate = $fromDate ? strtotime($currentDate) >= strtotime($fromDate) ? true : false : true;
+            $beforeToDate = $toDate ? strtotime($currentDate) <= strtotime($toDate) ? true : false : true;
+            $isWithinRange = $afterFromDate && $beforeToDate;
+        } catch (\Exception $e) {
+            $isWithinRange = false;
+        } finally {
+            return $isWithinRange;
+        }
+    }
 
-	protected function sqlQueryFetchAll($sql, $limit = 0)
-	{
-		$sql .= ($limit > 0) ? " LIMIT $limit" : "";
-		return $this->queryExecute($sql, "fetchAll");
-	}
+    protected function sqlQuery($sql)
+    {
+        return $this->queryExecute($sql);
+    }
 
-	protected function sqlQueryFetchOne($sql)
-	{
-		return $this->queryExecute($sql, "fetchOne");
-	}
+    protected function sqlQueryFetchAll($sql, $limit = 0)
+    {
+        $sql .= ($limit > 0) ? " LIMIT $limit" : "";
+        return $this->queryExecute($sql, "fetchAll");
+    }
 
-	protected function sqlQueryFetchRow($sql)
-	{
-		return $this->queryExecute($sql, "fetchRow");
-	}
+    protected function sqlQueryFetchOne($sql)
+    {
+        return $this->queryExecute($sql, "fetchOne");
+    }
 
-	protected function urlExists($remoteUrl = "")
-	{
-		$exists = false;
-		try
-		{
-			$exists = strpos(@get_headers($remoteUrl) [0], '404') === false;
-		}
-		catch(\Exception $e)
-		{
-			$exists = false;
-		}
-		finally
-		{
-			return $exists;
-		}
-	}
+    protected function sqlQueryFetchRow($sql)
+    {
+        return $this->queryExecute($sql, "fetchRow");
+    }
 
-	private function getSqlResource()
-	{
-		return $this->generateClassObject("Magento\Framework\App\ResourceConnection");
-	}
+    protected function urlExists($remoteUrl = "")
+    {
+        $exists = false;
+        try {
+            $exists = strpos(@get_headers($remoteUrl) [0], '404') === false;
+        } catch (\Exception $e) {
+            $exists = false;
+        } finally {
+            return $exists;
+        }
+    }
 
-	private function queryExecute($sql = null, $command = null)
-	{
-		$result = null;
-		try
-		{
-			$resource = $this->getSqlResource();
-			$connection = $resource->getConnection();
+    private function getSqlResource()
+    {
+        return $this->generateClassObject("Magento\Framework\App\ResourceConnection");
+    }
 
-			switch ($command)
-			{
-				case "fetchOne":
-					$result = $connection->fetchOne($sql);
-				break;
+    private function queryExecute($sql = null, $command = null)
+    {
+        $result = null;
+        try {
+            $resource = $this->getSqlResource();
+            $connection = $resource->getConnection();
 
-				case "fetchAll":
-					$result = $connection->fetchAll($sql);
-				break;
+            switch ($command) {
+                case "fetchOne":
+                    $result = $connection->fetchOne($sql);
+                break;
 
-				case "fetchRow":
-					$result = $connection->fetchRow($sql);
-				break;
+                case "fetchAll":
+                    $result = $connection->fetchAll($sql);
+                break;
 
-				default:
-					$result = $connection->query($sql);
-				break;
-			}
-		}
-		catch(\Exception $e)
-		{
-			$result = null;
-		}
-		finally
-		{
-			return $result;
-		}
-	}
+                case "fetchRow":
+                    $result = $connection->fetchRow($sql);
+                break;
+
+                default:
+                    $result = $connection->query($sql);
+                break;
+            }
+        } catch (\Exception $e) {
+            $result = null;
+        } finally {
+            return $result;
+        }
+    }
+
+    private function writeLogEntry($type = "info", $filename = null, $message = null)
+    {
+        try {
+            $writer = new Stream(BP . "/var/log/$filename.log");
+            $logger = new Logger();
+            $formatter = new Formatter\Simple();
+            $formatter->setDateTimeFormat("Y-m-d H:i:s T");
+            $writer->setFormatter($formatter);
+            $logger->addWriter($writer);
+
+            switch ($type) {
+                case "info":
+                    $logger->info($message);
+                    break;
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
