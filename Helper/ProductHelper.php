@@ -76,7 +76,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    protected function getProductImages($productId = 0, $maxSize = "500")
+    protected function getProductImages($productId = 0, $width = 500)
     {
         $imageList = [];
         try {
@@ -84,7 +84,7 @@ class ProductHelper extends BaseHelper
             $images = $product->getMediaGalleryImages();
             $_imageHelper = $this->generateClassObject('Magento\Catalog\Helper\Image');
             foreach ($images as $image) {
-                array_push($imageList, $_imageHelper !== null ? $_imageHelper->init($product, 'product_page_image_large')->keepAspectRatio(true)->setImageFile($image->getFile())->resize($maxSize, null)->getUrl() : "");
+                array_push($imageList, $_imageHelper !== null ? $_imageHelper->init($product, 'product_page_image_large')->keepAspectRatio(true)->setImageFile($image->getFile())->resize($width, null)->getUrl() : "");
             }
         } catch (\Exception $e) {
             $imageList = [];
