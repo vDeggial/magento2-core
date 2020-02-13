@@ -30,7 +30,7 @@ class OrderHelper extends BaseHelper
             $this->printLog("errors", $sql);
             $this->printLog("errors", $e->getMessage());
         } finally {
-            return $firstName;
+            return trim($firstName);
         }
     }
 
@@ -46,7 +46,7 @@ class OrderHelper extends BaseHelper
             $this->printLog("errors", $sql);
             $this->printLog("errors", $e->getMessage());
         } finally {
-            return $lastName;
+            return trim($lastName);
         }
     }
 
