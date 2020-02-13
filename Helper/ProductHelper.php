@@ -11,23 +11,7 @@ class ProductHelper extends BaseHelper
         parent::__construct($context, $objectManager);
     }
 
-    public function getProductStockQty($productId)
-    {
-        $qty = 0;
-        try {
-            $itemStockTable = $this->getSqlTableName('cataloginventory_stock_item');
-            $productEntityTable = $this->getSqlTableName('catalog_product_entity');
-            $sql = "SELECT stock.qty as qty FROM $itemStockTable stock join $productEntityTable product on stock.product_id = product.entity_id where product.entity_id = $productId";
-            $result = $this->sqlQueryFetchOne($sql);
-            $qty = (int)$result;
-        } catch (\Exception $e) {
-            $qty = - 1;
-        } finally {
-            return $qty;
-        }
-    }
-
-    protected function getProduct($productId)
+    public function getProduct($productId)
     {
         $product = null;
         try {
@@ -40,12 +24,12 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    protected function getProductBySku($productSku = null)
+    public function getProductBySku($productSku = null)
     {
         return $this->getProduct($this->getProductIdBySku($productSku));
     }
 
-    protected function getProductDescription($productId)
+    public function getProductDescription($productId)
     {
         $description = null;
         $attributeId = 75;
@@ -61,7 +45,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    protected function getProductIdBySku($productSku = null)
+    public function getProductIdBySku($productSku = null)
     {
         $productId = 0;
         try {
@@ -76,7 +60,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    protected function getProductImages($productId = 0, $width = 500)
+    public function getProductImages($productId = 0, $width = 500)
     {
         $imageList = [];
         try {
@@ -93,7 +77,23 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    protected function getProductStatus($productId)
+    public function getProductName($productId)
+    {
+        $name = null;
+        $attributeId = 73;
+        try {
+            $tableName = $this->getSqlTableName('catalog_product_entity_varchar');
+            $sql = "SELECT value FROM $tableName WHERE attribute_id = $attributeId AND entity_id = $productId";
+            $result = $this->sqlQueryFetchOne($sql);
+            $name = (string)$result;
+        } catch (\Exception $e) {
+            $name = null;
+        } finally {
+            return $name;
+        }
+    }
+
+    public function getProductStatus($productId)
     {
         $attributeId = 97;
         $status = 0;
@@ -109,7 +109,23 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    protected function productExists($productId)
+    public function getProductStockQty($productId)
+    {
+        $qty = 0;
+        try {
+            $itemStockTable = $this->getSqlTableName('cataloginventory_stock_item');
+            $productEntityTable = $this->getSqlTableName('catalog_product_entity');
+            $sql = "SELECT stock.qty as qty FROM $itemStockTable stock join $productEntityTable product on stock.product_id = product.entity_id where product.entity_id = $productId";
+            $result = $this->sqlQueryFetchOne($sql);
+            $qty = (int)$result;
+        } catch (\Exception $e) {
+            $qty = - 1;
+        } finally {
+            return $qty;
+        }
+    }
+
+    public function productExists($productId)
     {
         $exists = false;
         try {
