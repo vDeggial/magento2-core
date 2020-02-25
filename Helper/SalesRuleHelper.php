@@ -32,23 +32,7 @@ class SalesRuleHelper extends BaseHelper
         return $rule;
     }
 
-    protected function validateSalesRule(&$qty = 0, &$promoAvailable = false, &$salesRule = null)
-    {
-        switch (!$promoAvailable && $salesRule && $this->getSalesRuleStatus($salesRule)) {
-          case true:
-              $this->setSalesRuleStatus($salesRule, 0);
-              break;
-      }
-
-        switch ($salesRule && !$this->isValidRuleDates($salesRule)) {
-          case true:
-              $qty = 0;
-              $promoAvailable = false;
-              break;
-      }
-    }
-
-    private function getSalesRuleStatus($rule)
+    protected function getSalesRuleStatus($rule)
     {
         switch ($rule !== null) {
           case true:
@@ -56,7 +40,7 @@ class SalesRuleHelper extends BaseHelper
       }
     }
 
-    private function isValidRuleDates($rule)
+    protected function isValidRuleDates($rule)
     {
         switch ($rule !== null) {
           case true:
@@ -69,7 +53,7 @@ class SalesRuleHelper extends BaseHelper
       }
     }
 
-    private function setSalesRuleStatus($rule, $status = 0)
+    protected function setSalesRuleStatus($rule, $status = 0)
     {
         switch ($rule !== null) {
           case true:
