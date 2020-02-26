@@ -7,6 +7,7 @@ use Magento\Framework\App\Helper\Context;
 class OrderHelper extends BaseHelper
 {
     protected $tableOrder = null;
+    protected $tableOrderGrid = null;
     protected $tableOrderItem = null;
     protected $tableOrderAddress = null;
 
@@ -14,48 +15,18 @@ class OrderHelper extends BaseHelper
     {
         parent::__construct($context, $objectManager);
         $this->tableOrder = $this->getSqlTableName('sales_order');
+        $this->tableOrderGrid = $this->getSqlTableName('sales_order_grid');
         $this->tableOrderItem = $this->getSqlTableName('sales_order_item');
         $this->tableOrderAddress = $this->getSqlTableName('sales_order_address');
     }
 
-    public function getBillingFirstName($orderId = null)
-    {
-        $firstName = null;
-        try {
-            $sql = "SELECT firstname FROM " . $this->tableOrderAddress . " WHERE address_type LIKE 'billing' AND parent_id = $orderId";
-            $result = $this->sqlQueryFetchOne($sql);
-            $firstName = $result;
-        } catch (\Exception $e) {
-            $firstName = null;
-            $this->printLog("errors", $sql);
-            $this->printLog("errors", $e->getMessage());
-        } finally {
-            return trim($firstName);
-        }
-    }
-
-    public function getBillingLastName($orderId = null)
-    {
-        $lastName = null;
-        try {
-            $sql = "SELECT lastname FROM " . $this->tableOrderAddress . " WHERE address_type LIKE 'billing' AND parent_id = $orderId";
-            $result = $this->sqlQueryFetchOne($sql);
-            $lastName = $result;
-        } catch (\Exception $e) {
-            $lastName = null;
-            $this->printLog("errors", $sql);
-            $this->printLog("errors", $e->getMessage());
-        } finally {
-            return trim($lastName);
-        }
-    }
-
     public function getBillingName($orderId = null)
     {
-        $nameFormat = "%s %s";
         $fullName = null;
         try {
-            $fullName = sprintf($nameFormat, $this->getBillingFirstName($orderId), $this->getBillingLastName($orderId));
+            $sql = "SELECT billing_name FROM " . $this->tableOrderGrid . " WHERE entity_id = $orderId";
+            $result = $this->sqlQueryFetchOne($sql);
+            $fullName = $result;
         } catch (\Exception $e) {
             $fullName = null;
             $this->printLog("errors", $e->getMessage());
@@ -83,7 +54,7 @@ class OrderHelper extends BaseHelper
     {
         $email = null;
         try {
-            $sql = "SELECT email FROM " . $this->tableOrderAddress . " WHERE address_type LIKE 'billing' AND parent_id = $orderId";
+            $sql = "SELECT customer_email FROM " . $this->tableOrderGrid . " WHERE entity_id = $orderId";
             $result = $this->sqlQueryFetchOne($sql);
             $email = $result;
         } catch (\Exception $e) {
