@@ -39,7 +39,7 @@ class OrderHelper extends BaseHelper
     {
         $result = null;
         try {
-            $sql = "SELECT order_id FROM " . $this->tableOrderItem . " where sku LIKE '$productSku'";
+            $sql = "SELECT distinct order_id FROM " . $this->tableOrderItem . " where sku LIKE '$productSku'";
             $result = $this->sqlQueryFetchAll($sql);
         } catch (\Exception $e) {
             $result = null;
@@ -70,7 +70,7 @@ class OrderHelper extends BaseHelper
     {
         $qty = 0;
         try {
-            $sql = "SELECT qty_canceled FROM " . $this->tableOrderItem . " where order_id = $orderId AND sku LIKE '$productSku'";
+            $sql = "SELECT sum(qty_canceled) FROM " . $this->tableOrderItem . " where order_id = $orderId AND sku LIKE '$productSku'";
             $result = $this->sqlQueryFetchOne($sql);
             $qty = (int)$result;
         } catch (\Exception $e) {
@@ -86,7 +86,7 @@ class OrderHelper extends BaseHelper
     {
         $qty = 0;
         try {
-            $sql = "SELECT qty_ordered FROM " . $this->tableOrderItem . " where order_id = $orderId AND sku LIKE '$productSku'";
+            $sql = "SELECT sum(qty_ordered) FROM " . $this->tableOrderItem . " where order_id = $orderId AND sku LIKE '$productSku'";
             $result = $this->sqlQueryFetchOne($sql);
             $qty = (int)$result;
         } catch (\Exception $e) {
@@ -102,7 +102,7 @@ class OrderHelper extends BaseHelper
     {
         $qty = 0;
         try {
-            $sql = "SELECT qty_refunded FROM " . $this->tableOrderItem . " where order_id = $orderId AND sku LIKE '$productSku'";
+            $sql = "SELECT sum(qty_refunded) FROM " . $this->tableOrderItem . " where order_id = $orderId AND sku LIKE '$productSku'";
             $result = $this->sqlQueryFetchOne($sql);
             $qty = (int)$result;
         } catch (\Exception $e) {
