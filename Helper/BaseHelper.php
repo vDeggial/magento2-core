@@ -99,6 +99,11 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
         }
     }
 
+    protected function sortDataByColumn(&$data = [], $sortColumn = "qty", $sortDirection = SORT_DESC)
+    {
+        array_multisort(array_column($data, $sortColumn), $sortDirection, $data);
+    }
+
     protected function sqlQuery($sql)
     {
         return $this->queryExecute($sql);
