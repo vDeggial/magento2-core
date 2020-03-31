@@ -3,7 +3,7 @@
 Basic common core functionality plugin for Hapex developed Magento 2 modules
 
 ## Installation
--   Upload files to `app/code/Hapex/Core`
+-   Upload files to `Magento Home Directory`
 -   Run `php bin/magento setup:upgrade` in CLI
 -   Run `php bin/magento setup:di:compile` in CLI
 -   Run `php bin/magento setup:static-content:deploy -f` in CLI
