@@ -132,7 +132,7 @@ class ProductHelper extends BaseHelper
         $storeId = $storeManager->getStore()->getStoreId();
         $productUrl = null;
         try {
-            $product = $this->getProduct($productId);
+            //$product = $this->getProduct($productId);
             //$productUrl = $urlFactory->getUrl($product->getUrlKey());
             $productUrl = $urlFactory->getUrl('catalog/product/view', ['id' => $productId, '_nosid' => true, '_query' => ['___store' => $storeId]]);
         } catch (\Exception $e) {
