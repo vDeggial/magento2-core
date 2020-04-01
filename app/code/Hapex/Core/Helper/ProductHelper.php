@@ -125,6 +125,23 @@ class ProductHelper extends BaseHelper
         }
     }
 
+    public function getProductUrl($productId)
+    {
+        $urlFactory = $this->generateClassObject("Magento\Framework\Url");
+        $storeManager = $this->generateClassObject("Magento\Store\Model\StoreManagerInterface");
+        $storeId = $storeManager->getStore()->getStoreId();
+        $productUrl = null;
+        try {
+            $product = $this->getProduct($productId);
+            //$productUrl = $urlFactory->getUrl($product->getUrlKey());
+            $productUrl = $urlFactory->getUrl('catalog/product/view', ['id' => $productId, '_nosid' => true, '_query' => ['___store' => $storeId]]);
+        } catch (\Exception $e) {
+            $productUrl = null;
+        } finally {
+            return $productUrl;
+        }
+    }
+
     public function productExists($productId)
     {
         $exists = false;
