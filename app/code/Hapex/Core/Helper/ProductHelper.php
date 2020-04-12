@@ -24,6 +24,18 @@ class ProductHelper extends BaseHelper
         }
     }
 
+    public function getProductAttributeData($productId, $attribute)
+    {
+        $product = $this->getProduct($productId);
+        return $product ? $product->getData($attribute) : null;
+    }
+
+    public function getProductAttributeText($productId, $attribute)
+    {
+        $product = $this->getProduct($productId);
+        return $product ? $product->getAttributeText($attribute) : null;
+    }
+
     public function getProductBySku($productSku = null)
     {
         return $this->getProduct($this->getProductIdBySku($productSku));
