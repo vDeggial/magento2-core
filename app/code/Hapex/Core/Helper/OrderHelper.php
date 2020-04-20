@@ -20,20 +20,72 @@ class OrderHelper extends BaseHelper
         $this->tableOrderAddress = $this->getSqlTableName('sales_order_address');
     }
 
-    public function getBillingName($orderId = null)
+    public function getOrder($orderId)
     {
-        $fullName = null;
+        $order = null;
         try {
-            $sql = "SELECT billing_name FROM " . $this->tableOrderGrid . " WHERE entity_id = $orderId";
-            $result = $this->sqlQueryFetchOne($sql);
-            $fullName = $result;
+            $orderRepository = $this->generateClassObject("Magento\Sales\Model\OrderRepository");
+            $order = $orderRepository->get($orderId);
         } catch (\Exception $e) {
-            $fullName = null;
-            $this->printLog("errors", $e->getMessage());
+            $order = null;
         } finally {
-            return $fullName;
+            return $order;
         }
     }
+
+    public function getOrderAddress($order = null)
+    {
+        $address = null;
+        try {
+            $address = $order->getShippingAddress();
+            if ($address ==  null) {
+                $address = $order->getBillingAddress();
+            }
+        } catch (\Exception $e) {
+            $address = null;
+        } finally {
+            return $address;
+        }
+    }
+
+    public function getOrderCustomerEmail($order = null)
+    {
+        $customerEmail = null;
+        try {
+            $address = $this->getOrderAddress($order);
+            $customerEmail = $address->getEmail();
+        } catch (\Exception $e) {
+            $customerEmail = null;
+        } finally {
+            return $customerEmail;
+        }
+    }
+
+    public function getOrderCustomerEmailById($orderId = 0)
+    {
+        $order = $this->getOrder($orderId);
+        return $this->getOrderCustomerEmail($order);
+    }
+
+    public function getOrderCustomerName($order = null)
+    {
+        $customerName = null;
+        try {
+            $address = $this->getOrderAddress($order);
+            $customerName = $address->getName();
+        } catch (\Exception $e) {
+            $customerName = null;
+        } finally {
+            return $customerName;
+        }
+    }
+
+    public function getOrderCustomerNameById($orderId = 0)
+    {
+        $order = $this->getOrder($orderId);
+        return $this->getOrderCustomerName($order);
+    }
+
 
     public function getByProductSku($productSku = null)
     {
@@ -47,22 +99,6 @@ class OrderHelper extends BaseHelper
             $this->printLog("errors", $e->getMessage());
         } finally {
             return $result;
-        }
-    }
-
-    public function getBillingEmail($orderId = null)
-    {
-        $email = null;
-        try {
-            $sql = "SELECT customer_email FROM " . $this->tableOrderGrid . " WHERE entity_id = $orderId";
-            $result = $this->sqlQueryFetchOne($sql);
-            $email = $result;
-        } catch (\Exception $e) {
-            $email = null;
-            $this->printLog("errors", $sql);
-            $this->printLog("errors", $e->getMessage());
-        } finally {
-            return $email;
         }
     }
 
@@ -111,21 +147,6 @@ class OrderHelper extends BaseHelper
             $this->printLog("errors", $e->getMessage());
         } finally {
             return $qty;
-        }
-    }
-
-    public function getShippingName($orderId = null)
-    {
-        $fullName = null;
-        try {
-            $sql = "SELECT shipping_name FROM " . $this->tableOrderGrid . " WHERE entity_id = $orderId";
-            $result = $this->sqlQueryFetchOne($sql);
-            $fullName = $result;
-        } catch (\Exception $e) {
-            $fullName = null;
-            $this->printLog("errors", $e->getMessage());
-        } finally {
-            return $fullName;
         }
     }
 }
