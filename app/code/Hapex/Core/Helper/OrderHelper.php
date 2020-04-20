@@ -113,4 +113,19 @@ class OrderHelper extends BaseHelper
             return $qty;
         }
     }
+
+    public function getShippingName($orderId = null)
+    {
+        $fullName = null;
+        try {
+            $sql = "SELECT shipping_name FROM " . $this->tableOrderGrid . " WHERE entity_id = $orderId";
+            $result = $this->sqlQueryFetchOne($sql);
+            $fullName = $result;
+        } catch (\Exception $e) {
+            $fullName = null;
+            $this->printLog("errors", $e->getMessage());
+        } finally {
+            return $fullName;
+        }
+    }
 }
