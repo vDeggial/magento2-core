@@ -145,7 +145,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    private function getBillingName($orderId = null)
+    protected function getBillingName($orderId = null)
     {
         $fullName = null;
         try {
@@ -160,7 +160,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    private function getShippingName($orderId = null)
+    protected function getShippingName($orderId = null)
     {
         $fullName = null;
         try {
@@ -175,7 +175,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    private function getOrderEmail($orderId = null)
+    protected function getOrderEmail($orderId = null)
     {
         $email = null;
         try {
