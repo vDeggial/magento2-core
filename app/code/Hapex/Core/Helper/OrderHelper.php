@@ -37,10 +37,7 @@ class OrderHelper extends BaseHelper
     {
         $address = null;
         try {
-            $address = $order->getShippingAddress();
-            if ($address ==  null) {
-                $address = $order->getBillingAddress();
-            }
+            $address = $order->getBillingAddress();
         } catch (\Exception $e) {
             $address = null;
         } finally {
@@ -63,8 +60,7 @@ class OrderHelper extends BaseHelper
 
     public function getOrderCustomerEmailById($orderId = 0)
     {
-        $order = $this->getOrder($orderId);
-        return $this->getOrderCustomerEmail($order);
+        return $this->getOrderEmail($orderId);
     }
 
     public function getOrderCustomerName($order = null)
@@ -82,8 +78,7 @@ class OrderHelper extends BaseHelper
 
     public function getOrderCustomerNameById($orderId = 0)
     {
-        $order = $this->getOrder($orderId);
-        return $this->getOrderCustomerName($order);
+        return $this->getBillingName($orderId);
     }
 
 
@@ -147,6 +142,52 @@ class OrderHelper extends BaseHelper
             $this->printLog("errors", $e->getMessage());
         } finally {
             return $qty;
+        }
+    }
+
+    private function getBillingName($orderId = null)
+    {
+        $fullName = null;
+        try {
+            $sql = "SELECT billing_name FROM " . $this->tableOrderGrid . " WHERE entity_id = $orderId";
+            $result = $this->sqlQueryFetchOne($sql);
+            $fullName = $result;
+        } catch (\Exception $e) {
+            $fullName = null;
+            $this->printLog("errors", $e->getMessage());
+        } finally {
+            return $fullName;
+        }
+    }
+
+    private function getShippingName($orderId = null)
+    {
+        $fullName = null;
+        try {
+            $sql = "SELECT shipping_name FROM " . $this->tableOrderGrid . " WHERE entity_id = $orderId";
+            $result = $this->sqlQueryFetchOne($sql);
+            $fullName = $result;
+        } catch (\Exception $e) {
+            $fullName = null;
+            $this->printLog("errors", $e->getMessage());
+        } finally {
+            return $fullName;
+        }
+    }
+
+    private function getOrderEmail($orderId = null)
+    {
+        $email = null;
+        try {
+            $sql = "SELECT customer_email FROM " . $this->tableOrderGrid . " WHERE entity_id = $orderId";
+            $result = $this->sqlQueryFetchOne($sql);
+            $email = $result;
+        } catch (\Exception $e) {
+            $email = null;
+            $this->printLog("errors", $sql);
+            $this->printLog("errors", $e->getMessage());
+        } finally {
+            return $email;
         }
     }
 }
