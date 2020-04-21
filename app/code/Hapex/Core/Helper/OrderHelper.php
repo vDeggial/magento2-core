@@ -33,56 +33,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getOrderAddress($order = null)
-    {
-        $address = null;
-        try {
-            $address = $order->getBillingAddress();
-        } catch (\Exception $e) {
-            $address = null;
-        } finally {
-            return $address;
-        }
-    }
-
-    public function getOrderCustomerEmail($order = null)
-    {
-        $customerEmail = null;
-        try {
-            $address = $this->getOrderAddress($order);
-            $customerEmail = $address->getEmail();
-        } catch (\Exception $e) {
-            $customerEmail = null;
-        } finally {
-            return $customerEmail;
-        }
-    }
-
-    public function getOrderCustomerEmailById($orderId = 0)
-    {
-        return $this->getOrderEmail($orderId);
-    }
-
-    public function getOrderCustomerName($order = null)
-    {
-        $customerName = null;
-        try {
-            $address = $this->getOrderAddress($order);
-            $customerName = $address->getName();
-        } catch (\Exception $e) {
-            $customerName = null;
-        } finally {
-            return $customerName;
-        }
-    }
-
-    public function getOrderCustomerNameById($orderId = 0)
-    {
-        return $this->getBillingName($orderId);
-    }
-
-
-    public function getByProductSku($productSku = null)
+    public function getOrderDataBySku($productSku = null)
     {
         $result = null;
         try {
@@ -95,6 +46,34 @@ class OrderHelper extends BaseHelper
         } finally {
             return $result;
         }
+    }
+
+    public function getOrderEmail($data)
+    {
+        switch (true) {
+        case is_numeric($data):
+          return $this->getCustomerEmail($data);
+
+        case is_object($data):
+          return $this->getOrderCustomerEmail($data);
+
+        default:
+          return null;
+      }
+    }
+
+    public function getOrderName($data)
+    {
+        switch (true) {
+        case is_numeric($data):
+          return $this->getBillingName($data);
+
+        case is_object($data):
+          return $this->getOrderCustomerName($data);
+
+        default:
+          return null;
+      }
     }
 
     public function getQtyCanceled($orderId = null, $productSku = null)
@@ -160,22 +139,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    protected function getShippingName($orderId = null)
-    {
-        $fullName = null;
-        try {
-            $sql = "SELECT shipping_name FROM " . $this->tableOrderGrid . " WHERE entity_id = $orderId";
-            $result = $this->sqlQueryFetchOne($sql);
-            $fullName = $result;
-        } catch (\Exception $e) {
-            $fullName = null;
-            $this->printLog("errors", $e->getMessage());
-        } finally {
-            return $fullName;
-        }
-    }
-
-    protected function getOrderEmail($orderId = null)
+    protected function getCustomerEmail($orderId = null)
     {
         $email = null;
         try {
@@ -188,6 +152,59 @@ class OrderHelper extends BaseHelper
             $this->printLog("errors", $e->getMessage());
         } finally {
             return $email;
+        }
+    }
+
+    protected function getOrderAddress($order = null)
+    {
+        $address = null;
+        try {
+            $address = $order->getBillingAddress();
+        } catch (\Exception $e) {
+            $address = null;
+        } finally {
+            return $address;
+        }
+    }
+
+    protected function getOrderCustomerName($order = null)
+    {
+        $customerName = null;
+        try {
+            $address = $this->getOrderAddress($order);
+            $customerName = $address->getName();
+        } catch (\Exception $e) {
+            $customerName = null;
+        } finally {
+            return $customerName;
+        }
+    }
+
+    protected function getOrderCustomerEmail($order = null)
+    {
+        $customerEmail = null;
+        try {
+            $address = $this->getOrderAddress($order);
+            $customerEmail = $address->getEmail();
+        } catch (\Exception $e) {
+            $customerEmail = null;
+        } finally {
+            return $customerEmail;
+        }
+    }
+
+    protected function getShippingName($orderId = null)
+    {
+        $fullName = null;
+        try {
+            $sql = "SELECT shipping_name FROM " . $this->tableOrderGrid . " WHERE entity_id = $orderId";
+            $result = $this->sqlQueryFetchOne($sql);
+            $fullName = $result;
+        } catch (\Exception $e) {
+            $fullName = null;
+            $this->printLog("errors", $e->getMessage());
+        } finally {
+            return $fullName;
         }
     }
 }
