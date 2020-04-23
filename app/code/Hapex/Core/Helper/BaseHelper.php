@@ -19,6 +19,17 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
         parent::__construct($context);
     }
 
+    public function getRootPath()
+    {
+        $directory = $this->generateClassObject("Magento\Framework\Filesystem\DirectoryList");
+        return $directory->getRoot();
+    }
+
+    public function getFileContents($path = "", $filename = "")
+    {
+        return file_get_contents($this->getRootPath() . "/$path/$filename");
+    }
+
     public function printLog($filename = null, $message = null)
     {
         return $this->writeLogEntry("info", $filename, $message);
