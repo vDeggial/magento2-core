@@ -30,23 +30,6 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
         return file_get_contents($this->getRootPath() . "/$path/$filename");
     }
 
-    public function parseCsvFile($path = "", $filename = "")
-    {
-        $lines = explode("\n", $this->getFileContents($path, $filename));
-        $headers = str_getcsv(array_shift($lines));
-        $data = [];
-        foreach ($lines as $line) {
-            $row = array();
-            foreach (str_getcsv($line) as $key => $field) {
-                $row[ $headers[ $key ] ] = $field;
-            }
-            $row = array_filter($row);
-            $data[] = $row;
-        }
-
-        return $data;
-    }
-
     public function printLog($filename = null, $message = null)
     {
         return $this->writeLogEntry("info", $filename, $message);
