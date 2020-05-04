@@ -3,9 +3,11 @@ namespace Hapex\Core\Helper;
 
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\App\Helper\Context;
+use Magento\Framework\App\Filesystem\DirectoryList;
 
 class DataHelper extends BaseHelper
 {
+    protected $csvDirectory;
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
         parent::__construct($context, $objectManager);
@@ -21,7 +23,12 @@ class DataHelper extends BaseHelper
         return $this->scopeConfig->getValue($path, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $scopeCode);
     }
 
-    public function getCsvDataFile($fileName)
+    public function getCsvFileData($fileName)
+    {
+        return $this->getCsvDataFile($this->csvDirectory . "/" . "$fileName");
+    }
+
+    protected function getCsvDataFile($fileName)
     {
         $data = [];
         try {
@@ -34,7 +41,7 @@ class DataHelper extends BaseHelper
         }
     }
 
-    public function writeCsvDataFile($path, $fileName, $data = [])
+    protected function writeCsvDataFile($path, $fileName, $data = [])
     {
         $success = false;
         try {
@@ -46,5 +53,14 @@ class DataHelper extends BaseHelper
         } finally {
             return $success;
         }
+    }
+
+    protected function setCsvLocation($path)
+    {
+        $directoryList = $this->generateClassObject("Magento\Framework\App\Filesystem\DirectoryList");
+        $this->csvDirectory = $directoryList->getPath(DirectoryList::VAR_DIR) . "/" . $path;
+        // if (!is_dir($this->csvDirectory)) {
+            //     mkdir($this->csvDirectory, 0777, true);
+            // }
     }
 }
