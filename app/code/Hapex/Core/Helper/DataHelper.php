@@ -28,6 +28,15 @@ class DataHelper extends BaseHelper
         return $this->getCsvDataFile($this->csvDirectory . "/" . "$fileName");
     }
 
+    public function setCsvLocation($path)
+    {
+        $directoryList = $this->generateClassObject("Magento\Framework\App\Filesystem\DirectoryList");
+        $this->csvDirectory = $directoryList->getPath(DirectoryList::VAR_DIR) . "/" . $path;
+        // if (!is_dir($this->csvDirectory)) {
+            //     mkdir($this->csvDirectory, 0777, true);
+            // }
+    }
+
     protected function getCsvDataFile($fileName)
     {
         $data = [];
@@ -53,14 +62,5 @@ class DataHelper extends BaseHelper
         } finally {
             return $success;
         }
-    }
-
-    protected function setCsvLocation($path)
-    {
-        $directoryList = $this->generateClassObject("Magento\Framework\App\Filesystem\DirectoryList");
-        $this->csvDirectory = $directoryList->getPath(DirectoryList::VAR_DIR) . "/" . $path;
-        // if (!is_dir($this->csvDirectory)) {
-            //     mkdir($this->csvDirectory, 0777, true);
-            // }
     }
 }
