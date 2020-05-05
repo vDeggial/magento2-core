@@ -23,9 +23,9 @@ class DataHelper extends BaseHelper
         return $this->scopeConfig->getValue($path, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $scopeCode);
     }
 
-    public function getCsvFileData($fileName)
+    public function getCsvFileData($fileName, $isFirstRowHeader = false)
     {
-        return $this->getCsvDataFile($this->csvDirectory . "/" . "$fileName");
+        return $this->getCsvDataFile($this->csvDirectory . "/" . "$fileName", $isFirstRowHeader);
     }
 
     public function setCsvLocation($path)
@@ -37,7 +37,7 @@ class DataHelper extends BaseHelper
             // }
     }
 
-    protected function getCsvDataFile($fileName)
+    protected function getCsvDataFile($fileName, $isFirstRowHeader = false)
     {
         $data = [];
         try {
@@ -46,6 +46,9 @@ class DataHelper extends BaseHelper
         } catch (\Exception $e) {
             $data = [];
         } finally {
+            if ($isFirstRowHeader) {
+                array_push($data);
+            }
             return $data;
         }
     }
