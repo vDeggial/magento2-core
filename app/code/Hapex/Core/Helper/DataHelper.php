@@ -47,7 +47,7 @@ class DataHelper extends BaseHelper
             $data = [];
         } finally {
             if ($isFirstRowHeader) {
-                array_push($data);
+                array_shift($data);
             }
             return $data;
         }
