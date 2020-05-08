@@ -19,6 +19,18 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
         parent::__construct($context);
     }
 
+    public function generateClassObject($class = "")
+    {
+        $object = null;
+        try {
+            $object = $this->objectManager->get($class);
+        } catch (\Exception $e) {
+            $object = null;
+        } finally {
+            return $object;
+        }
+    }
+
     public function getRootPath()
     {
         $directory = $this->generateClassObject("Magento\Framework\Filesystem\DirectoryList");
@@ -48,18 +60,6 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
     protected function errorLog($message = null)
     {
         return $this->writeLogEntry("error", "hapex_error_log", $message);
-    }
-
-    protected function generateClassObject($class = "")
-    {
-        $object = null;
-        try {
-            $object = $this->objectManager->get($class);
-        } catch (\Exception $e) {
-            $object = null;
-        } finally {
-            return $object;
-        }
     }
 
     protected function getCurrentDate()
