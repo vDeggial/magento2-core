@@ -155,7 +155,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    protected function getOrderAddress($order = null)
+    protected function getOrderBillingAddress($order = null)
     {
         $address = null;
         try {
@@ -167,11 +167,23 @@ class OrderHelper extends BaseHelper
         }
     }
 
+    protected function getOrderShippingAddress($order = null)
+    {
+        $address = null;
+        try {
+            $address = $order->getShippingAddress();
+        } catch (\Exception $e) {
+            $address = null;
+        } finally {
+            return $address;
+        }
+    }
+
     protected function getOrderCustomerName($order = null)
     {
         $customerName = null;
         try {
-            $address = $this->getOrderAddress($order);
+            $address = $this->getOrderBillingAddress($order);
             $customerName = $address->getName();
         } catch (\Exception $e) {
             $customerName = null;
@@ -184,7 +196,7 @@ class OrderHelper extends BaseHelper
     {
         $customerEmail = null;
         try {
-            $address = $this->getOrderAddress($order);
+            $address = $this->getOrderBillingAddress($order);
             $customerEmail = $address->getEmail();
         } catch (\Exception $e) {
             $customerEmail = null;
