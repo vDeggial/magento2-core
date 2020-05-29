@@ -77,10 +77,12 @@ class ProductHelper extends BaseHelper
         $imageList = [];
         try {
             $product = $this->getProduct($productId);
+            $galleryReadHandler = $this->generateClassObject("Magento\Catalog\Model\Product\Gallery\ReadHandler");
+            $galleryReadHandler->execute($product);
             $images = $product->getMediaGalleryImages();
-            $_imageHelper = $this->generateClassObject('Magento\Catalog\Helper\Image');
+            $_imageHelper = $this->generateClassObject("Magento\Catalog\Helper\Image");
             foreach ($images as $image) {
-                array_push($imageList, $_imageHelper !== null ? $_imageHelper->init($product, 'product_page_image_large')->keepAspectRatio(true)->setImageFile($image->getFile())->resize($width, null)->getUrl() : "");
+                array_push($imageList, $_imageHelper->init($product, 'product_page_image_large')->keepAspectRatio(true)->setImageFile($image->getFile())->resize($width, null)->getUrl());
             }
         } catch (\Exception $e) {
             $imageList = [];
