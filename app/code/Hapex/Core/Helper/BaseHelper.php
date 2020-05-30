@@ -198,6 +198,9 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
                 case "info":
                     $logger->info($message);
                     break;
+                case "error":
+                    $logger->error($message);
+                    break;
             }
 
             return true;

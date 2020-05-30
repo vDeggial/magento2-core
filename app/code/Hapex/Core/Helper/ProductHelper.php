@@ -18,6 +18,7 @@ class ProductHelper extends BaseHelper
             $productFactory = $this->generateClassObject("Magento\Catalog\Model\ProductFactory");
             $product = $this->productExists($productId) ? $productFactory->create()->load($productId) : null;
         } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
             $product = null;
         } finally {
             return $product;
@@ -51,6 +52,7 @@ class ProductHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $description = (string)$result;
         } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
             $description = null;
         } finally {
             return $description;
@@ -66,6 +68,7 @@ class ProductHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $productId = (int)$result;
         } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
             $productId = 0;
         } finally {
             return $productId;
@@ -77,8 +80,11 @@ class ProductHelper extends BaseHelper
         $image = null;
         try {
             $imageFilename = $this->getProductImageFilename($productId);
-            $image = $this->getProductImageUrl($productid, $imageFilename, $width);
+            $image = $this->getProductImageUrl($productId, $imageFilename, $width);
+            $logEntry = "Product ID: $productId | $imageFilename | $image";
+            $this->printLog("hapex_product_images", $logEntry);
         } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
             $image = null;
         } finally {
             return $image;
@@ -91,12 +97,15 @@ class ProductHelper extends BaseHelper
         try {
             //$images = $this->getProductMediaGalleryImages($productId);
             $images = $this->getProductImagesFilenames($productId);
-            foreach ($images as $image) {
-                $this->printLog("hapex_product_images", $image);
+            foreach ($images as $imageFilename) {
+                $image = $this->getProductImageUrl($productId, $imageFilename, $width);
+                $logEntry = "Product ID: $productId | $imageFilename | $image";
+                $this->printLog("hapex_product_images", $logEntry);
                 //array_push($imageList, $this->getProductImageUrl($productId, $image->getFile(), $width));
-                array_push($imageList, $this->getProductImageUrl($productId, $image, $width));
+                array_push($imageList, $image);
             }
         } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
             $imageList = [];
         } finally {
             return $imageList;
@@ -113,6 +122,7 @@ class ProductHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $name = (string)$result;
         } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
             $name = null;
         } finally {
             return $name;
@@ -129,6 +139,7 @@ class ProductHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $status = (int)$result;
         } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
             $status = 0;
         } finally {
             return $status;
@@ -145,6 +156,7 @@ class ProductHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $qty = (int)$result;
         } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
             $qty = - 1;
         } finally {
             return $qty;
@@ -162,6 +174,7 @@ class ProductHelper extends BaseHelper
             //$productUrl = $urlFactory->getUrl($product->getUrlKey());
             $productUrl = $urlFactory->getUrl('catalog/product/view', ['id' => $productId, '_nosid' => true, '_query' => ['___store' => $storeId]]);
         } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
             $productUrl = null;
         } finally {
             return $productUrl;
@@ -177,9 +190,26 @@ class ProductHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $exists = $result && !empty($result);
         } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
             $exists = false;
         } finally {
             return $exists;
+        }
+    }
+
+    protected function getProductMediaGalleryImages($productId)
+    {
+        $images = [];
+        try {
+            $product = $this->getProduct($productId);
+            $galleryReadHandler = $this->generateClassObject("Magento\Catalog\Model\Product\Gallery\ReadHandler");
+            $galleryReadHandler->execute($product);
+            $images = $product->getMediaGalleryImages();
+        } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
+            $images = [];
+        } finally {
+            return $images;
         }
     }
 
@@ -193,6 +223,7 @@ class ProductHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $image = (string)$result;
         } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
             $image = null;
         } finally {
             return $image;
@@ -212,6 +243,7 @@ class ProductHelper extends BaseHelper
                 array_push($images, $entry["fileName"]);
             }
         } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
             $images = [];
         } finally {
             return $images;
@@ -226,24 +258,10 @@ class ProductHelper extends BaseHelper
             $_imageHelper = $this->generateClassObject("Magento\Catalog\Helper\Image");
             $imageUrl = $_imageHelper->init($product, 'product_page_image_large')->keepAspectRatio(true)->setImageFile($imageFilename)->resize($width, null)->getUrl();
         } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
             $imageUrl = null;
         } finally {
             return $imageUrl;
-        }
-    }
-
-    private function getProductMediaGalleryImages($productId)
-    {
-        $images = [];
-        try {
-            $product = $this->getProduct($productId);
-            $galleryReadHandler = $this->generateClassObject("Magento\Catalog\Model\Product\Gallery\ReadHandler");
-            $galleryReadHandler->execute($product);
-            $images = $product->getMediaGalleryImages();
-        } catch (\Exception $e) {
-            $images = [];
-        } finally {
-            return $images;
         }
     }
 }
