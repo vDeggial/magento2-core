@@ -81,8 +81,6 @@ class ProductHelper extends BaseHelper
         try {
             $imageFilename = $this->getProductImageFilename($productId);
             $image = $this->getProductImageUrl($productId, $imageFilename, $width);
-            $logEntry = "Product ID: $productId | $imageFilename | $image";
-            $this->printLog("hapex_product_images", $logEntry);
         } catch (\Exception $e) {
             $this->errorLog($e->getMessage());
             $image = null;
@@ -99,9 +97,7 @@ class ProductHelper extends BaseHelper
             $images = $this->getProductImagesFilenames($productId);
             foreach ($images as $imageFilename) {
                 $image = $this->getProductImageUrl($productId, $imageFilename, $width);
-                $logEntry = "Product ID: $productId | $imageFilename | $image";
-                $this->printLog("hapex_product_images", $logEntry);
-                //array_push($imageList, $this->getProductImageUrl($productId, $image->getFile(), $width));
+                //array_push($imageList, $this->getProductImageUrl($productId, $imageFilename->getFile(), $width));
                 array_push($imageList, $image);
             }
         } catch (\Exception $e) {
