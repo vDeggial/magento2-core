@@ -44,6 +44,7 @@ class DataHelper extends BaseHelper
             $csvProcessor = $this->generateClassObject("Magento\Framework\File\Csv");
             $data = $csvProcessor->getData($fileName);
         } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
             $data = [];
         } finally {
             if ($isFirstRowHeader) {
@@ -61,6 +62,7 @@ class DataHelper extends BaseHelper
             $csvProcessor->saveData("$path/$fileName", $data);
             $success = true;
         } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
             $success = false;
         } finally {
             return $success;

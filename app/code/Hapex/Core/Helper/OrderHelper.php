@@ -27,6 +27,7 @@ class OrderHelper extends BaseHelper
             $orderRepository = $this->generateClassObject("Magento\Sales\Model\OrderRepository");
             $order = $orderRepository->get($orderId);
         } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
             $order = null;
         } finally {
             return $order;
@@ -40,6 +41,7 @@ class OrderHelper extends BaseHelper
             $sql = "SELECT order_id FROM " . $this->tableOrderItem . " WHERE sku LIKE '$productSku' GROUP BY order_id";
             $result = $this->sqlQueryFetchAll($sql);
         } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
             $result = null;
             $this->printLog("errors", $sql);
             $this->printLog("errors", $e->getMessage());
@@ -84,9 +86,8 @@ class OrderHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $qty = (int)$result;
         } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
             $qty = 0;
-            $this->printLog("errors", $sql);
-            $this->printLog("errors", $e->getMessage());
         } finally {
             return $qty;
         }
@@ -100,9 +101,8 @@ class OrderHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $qty = (int)$result;
         } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
             $qty = 0;
-            $this->printLog("errors", $sql);
-            $this->printLog("errors", $e->getMessage());
         } finally {
             return $qty;
         }
@@ -116,9 +116,8 @@ class OrderHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $qty = (int)$result;
         } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
             $qty = 0;
-            $this->printLog("errors", $sql);
-            $this->printLog("errors", $e->getMessage());
         } finally {
             return $qty;
         }
@@ -132,8 +131,8 @@ class OrderHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $fullName = $result;
         } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
             $fullName = null;
-            $this->printLog("errors", $e->getMessage());
         } finally {
             return $fullName;
         }
@@ -147,9 +146,8 @@ class OrderHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $email = $result;
         } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
             $email = null;
-            $this->printLog("errors", $sql);
-            $this->printLog("errors", $e->getMessage());
         } finally {
             return $email;
         }
@@ -161,6 +159,7 @@ class OrderHelper extends BaseHelper
         try {
             $address = $order->getBillingAddress();
         } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
             $address = null;
         } finally {
             return $address;
@@ -173,6 +172,7 @@ class OrderHelper extends BaseHelper
         try {
             $address = $order->getShippingAddress();
         } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
             $address = null;
         } finally {
             return $address;
@@ -186,6 +186,7 @@ class OrderHelper extends BaseHelper
             $address = $this->getOrderBillingAddress($order);
             $customerName = $address->getName();
         } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
             $customerName = null;
         } finally {
             return $customerName;
@@ -199,6 +200,7 @@ class OrderHelper extends BaseHelper
             $address = $this->getOrderBillingAddress($order);
             $customerEmail = $address->getEmail();
         } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
             $customerEmail = null;
         } finally {
             return $customerEmail;
@@ -213,6 +215,7 @@ class OrderHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $fullName = $result;
         } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
             $fullName = null;
             $this->printLog("errors", $e->getMessage());
         } finally {

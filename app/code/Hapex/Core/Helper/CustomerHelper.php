@@ -28,6 +28,7 @@ class CustomerHelper extends BaseHelper
             $attribute = $customer->getCustomAttribute($attribute);
             $value = $attribute !== null ? $attribute->getValue() : false;
         } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
             $value = null;
         } finally {
             return $value;
