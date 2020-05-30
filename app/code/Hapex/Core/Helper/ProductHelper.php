@@ -72,17 +72,33 @@ class ProductHelper extends BaseHelper
         }
     }
 
+    public function getProductImage($productId = 0, $width = 500)
+    {
+        $image = null;
+        try {
+            $product = $this->getProduct($productId);
+            $image = $this->getProductImageUrl($productId);
+            $_imageHelper = $this->generateClassObject("Magento\Catalog\Helper\Image");
+            $image = $_imageHelper->init($product, 'product_page_image_large')->keepAspectRatio(true)->setImageFile($image)->resize($width, null)->getUrl();
+        } catch (\Exception $e) {
+            $image = null;
+        } finally {
+            return $image;
+        }
+    }
+
     public function getProductImages($productId = 0, $width = 500)
     {
         $imageList = [];
         try {
             $product = $this->getProduct($productId);
-            $galleryReadHandler = $this->generateClassObject("Magento\Catalog\Model\Product\Gallery\ReadHandler");
-            $galleryReadHandler->execute($product);
-            $images = $product->getMediaGalleryImages();
+            //$images = $this->getProductMediaGalleryImages($product);
+            $images = $this->getProductImagesList($productId);
             $_imageHelper = $this->generateClassObject("Magento\Catalog\Helper\Image");
             foreach ($images as $image) {
-                array_push($imageList, $_imageHelper->init($product, 'product_page_image_large')->keepAspectRatio(true)->setImageFile($image->getFile())->resize($width, null)->getUrl());
+                //array_push($imageList, $_imageHelper->init($product, 'product_page_image_large')->keepAspectRatio(true)->setImageFile($image->getFile())->resize($width, null)->getUrl());
+                $this->printLog("hapex_product_images", $image);
+                array_push($imageList, $_imageHelper->init($product, 'product_page_image_large')->keepAspectRatio(true)->setImageFile($image)->resize($width, null)->getUrl());
             }
         } catch (\Exception $e) {
             $imageList = [];
@@ -169,5 +185,49 @@ class ProductHelper extends BaseHelper
         } finally {
             return $exists;
         }
+    }
+
+    private function getProductImagesList($productId = 0)
+    {
+        $images = [];
+        try {
+            $tableValueToEntity = $this->getSqlTableName("catalog_product_entity_media_gallery_value_to_entity");
+            $tableValue = $this->getSqlTableName("catalog_product_entity_media_gallery_value");
+            $tableGallery = $this->getSqlTableName("catalog_product_entity_media_gallery");
+            $sql = "SELECT gal.value AS fileName FROM $tableValueToEntity ent LEFT JOIN $tableValue val ON ent.entity_id= val.entity_id LEFT JOIN $tableGallery gal ON val.value_id = gal.value_id WHERE ent.entity_id = $productId GROUP BY gal.value";
+            $result = $this->sqlQueryFetchAll($sql);
+            foreach ($result as $entry) {
+                array_push($images, $entry["fileName"]);
+            }
+        } catch (\Exception $e) {
+            $images = [];
+        } finally {
+            return $images;
+        }
+    }
+
+    private function getProductImageUrl($productId)
+    {
+        $image = null;
+        $attributeId = 87;
+        try {
+            $tableName = $this->getSqlTableName('catalog_product_entity_varchar');
+            $sql = "SELECT value FROM $tableName WHERE attribute_id = $attributeId AND entity_id = $productId";
+            $result = $this->sqlQueryFetchOne($sql);
+            $image = (string)$result;
+        } catch (\Exception $e) {
+            $image = null;
+        } finally {
+            return $image;
+        }
+    }
+
+    private function getProductMediaGalleryImages($product)
+    {
+        $images = [];
+        $galleryReadHandler = $this->generateClassObject("Magento\Catalog\Model\Product\Gallery\ReadHandler");
+        $galleryReadHandler->execute($product);
+        $images = $product->getMediaGalleryImages();
+        return $images;
     }
 }

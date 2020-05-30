@@ -37,7 +37,7 @@ class OrderHelper extends BaseHelper
     {
         $result = null;
         try {
-            $sql = "SELECT distinct order_id FROM " . $this->tableOrderItem . " where sku LIKE '$productSku'";
+            $sql = "SELECT order_id FROM " . $this->tableOrderItem . " WHERE sku LIKE '$productSku' GROUP BY order_id";
             $result = $this->sqlQueryFetchAll($sql);
         } catch (\Exception $e) {
             $result = null;
