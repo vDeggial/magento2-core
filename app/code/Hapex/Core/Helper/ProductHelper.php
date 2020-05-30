@@ -76,10 +76,8 @@ class ProductHelper extends BaseHelper
     {
         $image = null;
         try {
-            $product = $this->getProduct($productId);
-            $image = $this->getProductImageUrl($productId);
-            $_imageHelper = $this->generateClassObject("Magento\Catalog\Helper\Image");
-            $image = $_imageHelper->init($product, 'product_page_image_large')->keepAspectRatio(true)->setImageFile($image)->resize($width, null)->getUrl();
+            $imageFilename = $this->getProductImageFilename($productId);
+            $image = $this->getProductImageUrl($productid, $imageFilename, $width);
         } catch (\Exception $e) {
             $image = null;
         } finally {
@@ -91,14 +89,12 @@ class ProductHelper extends BaseHelper
     {
         $imageList = [];
         try {
-            $product = $this->getProduct($productId);
-            //$images = $this->getProductMediaGalleryImages($product);
+            //$images = $this->getProductMediaGalleryImages($productId);
             $images = $this->getProductImagesList($productId);
-            $_imageHelper = $this->generateClassObject("Magento\Catalog\Helper\Image");
             foreach ($images as $image) {
-                //array_push($imageList, $_imageHelper->init($product, 'product_page_image_large')->keepAspectRatio(true)->setImageFile($image->getFile())->resize($width, null)->getUrl());
                 $this->printLog("hapex_product_images", $image);
-                array_push($imageList, $_imageHelper->init($product, 'product_page_image_large')->keepAspectRatio(true)->setImageFile($image)->resize($width, null)->getUrl());
+                //array_push($imageList, $this->getProductImageUrl($productId, $image->getFile(), $width));
+                array_push($imageList, $this->getProductImageUrl($productId, $image, $width));
             }
         } catch (\Exception $e) {
             $imageList = [];
@@ -206,7 +202,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    private function getProductImageUrl($productId)
+    private function getProductImageFilename($productId)
     {
         $image = null;
         $attributeId = 87;
@@ -222,12 +218,32 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    private function getProductMediaGalleryImages($product)
+    private function getProductImageUrl($productId = 0, $imageFilename = null, $width = 500)
+    {
+        $imageUrl = null;
+        try {
+            $product = $this->getProduct($productId);
+            $_imageHelper = $this->generateClassObject("Magento\Catalog\Helper\Image");
+            $imageUrl = $_imageHelper->init($product, 'product_page_image_large')->keepAspectRatio(true)->setImageFile($imageFilename)->resize($width, null)->getUrl();
+        } catch (\Exception $e) {
+            $imageUrl = null;
+        } finally {
+            return $imageUrl;
+        }
+    }
+
+    private function getProductMediaGalleryImages($productId)
     {
         $images = [];
-        $galleryReadHandler = $this->generateClassObject("Magento\Catalog\Model\Product\Gallery\ReadHandler");
-        $galleryReadHandler->execute($product);
-        $images = $product->getMediaGalleryImages();
-        return $images;
+        try {
+            $product = $this->getProduct($productId);
+            $galleryReadHandler = $this->generateClassObject("Magento\Catalog\Model\Product\Gallery\ReadHandler");
+            $galleryReadHandler->execute($product);
+            $images = $product->getMediaGalleryImages();
+        } catch (\Exception $e) {
+            $images = [];
+        } finally {
+            return $images;
+        }
     }
 }
