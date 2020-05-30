@@ -90,7 +90,7 @@ class ProductHelper extends BaseHelper
         $imageList = [];
         try {
             //$images = $this->getProductMediaGalleryImages($productId);
-            $images = $this->getProductImagesList($productId);
+            $images = $this->getProductImagesFilenames($productId);
             foreach ($images as $image) {
                 $this->printLog("hapex_product_images", $image);
                 //array_push($imageList, $this->getProductImageUrl($productId, $image->getFile(), $width));
@@ -183,7 +183,23 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    private function getProductImagesList($productId = 0)
+    private function getProductImageFilename($productId)
+    {
+        $image = null;
+        $attributeId = 87;
+        try {
+            $tableName = $this->getSqlTableName('catalog_product_entity_varchar');
+            $sql = "SELECT value FROM $tableName WHERE attribute_id = $attributeId AND entity_id = $productId";
+            $result = $this->sqlQueryFetchOne($sql);
+            $image = (string)$result;
+        } catch (\Exception $e) {
+            $image = null;
+        } finally {
+            return $image;
+        }
+    }
+
+    private function getProductImagesFilenames($productId = 0)
     {
         $images = [];
         try {
@@ -199,22 +215,6 @@ class ProductHelper extends BaseHelper
             $images = [];
         } finally {
             return $images;
-        }
-    }
-
-    private function getProductImageFilename($productId)
-    {
-        $image = null;
-        $attributeId = 87;
-        try {
-            $tableName = $this->getSqlTableName('catalog_product_entity_varchar');
-            $sql = "SELECT value FROM $tableName WHERE attribute_id = $attributeId AND entity_id = $productId";
-            $result = $this->sqlQueryFetchOne($sql);
-            $image = (string)$result;
-        } catch (\Exception $e) {
-            $image = null;
-        } finally {
-            return $image;
         }
     }
 
