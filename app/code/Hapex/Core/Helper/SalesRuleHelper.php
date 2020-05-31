@@ -94,7 +94,7 @@ class SalesRuleHelper extends BaseHelper
             $tableSalesRule = $this->getSqlTableName($this->salesRuleTableName);
             $sql = "UPDATE $tableSalesRule SET is_active = $status where rule_id = $ruleId";
             $result = $this->sqlQuery($sql);
-            $isSet = true;
+            $isSet = $result !== null;
         } catch (\Exception $e) {
             $this->errorLog($e->getMessage());
             $isSet = false;
