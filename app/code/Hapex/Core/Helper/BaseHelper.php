@@ -32,7 +32,7 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     public function printLog($filename = null, $message = null)
     {
-        return $this->writeLogEntry("info", $filename, $message);
+        return $this->writeLogEntry($filename, $message);
     }
 
     public function sendOutput($output)
@@ -48,7 +48,7 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     protected function errorLog($message = null)
     {
-        return $this->writeLogEntry("error", "hapex_error_log", $message);
+        return $this->printLog("hapex_error_log", $message);
     }
 
     protected function generateClassObject($class = "")
@@ -191,7 +191,7 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
         }
     }
 
-    private function writeLogEntry($type = "info", $filename = null, $message = null)
+    private function writeLogEntry($filename = null, $message = null)
     {
         try {
             $writer = new Stream(BP . "/var/log/$filename.log");
@@ -200,16 +200,7 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $formatter->setDateTimeFormat("Y-m-d H:i:s T");
             $writer->setFormatter($formatter);
             $logger->addWriter($writer);
-
-            switch ($type) {
-                case "info":
-                    $logger->info($message);
-                    break;
-                case "error":
-                    $logger->error($message);
-                    break;
-            }
-
+            $logger->info($message);
             return true;
         } catch (\Exception $e) {
             return false;

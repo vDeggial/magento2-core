@@ -27,14 +27,15 @@ class ProductHelper extends BaseHelper
 
     public function getProductAttributeData($productId, $attribute)
     {
-        $product = $this->getProduct($productId);
-        return $product ? $product->getData($attribute) : null;
+        //$product = $this->getProduct($productId);
+        //return $product ? $product->getData($attribute) : null;
+        return $this->getProductAttributeValue($productId, $attribute);
     }
 
-    public function getProductAttributeText($productId, $attribute)
+    public function getProductAttributeSelect($productId, $attribute)
     {
-        $product = $this->getProduct($productId);
-        return $product ? $product->getAttributeText($attribute) : null;
+        $optionId = $this->getProductAttributeValue($productId, $attribute);
+        return $this->getProductAttributeOptionValue($optionId);
     }
 
     public function getProductBySku($productSku = null)
@@ -45,7 +46,7 @@ class ProductHelper extends BaseHelper
     public function getProductDescription($productId)
     {
         $description = null;
-        $attributeId = 75;
+        $attributeId = $this->getProductAttributeId("description");
         try {
             $tableName = $this->getSqlTableName('catalog_product_entity_text');
             $sql = "SELECT value FROM $tableName WHERE attribute_id = $attributeId AND entity_id = $productId";
@@ -111,7 +112,7 @@ class ProductHelper extends BaseHelper
     public function getProductName($productId)
     {
         $name = null;
-        $attributeId = 73;
+        $attributeId = $this->getProductAttributeId("name");
         try {
             $tableName = $this->getSqlTableName('catalog_product_entity_varchar');
             $sql = "SELECT value FROM $tableName WHERE attribute_id = $attributeId AND entity_id = $productId";
@@ -127,7 +128,7 @@ class ProductHelper extends BaseHelper
 
     public function getProductStatus($productId)
     {
-        $attributeId = 97;
+        $attributeId = $this->getProductAttributeId("status");
         $status = 0;
         try {
             $tableName = $this->getSqlTableName('catalog_product_entity_int');
@@ -206,6 +207,90 @@ class ProductHelper extends BaseHelper
             $images = [];
         } finally {
             return $images;
+        }
+    }
+
+    private function getProductAttributeId($attributeCode)
+    {
+        $attributeId = 0;
+        $entityTypeId = 4;
+        try {
+            $tableAttribute = $this->getSqlTableName("eav_attribute");
+            $sql = "SELECT attribute_id from $tableAttribute WHERE entity_type_id = $entityTypeId AND attribute_code LIKE '$attributeCode'";
+            $result = (int)$this->sqlQueryFetchOne($sql);
+            $attributeId = $result;
+        } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
+            $attributeId = 0;
+        } finally {
+            return $attributeId;
+        }
+    }
+
+    private function getProductAttributeTable($attributeCode)
+    {
+        $tableName = "catalog_product_entity";
+        try {
+            $suffix = "";
+            $attributeId = $this->getProductAttributeId($attributeCode);
+            $attributeType = $this->getProductAttributeType($attributeId);
+            $tableName .= "_" . $attributeType;
+            $tableName = $this->getSqlTableName($tableName);
+        } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
+            $tableName = "catalog_product_entity";
+        } finally {
+            return $tableName;
+        }
+    }
+
+    private function getProductAttributeOptionValue($optionId)
+    {
+        $optionValue = null;
+        try {
+            $tableOption = $this->getSqlTableName("eav_attribute_option_value");
+            $sql = "SELECT value from $tableOption WHERE option_id = $optionId";
+            $result = (string)$this->sqlQueryFetchOne($sql);
+            $optionValue = $result;
+        } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
+            $optionValue = null;
+        } finally {
+            return $optionValue;
+        }
+    }
+
+    private function getProductAttributeType($attributeId)
+    {
+        $attributeType = null;
+        $entityTypeId = 4;
+        try {
+            $tableAttribute = $this->getSqlTableName("eav_attribute");
+            $sql = "SELECT backend_type from $tableAttribute WHERE entity_type_id = $entityTypeId AND attribute_id = $attributeId";
+            $result = (string)$this->sqlQueryFetchOne($sql);
+            $attributeType = $result;
+        } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
+            $attributeType = null;
+        } finally {
+            return $attributeType;
+        }
+    }
+
+    public function getProductAttributeValue($productId, $attributeCode)
+    {
+        $value = null;
+        $attributeId = $this->getProductAttributeId($attributeCode);
+        try {
+            $tableName = $this->getProductAttributeTable($attributeCode);
+            $sql = "SELECT value FROM $tableName WHERE attribute_id = $attributeId AND entity_id = $productId";
+            $result = $this->sqlQueryFetchOne($sql);
+            $value = $result;
+        } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
+            $value = null;
+        } finally {
+            return $value;
         }
     }
 
