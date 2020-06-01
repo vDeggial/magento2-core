@@ -25,16 +25,14 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    public function getProductAttributeData($productId, $attribute)
+    public function getProductAttributeData($productId = 0, $attributeCode = null)
     {
-        //$product = $this->getProduct($productId);
-        //return $product ? $product->getData($attribute) : null;
-        return $this->getProductAttributeValue($productId, $attribute);
+        return $this->getProductAttributeValue($productId, $attributeCode);
     }
 
-    public function getProductAttributeSelect($productId, $attribute)
+    public function getProductAttributeSelect($productId = 0, $attributeCode = null)
     {
-        $optionId = $this->getProductAttributeValue($productId, $attribute);
+        $optionId = $this->getProductAttributeValue($productId, $attributeCode);
         return $this->getProductAttributeOptionValue($optionId);
     }
 
@@ -231,7 +229,6 @@ class ProductHelper extends BaseHelper
     {
         $tableName = "catalog_product_entity";
         try {
-            $suffix = "";
             $attributeId = $this->getProductAttributeId($attributeCode);
             $attributeType = $this->getProductAttributeType($attributeId);
             $tableName .= "_" . $attributeType;
