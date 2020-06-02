@@ -13,16 +13,7 @@ class ProductHelper extends BaseHelper
 
     public function getProduct($productId)
     {
-        $product = null;
-        try {
-            $productFactory = $this->generateClassObject("Magento\Catalog\Model\ProductFactory");
-            $product = $this->productExists($productId) ? $productFactory->create()->load($productId) : null;
-        } catch (\Exception $e) {
-            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
-            $product = null;
-        } finally {
-            return $product;
-        }
+        return $this->getProductById($productId);
     }
 
     public function getProductAttributeData($productId = 0, $attributeCode = null)
@@ -38,7 +29,7 @@ class ProductHelper extends BaseHelper
 
     public function getProductBySku($productSku = null)
     {
-        return $this->getProduct($this->getProductIdBySku($productSku));
+        return $this->getProductById($this->getProductIdBySku($productSku));
     }
 
     public function getProductDescription($productId)
@@ -104,6 +95,22 @@ class ProductHelper extends BaseHelper
             $imageList = [];
         } finally {
             return $imageList;
+        }
+    }
+
+    public function getProductMediaGalleryImages($productId)
+    {
+        $images = [];
+        try {
+            $product = $this->getProductById($productId);
+            $galleryReadHandler = $this->generateClassObject("Magento\Catalog\Model\Product\Gallery\ReadHandler");
+            $galleryReadHandler->execute($product);
+            $images = $product->getMediaGalleryImages();
+        } catch (\Exception $e) {
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $images = [];
+        } finally {
+            return $images;
         }
     }
 
@@ -181,7 +188,7 @@ class ProductHelper extends BaseHelper
         $storeId = $storeManager->getStore()->getStoreId();
         $productUrl = null;
         try {
-            //$product = $this->getProduct($productId);
+            //$product = $this->getProductById($productId);
             //$productUrl = $urlFactory->getUrl($product->getUrlKey());
             $productUrl = $urlFactory->getUrl('catalog/product/view', ['id' => $productId, '_nosid' => true, '_query' => ['___store' => $storeId]]);
         } catch (\Exception $e) {
@@ -205,22 +212,6 @@ class ProductHelper extends BaseHelper
             $exists = false;
         } finally {
             return $exists;
-        }
-    }
-
-    protected function getProductMediaGalleryImages($productId)
-    {
-        $images = [];
-        try {
-            $product = $this->getProduct($productId);
-            $galleryReadHandler = $this->generateClassObject("Magento\Catalog\Model\Product\Gallery\ReadHandler");
-            $galleryReadHandler->execute($product);
-            $images = $product->getMediaGalleryImages();
-        } catch (\Exception $e) {
-            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
-            $images = [];
-        } finally {
-            return $images;
         }
     }
 
@@ -290,7 +281,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    public function getProductAttributeValue($productId, $attributeCode)
+    private function getProductAttributeValue($productId, $attributeCode)
     {
         $value = null;
         $attributeId = $this->getProductAttributeId($attributeCode);
@@ -304,6 +295,20 @@ class ProductHelper extends BaseHelper
             $value = null;
         } finally {
             return $value;
+        }
+    }
+
+    private function getProductById($productId)
+    {
+        $product = null;
+        try {
+            $productFactory = $this->generateClassObject("Magento\Catalog\Model\ProductFactory");
+            $product = $this->productExists($productId) ? $productFactory->create()->load($productId) : null;
+        } catch (\Exception $e) {
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $product = null;
+        } finally {
+            return $product;
         }
     }
 
@@ -348,7 +353,7 @@ class ProductHelper extends BaseHelper
     {
         $imageUrl = null;
         try {
-            $product = $this->getProduct($productId);
+            $product = $this->getProductById($productId);
             $_imageHelper = $this->generateClassObject("Magento\Catalog\Helper\Image");
             $imageUrl = $_imageHelper->init($product, 'product_page_image_large')->keepAspectRatio(true)->setImageFile($imageFilename)->resize($width, null)->getUrl();
         } catch (\Exception $e) {
