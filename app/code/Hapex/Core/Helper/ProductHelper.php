@@ -49,6 +49,22 @@ class ProductHelper extends BaseHelper
         }
     }
 
+    public function getProductGalleryImages($productId = 0, $width = 500)
+    {
+        $imageList = [];
+        try {
+            $images = $this->getProductMediaGalleryImages($productId);
+            foreach ($images as $image) {
+                array_push($imageList, $this->getProductImageUrl($productId, $image->getFile(), $width));
+            }
+        } catch (\Exception $e) {
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $imageList = [];
+        } finally {
+            return $imageList;
+        }
+    }
+
     public function getProductIdBySku($productSku = null)
     {
         $productId = 0;
@@ -83,34 +99,15 @@ class ProductHelper extends BaseHelper
     {
         $imageList = [];
         try {
-            //$images = $this->getProductMediaGalleryImages($productId);
             $images = $this->getProductImagesFilenames($productId);
             foreach ($images as $imageFilename) {
-                $image = $this->getProductImageUrl($productId, $imageFilename, $width);
-                //array_push($imageList, $this->getProductImageUrl($productId, $imageFilename->getFile(), $width));
-                array_push($imageList, $image);
+                array_push($imageList, $this->getProductImageUrl($productId, $imageFilename, $width));
             }
         } catch (\Exception $e) {
             $this->errorLog(__METHOD__ . " | " . $e->getMessage());
             $imageList = [];
         } finally {
             return $imageList;
-        }
-    }
-
-    public function getProductMediaGalleryImages($productId)
-    {
-        $images = [];
-        try {
-            $product = $this->getProductById($productId);
-            $galleryReadHandler = $this->generateClassObject("Magento\Catalog\Model\Product\Gallery\ReadHandler");
-            $galleryReadHandler->execute($product);
-            $images = $product->getMediaGalleryImages();
-        } catch (\Exception $e) {
-            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
-            $images = [];
-        } finally {
-            return $images;
         }
     }
 
@@ -361,6 +358,22 @@ class ProductHelper extends BaseHelper
             $imageUrl = null;
         } finally {
             return $imageUrl;
+        }
+    }
+
+    private function getProductMediaGalleryImages($productId)
+    {
+        $images = [];
+        try {
+            $product = $this->getProductById($productId);
+            $galleryReadHandler = $this->generateClassObject("Magento\Catalog\Model\Product\Gallery\ReadHandler");
+            $galleryReadHandler->execute($product);
+            $images = $product->getMediaGalleryImages();
+        } catch (\Exception $e) {
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $images = [];
+        } finally {
+            return $images;
         }
     }
 }
