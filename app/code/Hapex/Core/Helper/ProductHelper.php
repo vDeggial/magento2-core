@@ -29,7 +29,7 @@ class ProductHelper extends BaseHelper
 
     public function getProductBySku($productSku = null)
     {
-        return $this->getProductById($this->getProductIdBySku($productSku));
+        return $this->getProductById($this->getProductId($productSku));
     }
 
     public function getProductDescription($productId)
@@ -65,7 +65,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    public function getProductIdBySku($productSku = null)
+    public function getProductId($productSku = null)
     {
         $productId = 0;
         try {
