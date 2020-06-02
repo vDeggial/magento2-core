@@ -18,7 +18,7 @@ class ProductHelper extends BaseHelper
             $productFactory = $this->generateClassObject("Magento\Catalog\Model\ProductFactory");
             $product = $this->productExists($productId) ? $productFactory->create()->load($productId) : null;
         } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
             $product = null;
         } finally {
             return $product;
@@ -32,7 +32,7 @@ class ProductHelper extends BaseHelper
 
     public function getProductAttributeSelect($productId = 0, $attributeCode = null)
     {
-        $optionId = $this->getProductAttributeValue($productId, $attributeCode);
+        $optionId = (int)$this->getProductAttributeValue($productId, $attributeCode);
         return $this->getProductAttributeOptionValue($optionId);
     }
 
@@ -51,7 +51,7 @@ class ProductHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $description = (string)$result;
         } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
             $description = null;
         } finally {
             return $description;
@@ -67,7 +67,7 @@ class ProductHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $productId = (int)$result;
         } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
             $productId = 0;
         } finally {
             return $productId;
@@ -81,7 +81,7 @@ class ProductHelper extends BaseHelper
             $imageFilename = $this->getProductImageFilename($productId);
             $image = $this->getProductImageUrl($productId, $imageFilename, $width);
         } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
             $image = null;
         } finally {
             return $image;
@@ -100,7 +100,7 @@ class ProductHelper extends BaseHelper
                 array_push($imageList, $image);
             }
         } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
             $imageList = [];
         } finally {
             return $imageList;
@@ -117,10 +117,26 @@ class ProductHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $name = (string)$result;
         } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
             $name = null;
         } finally {
             return $name;
+        }
+    }
+
+    public function getProductSku($productId = 0)
+    {
+        $productSku = null;
+        try {
+            $tableName = $this->getSqlTableName('catalog_product_entity');
+            $sql  = "SELECT sku FROM $tableName WHERE entity_id = $productId";
+            $result = $this->sqlQueryFetchOne($sql);
+            $productId = (string)$result;
+        } catch (\Exception $e) {
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $productSku = null;
+        } finally {
+            return $productSku;
         }
     }
 
@@ -134,7 +150,7 @@ class ProductHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $status = (int)$result;
         } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
             $status = 0;
         } finally {
             return $status;
@@ -151,7 +167,7 @@ class ProductHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $qty = (int)$result;
         } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
             $qty = - 1;
         } finally {
             return $qty;
@@ -169,7 +185,7 @@ class ProductHelper extends BaseHelper
             //$productUrl = $urlFactory->getUrl($product->getUrlKey());
             $productUrl = $urlFactory->getUrl('catalog/product/view', ['id' => $productId, '_nosid' => true, '_query' => ['___store' => $storeId]]);
         } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
             $productUrl = null;
         } finally {
             return $productUrl;
@@ -185,7 +201,7 @@ class ProductHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $exists = $result && !empty($result);
         } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
             $exists = false;
         } finally {
             return $exists;
@@ -201,7 +217,7 @@ class ProductHelper extends BaseHelper
             $galleryReadHandler->execute($product);
             $images = $product->getMediaGalleryImages();
         } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
             $images = [];
         } finally {
             return $images;
@@ -218,7 +234,7 @@ class ProductHelper extends BaseHelper
             $result = (int)$this->sqlQueryFetchOne($sql);
             $attributeId = $result;
         } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
             $attributeId = 0;
         } finally {
             return $attributeId;
@@ -234,7 +250,7 @@ class ProductHelper extends BaseHelper
             $tableName .= "_" . $attributeType;
             $tableName = $this->getSqlTableName($tableName);
         } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
             $tableName = "catalog_product_entity";
         } finally {
             return $tableName;
@@ -250,7 +266,7 @@ class ProductHelper extends BaseHelper
             $result = (string)$this->sqlQueryFetchOne($sql);
             $optionValue = $result;
         } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
             $optionValue = null;
         } finally {
             return $optionValue;
@@ -267,7 +283,7 @@ class ProductHelper extends BaseHelper
             $result = (string)$this->sqlQueryFetchOne($sql);
             $attributeType = $result;
         } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
             $attributeType = null;
         } finally {
             return $attributeType;
@@ -284,7 +300,7 @@ class ProductHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $value = $result;
         } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
             $value = null;
         } finally {
             return $value;
@@ -301,7 +317,7 @@ class ProductHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $image = (string)$result;
         } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
             $image = null;
         } finally {
             return $image;
@@ -321,7 +337,7 @@ class ProductHelper extends BaseHelper
                 array_push($images, $entry["fileName"]);
             }
         } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
             $images = [];
         } finally {
             return $images;
@@ -336,7 +352,7 @@ class ProductHelper extends BaseHelper
             $_imageHelper = $this->generateClassObject("Magento\Catalog\Helper\Image");
             $imageUrl = $_imageHelper->init($product, 'product_page_image_large')->keepAspectRatio(true)->setImageFile($imageFilename)->resize($width, null)->getUrl();
         } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
             $imageUrl = null;
         } finally {
             return $imageUrl;
