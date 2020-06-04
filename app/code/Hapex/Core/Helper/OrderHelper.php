@@ -207,6 +207,22 @@ class OrderHelper extends BaseHelper
         }
     }
 
+    protected function getOrderItems($order = null)
+    {
+        $items = [];
+        try {
+            foreach ($order->getItems() as $item) {
+                if (!$item->isDeleted() && !$item->getParentItem()) {
+                    $items[] = $item;
+                }
+            }
+        } catch (\Exception $e) {
+            $items = [];
+        } finally {
+            return $items;
+        }
+    }
+
     protected function getShippingName($orderId = null)
     {
         $fullName = null;
