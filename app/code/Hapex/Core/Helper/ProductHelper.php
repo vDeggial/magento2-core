@@ -181,13 +181,15 @@ class ProductHelper extends BaseHelper
     public function getProductUrl($productId)
     {
         $urlFactory = $this->generateClassObject("Magento\Framework\Url");
-        $storeManager = $this->generateClassObject("Magento\Store\Model\StoreManagerInterface");
-        $storeId = $storeManager->getStore()->getStoreId();
+        //$storeManager = $this->generateClassObject("Magento\Store\Model\StoreManagerInterface");
+        //$storeId = $storeManager->getStore()->getStoreId();
         $productUrl = null;
         try {
             //$product = $this->getProductById($productId);
             //$productUrl = $urlFactory->getUrl($product->getUrlKey());
-            $productUrl = $urlFactory->getUrl('catalog/product/view', ['id' => $productId, '_nosid' => true, '_query' => ['___store' => $storeId]]);
+            $urlKey = $this->getProductUrlKey($productId);
+            $productUrl = $urlFactory->getUrl($urlKey);
+            //$productUrl = $urlFactory->getUrl('catalog/product/view', ['id' => $productId, '_nosid' => true, '_query' => ['___store' => $storeId]]);
         } catch (\Exception $e) {
             $this->errorLog(__METHOD__ . " | " . $e->getMessage());
             $productUrl = null;
@@ -374,6 +376,23 @@ class ProductHelper extends BaseHelper
             $images = [];
         } finally {
             return $images;
+        }
+    }
+
+    private function getProductUrlKey($productId)
+    {
+        $urlKey = null;
+        $attributeId = $this->getProductAttributeId("url_key");
+        try {
+            $tableName = $this->getSqlTableName('catalog_product_entity_varchar');
+            $sql = "SELECT value FROM $tableName WHERE attribute_id = $attributeId AND entity_id = $productId";
+            $result = $this->sqlQueryFetchOne($sql);
+            $urlKey = (string)$result;
+        } catch (\Exception $e) {
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $urlKey = null;
+        } finally {
+            return $urlKey;
         }
     }
 }
