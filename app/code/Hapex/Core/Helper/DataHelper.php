@@ -31,7 +31,7 @@ class DataHelper extends BaseHelper
     public function setCsvLocation($path)
     {
         $directoryList = $this->generateClassObject("Magento\Framework\App\Filesystem\DirectoryList");
-        $this->csvDirectory = $directoryList->getPath(DirectoryList::VAR_DIR) . "/" . $path;
+        $this->csvDirectory = $directoryList->getPath(DirectoryList::PUB) . "/" . $path;
         // if (!is_dir($this->csvDirectory)) {
             //     mkdir($this->csvDirectory, 0777, true);
             // }
