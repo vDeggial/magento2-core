@@ -41,13 +41,15 @@ class DataHelper extends BaseHelper
     {
         $data = [];
         try {
-            $csvProcessor = $this->generateClassObject("Magento\Framework\File\Csv");
-            $data = $csvProcessor->getData($fileName);
+            if (file_exists($fileName)) {
+                $csvProcessor = $this->generateClassObject("Magento\Framework\File\Csv");
+                $data = $csvProcessor->getData($fileName);
+            }
         } catch (\Exception $e) {
             $this->errorLog($e->getMessage());
             $data = [];
         } finally {
-            if ($isFirstRowHeader) {
+            if (!empty($data) && $isFirstRowHeader) {
                 array_shift($data);
             }
             return $data;
