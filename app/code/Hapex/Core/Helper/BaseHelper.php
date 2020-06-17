@@ -115,6 +115,19 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
         }
     }
 
+    protected function getRemoteContent($url)
+    {
+        $options = array(
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_USERAGENT      => "Mozilla/5.0",
+    );
+        $ch      = curl_init($url);
+        curl_setopt_array($ch, $options);
+        $htmlContent = curl_exec($ch);
+        curl_close($ch);
+        return $htmlContent;
+    }
+
     protected function sortDataByColumn(&$data = [], $sortColumn = "qty", $sortDirection = SORT_DESC)
     {
         array_multisort(array_column($data, $sortColumn), $sortDirection, $data);
