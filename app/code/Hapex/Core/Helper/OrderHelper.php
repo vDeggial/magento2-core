@@ -34,12 +34,28 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getOrderDataBySku($productSku = null)
+    public function getOrderIdsByProductSku($productSku = null)
     {
         $result = null;
         try {
             $sql = "SELECT order_id FROM " . $this->tableOrderItem . " WHERE sku LIKE '$productSku' GROUP BY order_id";
-            $result = $this->sqlQueryFetchAll($sql);
+            $result = array_column($this->sqlQueryFetchAll($sql), "order_id");
+        } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
+            $result = null;
+            $this->printLog("errors", $sql);
+            $this->printLog("errors", $e->getMessage());
+        } finally {
+            return $result;
+        }
+    }
+
+    public function getOrderIdsByCustomerId($customerId = 0)
+    {
+        $result = null;
+        try {
+            $sql = "SELECT entity_id FROM " . $this->tableOrder . " WHERE customer_id = $customerId GROUP BY entity_id ORDER BY created_at DESC";
+            $result = array_column($this->sqlQueryFetchAll($sql), "entity_id");
         } catch (\Exception $e) {
             $this->errorLog($e->getMessage());
             $result = null;
