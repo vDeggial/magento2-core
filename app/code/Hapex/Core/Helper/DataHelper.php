@@ -28,6 +28,11 @@ class DataHelper extends BaseHelper
         return $this->getCsvDataFile($this->csvDirectory . "/" . "$fileName", $isFirstRowHeader);
     }
 
+    public function writeCsvFileData($fileName, $data)
+    {
+        $this->writeCsvDataFile($this->csvDirectory, $fileName, $data);
+    }
+
     public function setCsvLocation($path)
     {
         $directoryList = $this->generateClassObject("Magento\Framework\App\Filesystem\DirectoryList");
@@ -61,7 +66,7 @@ class DataHelper extends BaseHelper
         $success = false;
         try {
             $csvProcessor = $this->generateClassObject("Magento\Framework\File\Csv");
-            $csvProcessor->saveData("$path/$fileName", $data);
+            $csvProcessor->setEnclosure('"')->setDelimiter(',')->saveData("$path/$fileName", $data);
             $success = true;
         } catch (\Exception $e) {
             $this->errorLog($e->getMessage());
