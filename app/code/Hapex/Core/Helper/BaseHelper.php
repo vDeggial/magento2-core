@@ -119,12 +119,12 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
     {
         $options = array(
             CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_USERAGENT      => "Mozilla/5.0",
+            CURLOPT_USERAGENT      => "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7) Gecko/20040803 Firefox/0.9.3",
     );
-        $ch      = curl_init($url);
-        curl_setopt_array($ch, $options);
-        $htmlContent = curl_exec($ch);
-        curl_close($ch);
+        $handle = curl_init($url);
+        curl_setopt_array($handle, $options);
+        $htmlContent = curl_exec($handle);
+        curl_close($handle);
         return $htmlContent;
     }
 
