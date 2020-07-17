@@ -66,6 +66,36 @@ class OrderHelper extends BaseHelper
         }
     }
 
+    public function getOrderCreatedDate($orderId = null)
+    {
+        $date = null;
+        try {
+            $sql = "SELECT created_at FROM " . $this->tableOrder . " where order_id = $orderId";
+            $result = $this->sqlQueryFetchOne($sql);
+            $date = (string)$result;
+        } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
+            $date = null;
+        } finally {
+            return $date;
+        }
+    }
+
+    public function getOrderUpdatedDate($orderId = null)
+    {
+        $date = null;
+        try {
+            $sql = "SELECT updated_at FROM " . $this->tableOrder . " where order_id = $orderId";
+            $result = $this->sqlQueryFetchOne($sql);
+            $date = (string)$result;
+        } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
+            $date = null;
+        } finally {
+            return $date;
+        }
+    }
+
     public function getOrderEmail($data)
     {
         switch (true) {

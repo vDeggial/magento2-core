@@ -27,9 +27,57 @@ class ProductHelper extends BaseHelper
         return $this->getProductAttributeOptionValue($optionId);
     }
 
+    public function getProductAttributeSet($productId = 0)
+    {
+        $productAttributeSet = 0;
+        try {
+            $tableName = $this->getSqlTableName('catalog_product_entity');
+            $sql  = "SELECT type_id FROM $tableName WHERE entity_id = $productId";
+            $result = $this->sqlQueryFetchOne($sql);
+            $productAttributeSet = (int)$result;
+        } catch (\Exception $e) {
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $productAttributeSet = 0;
+        } finally {
+            return $productAttributeSet;
+        }
+    }
+
     public function getProductBySku($productSku = null)
     {
         return $this->getProductById($this->getProductId($productSku));
+    }
+
+    public function getProductCreatedDate($productId = 0)
+    {
+        $productDate = null;
+        try {
+            $tableName = $this->getSqlTableName('catalog_product_entity');
+            $sql  = "SELECT created_at FROM $tableName WHERE entity_id = $productId";
+            $result = $this->sqlQueryFetchOne($sql);
+            $productDate = (string)$result;
+        } catch (\Exception $e) {
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $productDate = null;
+        } finally {
+            return $productDate;
+        }
+    }
+
+    public function getProductUpdatedDate($productId = 0)
+    {
+        $productDate = null;
+        try {
+            $tableName = $this->getSqlTableName('catalog_product_entity');
+            $sql  = "SELECT updated_at FROM $tableName WHERE entity_id = $productId";
+            $result = $this->sqlQueryFetchOne($sql);
+            $productDate = (string)$result;
+        } catch (\Exception $e) {
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $productDate = null;
+        } finally {
+            return $productDate;
+        }
     }
 
     public function getProductDescription($productId)
@@ -135,7 +183,7 @@ class ProductHelper extends BaseHelper
             $tableName = $this->getSqlTableName('catalog_product_entity');
             $sql  = "SELECT sku FROM $tableName WHERE entity_id = $productId";
             $result = $this->sqlQueryFetchOne($sql);
-            $productId = (string)$result;
+            $productSku = (string)$result;
         } catch (\Exception $e) {
             $this->errorLog(__METHOD__ . " | " . $e->getMessage());
             $productSku = null;
@@ -178,6 +226,22 @@ class ProductHelper extends BaseHelper
         }
     }
 
+    public function getProductType($productId = 0)
+    {
+        $productType = null;
+        try {
+            $tableName = $this->getSqlTableName('catalog_product_entity');
+            $sql  = "SELECT type_id FROM $tableName WHERE entity_id = $productId";
+            $result = $this->sqlQueryFetchOne($sql);
+            $productType = (string)$result;
+        } catch (\Exception $e) {
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $productType = null;
+        } finally {
+            return $productType;
+        }
+    }
+
     public function getProductUrl($productId)
     {
         $urlFactory = $this->generateClassObject("Magento\Framework\Url");
@@ -195,6 +259,23 @@ class ProductHelper extends BaseHelper
             $productUrl = null;
         } finally {
             return $productUrl;
+        }
+    }
+
+    public function getProductUrlKey($productId)
+    {
+        $urlKey = null;
+        $attributeId = $this->getProductAttributeId("url_key");
+        try {
+            $tableName = $this->getSqlTableName('catalog_product_entity_varchar');
+            $sql = "SELECT value FROM $tableName WHERE attribute_id = $attributeId AND entity_id = $productId";
+            $result = $this->sqlQueryFetchOne($sql);
+            $urlKey = (string)$result;
+        } catch (\Exception $e) {
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $urlKey = null;
+        } finally {
+            return $urlKey;
         }
     }
 
@@ -376,23 +457,6 @@ class ProductHelper extends BaseHelper
             $images = [];
         } finally {
             return $images;
-        }
-    }
-
-    private function getProductUrlKey($productId)
-    {
-        $urlKey = null;
-        $attributeId = $this->getProductAttributeId("url_key");
-        try {
-            $tableName = $this->getSqlTableName('catalog_product_entity_varchar');
-            $sql = "SELECT value FROM $tableName WHERE attribute_id = $attributeId AND entity_id = $productId";
-            $result = $this->sqlQueryFetchOne($sql);
-            $urlKey = (string)$result;
-        } catch (\Exception $e) {
-            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
-            $urlKey = null;
-        } finally {
-            return $urlKey;
         }
     }
 }
