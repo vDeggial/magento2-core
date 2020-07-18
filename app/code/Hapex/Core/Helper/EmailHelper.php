@@ -50,7 +50,7 @@ class EmailHelper extends BaseHelper
 
 		catch(\Exception $e)
 		{
-			$this->errorLog($e->getMessage());
+			$this->errorLog(__METHOD__ . " | " . $e->getMessage());
 			return false;
 		}
 	}

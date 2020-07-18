@@ -33,8 +33,7 @@ class CustomerHelper extends BaseHelper
 
     public function getLoggedInGroup()
     {
-        $customer = $this->getLoggedInCustomer();
-        return $customer != null ? $customer->getGroupId() : 0;
+        return $this->getCustomerGroup($this->getLoggedInCustomerId());
     }
 
     public function isLoggedIn()
@@ -56,6 +55,21 @@ class CustomerHelper extends BaseHelper
     {
         $factory = $this->generateClassObject("Magento\Customer\Model\CustomerFactory")->create();
         return $factory->load($customerId);
+    }
+
+    private function getCustomerGroup($customerId)
+    {
+      $customerGroup = 0;
+      try {
+          $sql  = "SELECT group_id FROM " . $this->tableCustomer ." WHERE entity_id = $customerId";
+          $result = $this->sqlQueryFetchOne($sql);
+          $customerGroup = (int)$result;
+      } catch (\Exception $e) {
+          $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+          $customerGroup = 0;
+      } finally {
+          return $customerGroup;
+      }
     }
 
     private function getCustomerAttributeId($attributeCode)
