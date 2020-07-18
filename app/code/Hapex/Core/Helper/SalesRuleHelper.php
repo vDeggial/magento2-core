@@ -14,69 +14,71 @@ class SalesRuleHelper extends BaseHelper
         $this->tableSalesRule = $this->getSqlTableName("salesrule");
     }
 
-    protected function getSalesRules($salesRuleId = 0)
+    public function ruleExists($ruleId)
     {
-        $rule = null;
+        $exists = false;
         try {
-            switch (is_array($salesRuleId)) {
-                case true:
-                    $rule = [];
-                    foreach ($salesRuleId as $ruleId) {
-                        $rule[] = $this->getSalesRule($ruleId);
-                    }
-                break;
-
-                default:
-                    $rule = $this->getSalesRule($salesRuleId);
-                break;
-            }
+            $sql = "SELECT rule_id FROM " . $this->tableSalesRule . " WHERE rule_id = $ruleId";
+            $result = $this->sqlQueryFetchOne($sql);
+            $exists = $result && !empty($result);
         } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
-            $rule = null;
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $exists = false;
         } finally {
-            return $rule;
+            return $exists;
         }
     }
 
-    private function getSalesRule($salesRuleId = 0)
+    public function getRuleFromDate($ruleId = 0)
     {
-        $rule = null;
+        $date = null;
         try {
-            $sql = "SELECT rule_id, from_date, to_date, is_active FROM " . $this->tableSalesRule . " WHERE rule_id = $salesRuleId";
-            $result = $this->sqlQueryFetchRow($sql);
-            $rule = [];
-            $rule["id"] = (int)$result["rule_id"];
-            $rule["active"] = (bool)$result["is_active"];
-            $rule["from_date"] = $result["from_date"];
-            $rule["to_date"] = $result["to_date"];
+            $sql = "SELECT from_date FROM " . $this->tableSalesRule . " WHERE rule_id = $ruleId";
+            $result = $this->sqlQueryFetchOne($sql);
+            $date = (string)$result;
         } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
-            $rule = null;
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $date = null;
         } finally {
-            return $rule;
+            return $date;
         }
     }
 
-    protected function getSalesRuleStatus($rule)
+    public function getRuleToDate($ruleId = 0)
     {
-        $isActive = false;
+        $date = null;
         try {
-            $isActive = $rule["active"];
+            $sql = "SELECT to_date FROM " . $this->tableSalesRule . " WHERE rule_id = $ruleId";
+            $result = $this->sqlQueryFetchOne($sql);
+            $date = (string)$result;
         } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
-            $isActive = false;
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $date = null;
         } finally {
-            return $isActive;
+            return $date;
         }
     }
 
-    protected function isValidRuleDates($rule)
+    public function getRuleStatus($ruleId = 0)
+    {
+        $date = null;
+        try {
+            $sql = "SELECT is_active FROM " . $this->tableSalesRule . " WHERE rule_id = $ruleId";
+            $result = $this->sqlQueryFetchOne($sql);
+            $date = (bool)$result;
+        } catch (\Exception $e) {
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $date = null;
+        } finally {
+            return $date;
+        }
+    }
+
+    public function isActiveDates($ruleId)
     {
         $isValid = false;
         try {
-            $fromDate = $rule["from_date"];
-            $toDate = $rule["to_date"];
-            $isValid = $this->isCurrentDateWithinRange($fromDate, $toDate);
+            $isValid = $this->isCurrentDateWithinRange($this->getRuleFromDate($ruleId), $this->getRuleToDate($ruleId));
         } catch (\Exception $e) {
             $this->errorLog($e->getMessage());
             $isValid = false;
@@ -85,11 +87,10 @@ class SalesRuleHelper extends BaseHelper
         }
     }
 
-    protected function setSalesRuleStatus($rule, $status = 0)
+    public function setRuleStatus($ruleId, $status = 0)
     {
         $isSet = false;
         try {
-            $ruleId = $rule["id"];
             $sql = "UPDATE " . $this->tableSalesRule . " SET is_active = $status where rule_id = $ruleId";
             $result = $this->sqlQuery($sql);
             $isSet = $result !== null;
