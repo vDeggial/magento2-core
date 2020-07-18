@@ -61,16 +61,16 @@ class SalesRuleHelper extends BaseHelper
 
     public function getRuleStatus($ruleId = 0)
     {
-        $date = null;
+        $status = 0;
         try {
             $sql = "SELECT is_active FROM " . $this->tableSalesRule . " WHERE rule_id = $ruleId";
             $result = $this->sqlQueryFetchOne($sql);
-            $date = (bool)$result;
+            $status = (int)$result;
         } catch (\Exception $e) {
             $this->errorLog(__METHOD__ . " | " . $e->getMessage());
-            $date = null;
+            $status = 0;
         } finally {
-            return $date;
+            return $status;
         }
     }
 
