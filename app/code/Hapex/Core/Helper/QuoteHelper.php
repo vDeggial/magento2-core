@@ -24,7 +24,7 @@ class QuoteHelper extends BaseHelper
     {
         $exists = false;
         try {
-            $sql = "SELECT * FROM " . $this->tableQuote . " quote where quote.entity_id = $productId";
+            $sql = "SELECT * FROM " . $this->tableQuote . " quote where quote.entity_id = $quoteId";
             $result = $this->sqlQueryFetchOne($sql);
             $exists = $result && !empty($result);
         } catch (\Exception $e) {
