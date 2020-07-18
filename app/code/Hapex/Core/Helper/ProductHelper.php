@@ -32,7 +32,7 @@ class ProductHelper extends BaseHelper
         $productAttributeSet = 0;
         try {
             $tableName = $this->getSqlTableName('catalog_product_entity');
-            $sql  = "SELECT type_id FROM $tableName WHERE entity_id = $productId";
+            $sql  = "SELECT attribute_set_id FROM $tableName WHERE entity_id = $productId";
             $result = $this->sqlQueryFetchOne($sql);
             $productAttributeSet = (int)$result;
         } catch (\Exception $e) {
