@@ -6,10 +6,10 @@ use Magento\Framework\App\Helper\Context;
 
 class OrderHelper extends BaseHelper
 {
-    protected $tableOrder = null;
-    protected $tableOrderGrid = null;
-    protected $tableOrderItem = null;
-    protected $tableOrderAddress = null;
+    protected $tableOrder;
+    protected $tableOrderGrid;
+    protected $tableOrderItem;
+    protected $tableOrderAddress;
 
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
