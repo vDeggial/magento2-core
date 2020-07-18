@@ -16,9 +16,11 @@ class ProductHelper extends BaseHelper
     protected $tableGallery;
     protected $tableGalleryValue;
     protected $tableGalleryToEntity;
+    protected $attributeTypeId;
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
         parent::__construct($context, $objectManager);
+        $this->attributeTypeId = 4;
         $this->tableProduct = $this->getSqlTableName('catalog_product_entity');
         $this->tableProductInt = $this->getSqlTableName('catalog_product_entity_int');
         $this->tableProductOption = $this->getSqlTableName("eav_attribute_option_value");
@@ -305,9 +307,8 @@ class ProductHelper extends BaseHelper
     private function getProductAttributeId($attributeCode)
     {
         $attributeId = 0;
-        $entityTypeId = 4;
         try {
-            $sql = "SELECT attribute_id from " . $this->tableAttribute . " WHERE entity_type_id = $entityTypeId AND attribute_code LIKE '$attributeCode'";
+            $sql = "SELECT attribute_id from " . $this->tableAttribute . " WHERE entity_type_id = " . $this->attributeTypeId . " AND attribute_code LIKE '$attributeCode'";
             $result = (int)$this->sqlQueryFetchOne($sql);
             $attributeId = $result;
         } catch (\Exception $e) {
