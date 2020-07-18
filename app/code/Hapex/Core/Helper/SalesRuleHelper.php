@@ -6,12 +6,12 @@ use Magento\Framework\App\Helper\Context;
 
 class SalesRuleHelper extends BaseHelper
 {
-    protected $salesRuleTableName = null;
+    protected $tableSalesRule;
 
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
         parent::__construct($context, $objectManager);
-        $this->salesRuleTableName = "salesrule";
+        $this->tableSalesRule = $this->getSqlTableName("salesrule");
     }
 
     protected function getSalesRules($salesRuleId = 0)
@@ -42,8 +42,7 @@ class SalesRuleHelper extends BaseHelper
     {
         $rule = null;
         try {
-            $tableSalesRule = $this->getSqlTableName($this->salesRuleTableName);
-            $sql = "SELECT rule_id, from_date, to_date, is_active FROM $tableSalesRule WHERE rule_id = $salesRuleId";
+            $sql = "SELECT rule_id, from_date, to_date, is_active FROM " . $this->tableSalesRule . " WHERE rule_id = $salesRuleId";
             $result = $this->sqlQueryFetchRow($sql);
             $rule = [];
             $rule["id"] = (int)$result["rule_id"];
@@ -91,8 +90,7 @@ class SalesRuleHelper extends BaseHelper
         $isSet = false;
         try {
             $ruleId = $rule["id"];
-            $tableSalesRule = $this->getSqlTableName($this->salesRuleTableName);
-            $sql = "UPDATE $tableSalesRule SET is_active = $status where rule_id = $ruleId";
+            $sql = "UPDATE " . $this->tableSalesRule . " SET is_active = $status where rule_id = $ruleId";
             $result = $this->sqlQuery($sql);
             $isSet = $result !== null;
         } catch (\Exception $e) {
