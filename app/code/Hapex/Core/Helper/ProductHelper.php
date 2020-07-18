@@ -6,9 +6,30 @@ use Magento\Framework\App\Helper\Context;
 
 class ProductHelper extends BaseHelper
 {
+  protected $tableProduct;
+  protected $tableProductAttributeInt;
+  protected $tableProductAttributeOptionValue;
+  protected $tableProductAttributeText;
+  protected $tableProductAttributeVarchar;
+  protected $tableProductStock;
+  protected $tableAttribute;
+  protected $tableProductGallery;
+  protected $tableProductGalleryValue;
+  protected $tableProductGalleryValueToEntity;
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
         parent::__construct($context, $objectManager);
+        $this->tableProduct = $this->getSqlTableName('catalog_product_entity');
+        $this->tableProductAttributeInt = $this->getSqlTableName('catalog_product_entity_int');
+        $this->tableProductAttributeOptionValue = $this->getSqlTableName("eav_attribute_option_value");
+        $this->tableProductAttributeText = $this->getSqlTableName('catalog_product_entity_text');
+        $this->tableProductAttributeVarchar = $this->getSqlTableName('catalog_product_entity_varchar');
+        $this->tableProductStock = $this->getSqlTableName('cataloginventory_stock_item');
+        $this->tableAttribute = $this->getSqlTableName("eav_attribute");
+        $this->tableProductGallery = $this->getSqlTableName("catalog_product_entity_media_gallery");
+        $this->tableProductGalleryValue = $this->getSqlTableName("catalog_product_entity_media_gallery_value");
+        $this->tableProductGalleryValueToEntity = $this->getSqlTableName("catalog_product_entity_media_gallery_value_to_entity");
+
     }
 
     public function getProduct($productId)
@@ -31,8 +52,7 @@ class ProductHelper extends BaseHelper
     {
         $productAttributeSet = 0;
         try {
-            $tableName = $this->getSqlTableName('catalog_product_entity');
-            $sql  = "SELECT attribute_set_id FROM $tableName WHERE entity_id = $productId";
+            $sql  = "SELECT attribute_set_id FROM " . $this->tableProduct ." WHERE entity_id = $productId";
             $result = $this->sqlQueryFetchOne($sql);
             $productAttributeSet = (int)$result;
         } catch (\Exception $e) {
@@ -52,8 +72,7 @@ class ProductHelper extends BaseHelper
     {
         $productDate = null;
         try {
-            $tableName = $this->getSqlTableName('catalog_product_entity');
-            $sql  = "SELECT created_at FROM $tableName WHERE entity_id = $productId";
+            $sql  = "SELECT created_at FROM " . $this->tableProduct ." WHERE entity_id = $productId";
             $result = $this->sqlQueryFetchOne($sql);
             $productDate = (string)$result;
         } catch (\Exception $e) {
@@ -68,8 +87,7 @@ class ProductHelper extends BaseHelper
     {
         $productDate = null;
         try {
-            $tableName = $this->getSqlTableName('catalog_product_entity');
-            $sql  = "SELECT updated_at FROM $tableName WHERE entity_id = $productId";
+            $sql  = "SELECT updated_at FROM " . $this->tableProduct ." WHERE entity_id = $productId";
             $result = $this->sqlQueryFetchOne($sql);
             $productDate = (string)$result;
         } catch (\Exception $e) {
@@ -85,8 +103,7 @@ class ProductHelper extends BaseHelper
         $description = null;
         $attributeId = $this->getProductAttributeId("description");
         try {
-            $tableName = $this->getSqlTableName('catalog_product_entity_text');
-            $sql = "SELECT value FROM $tableName WHERE attribute_id = $attributeId AND entity_id = $productId";
+            $sql = "SELECT value FROM " . $this->tableProductAttributeText ." WHERE attribute_id = $attributeId AND entity_id = $productId";
             $result = $this->sqlQueryFetchOne($sql);
             $description = (string)$result;
         } catch (\Exception $e) {
@@ -117,8 +134,7 @@ class ProductHelper extends BaseHelper
     {
         $productId = 0;
         try {
-            $tableName = $this->getSqlTableName('catalog_product_entity');
-            $sql  = "SELECT entity_id FROM $tableName WHERE sku LIKE '$productSku'";
+            $sql  = "SELECT entity_id FROM " . $this->tableProduct ." WHERE sku LIKE '$productSku'";
             $result = $this->sqlQueryFetchOne($sql);
             $productId = (int)$result;
         } catch (\Exception $e) {
@@ -164,8 +180,7 @@ class ProductHelper extends BaseHelper
         $name = null;
         $attributeId = $this->getProductAttributeId("name");
         try {
-            $tableName = $this->getSqlTableName('catalog_product_entity_varchar');
-            $sql = "SELECT value FROM $tableName WHERE attribute_id = $attributeId AND entity_id = $productId";
+            $sql = "SELECT value FROM " . $this->tableProductAttributeVarchar . " WHERE attribute_id = $attributeId AND entity_id = $productId";
             $result = $this->sqlQueryFetchOne($sql);
             $name = (string)$result;
         } catch (\Exception $e) {
@@ -180,8 +195,7 @@ class ProductHelper extends BaseHelper
     {
         $productSku = null;
         try {
-            $tableName = $this->getSqlTableName('catalog_product_entity');
-            $sql  = "SELECT sku FROM $tableName WHERE entity_id = $productId";
+            $sql  = "SELECT sku FROM " . $this->tableProduct ." WHERE entity_id = $productId";
             $result = $this->sqlQueryFetchOne($sql);
             $productSku = (string)$result;
         } catch (\Exception $e) {
@@ -197,8 +211,7 @@ class ProductHelper extends BaseHelper
         $attributeId = $this->getProductAttributeId("status");
         $status = 0;
         try {
-            $tableName = $this->getSqlTableName('catalog_product_entity_int');
-            $sql = "SELECT value FROM $tableName WHERE attribute_id = $attributeId AND entity_id = $productId";
+            $sql = "SELECT value FROM " . $this->$tableProductAttributeInt . " WHERE attribute_id = $attributeId AND entity_id = $productId";
             $result = $this->sqlQueryFetchOne($sql);
             $status = (int)$result;
         } catch (\Exception $e) {
@@ -213,9 +226,7 @@ class ProductHelper extends BaseHelper
     {
         $qty = 0;
         try {
-            $itemStockTable = $this->getSqlTableName('cataloginventory_stock_item');
-            $productEntityTable = $this->getSqlTableName('catalog_product_entity');
-            $sql = "SELECT stock.qty as qty FROM $itemStockTable stock join $productEntityTable product on stock.product_id = product.entity_id where product.entity_id = $productId";
+            $sql = "SELECT stock.qty as qty FROM " . $this->tableProductStock . " stock join " . $this->tableProduct . " product on stock.product_id = product.entity_id where product.entity_id = $productId";
             $result = $this->sqlQueryFetchOne($sql);
             $qty = (int)$result;
         } catch (\Exception $e) {
@@ -230,8 +241,7 @@ class ProductHelper extends BaseHelper
     {
         $productType = null;
         try {
-            $tableName = $this->getSqlTableName('catalog_product_entity');
-            $sql  = "SELECT type_id FROM $tableName WHERE entity_id = $productId";
+            $sql  = "SELECT type_id FROM " . $this->tableProduct ." WHERE entity_id = $productId";
             $result = $this->sqlQueryFetchOne($sql);
             $productType = (string)$result;
         } catch (\Exception $e) {
@@ -267,8 +277,7 @@ class ProductHelper extends BaseHelper
         $urlKey = null;
         $attributeId = $this->getProductAttributeId("url_key");
         try {
-            $tableName = $this->getSqlTableName('catalog_product_entity_varchar');
-            $sql = "SELECT value FROM $tableName WHERE attribute_id = $attributeId AND entity_id = $productId";
+            $sql = "SELECT value FROM " . $this->tableProductAttributeVarchar . " WHERE attribute_id = $attributeId AND entity_id = $productId";
             $result = $this->sqlQueryFetchOne($sql);
             $urlKey = (string)$result;
         } catch (\Exception $e) {
@@ -283,8 +292,7 @@ class ProductHelper extends BaseHelper
     {
         $exists = false;
         try {
-            $productEntityTable = $this->getSqlTableName('catalog_product_entity');
-            $sql = "SELECT * FROM $productEntityTable product where product.entity_id = $productId";
+            $sql = "SELECT * FROM " . $this->$tableProduct ." product where product.entity_id = $productId";
             $result = $this->sqlQueryFetchOne($sql);
             $exists = $result && !empty($result);
         } catch (\Exception $e) {
@@ -300,8 +308,7 @@ class ProductHelper extends BaseHelper
         $attributeId = 0;
         $entityTypeId = 4;
         try {
-            $tableAttribute = $this->getSqlTableName("eav_attribute");
-            $sql = "SELECT attribute_id from $tableAttribute WHERE entity_type_id = $entityTypeId AND attribute_code LIKE '$attributeCode'";
+            $sql = "SELECT attribute_id from " . $this->tableAttribute . " WHERE entity_type_id = $entityTypeId AND attribute_code LIKE '$attributeCode'";
             $result = (int)$this->sqlQueryFetchOne($sql);
             $attributeId = $result;
         } catch (\Exception $e) {
@@ -314,7 +321,7 @@ class ProductHelper extends BaseHelper
 
     private function getProductAttributeTable($attributeCode)
     {
-        $tableName = "catalog_product_entity";
+        $tableName = $this->tableProduct;
         try {
             $attributeId = $this->getProductAttributeId($attributeCode);
             $attributeType = $this->getProductAttributeType($attributeId);
@@ -322,7 +329,7 @@ class ProductHelper extends BaseHelper
             $tableName = $this->getSqlTableName($tableName);
         } catch (\Exception $e) {
             $this->errorLog(__METHOD__ . " | " . $e->getMessage());
-            $tableName = "catalog_product_entity";
+            $tableName = $this->$tableProduct;
         } finally {
             return $tableName;
         }
@@ -332,8 +339,7 @@ class ProductHelper extends BaseHelper
     {
         $optionValue = null;
         try {
-            $tableOption = $this->getSqlTableName("eav_attribute_option_value");
-            $sql = "SELECT value from $tableOption WHERE option_id = $optionId";
+            $sql = "SELECT value from " . $this->tableProductAttributeOptionValue . " WHERE option_id = $optionId";
             $result = (string)$this->sqlQueryFetchOne($sql);
             $optionValue = $result;
         } catch (\Exception $e) {
@@ -349,8 +355,7 @@ class ProductHelper extends BaseHelper
         $attributeType = null;
         $entityTypeId = 4;
         try {
-            $tableAttribute = $this->getSqlTableName("eav_attribute");
-            $sql = "SELECT backend_type from $tableAttribute WHERE entity_type_id = $entityTypeId AND attribute_id = $attributeId";
+            $sql = "SELECT backend_type from " . $this->tableAttribute . " WHERE entity_type_id = $entityTypeId AND attribute_id = $attributeId";
             $result = (string)$this->sqlQueryFetchOne($sql);
             $attributeType = $result;
         } catch (\Exception $e) {
@@ -397,8 +402,7 @@ class ProductHelper extends BaseHelper
         $image = null;
         $attributeId = 87;
         try {
-            $tableName = $this->getSqlTableName('catalog_product_entity_varchar');
-            $sql = "SELECT value FROM $tableName WHERE attribute_id = $attributeId AND entity_id = $productId";
+            $sql = "SELECT value FROM " . $this->tableProductAttributeVarchar . " WHERE attribute_id = $attributeId AND entity_id = $productId";
             $result = $this->sqlQueryFetchOne($sql);
             $image = (string)$result;
         } catch (\Exception $e) {
@@ -413,10 +417,7 @@ class ProductHelper extends BaseHelper
     {
         $images = [];
         try {
-            $tableValueToEntity = $this->getSqlTableName("catalog_product_entity_media_gallery_value_to_entity");
-            $tableValue = $this->getSqlTableName("catalog_product_entity_media_gallery_value");
-            $tableGallery = $this->getSqlTableName("catalog_product_entity_media_gallery");
-            $sql = "SELECT gal.value AS fileName FROM $tableValueToEntity ent LEFT JOIN $tableValue val ON ent.entity_id= val.entity_id LEFT JOIN $tableGallery gal ON val.value_id = gal.value_id WHERE ent.entity_id = $productId GROUP BY gal.value";
+            $sql = "SELECT gal.value AS fileName FROM " . $this->tableProductGalleryValueToEntity . " ent LEFT JOIN " . $this->tableProductGalleryValue . " val ON ent.entity_id= val.entity_id LEFT JOIN " . $this->tableProductGallery . " gal ON val.value_id = gal.value_id WHERE ent.entity_id = $productId GROUP BY gal.value";
             $result = $this->sqlQueryFetchAll($sql);
             foreach ($result as $entry) {
                 array_push($images, $entry["fileName"]);
