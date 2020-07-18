@@ -353,9 +353,8 @@ class ProductHelper extends BaseHelper
     private function getProductAttributeType($attributeId)
     {
         $attributeType = null;
-        $entityTypeId = 4;
         try {
-            $sql = "SELECT backend_type from " . $this->tableAttribute . " WHERE entity_type_id = $entityTypeId AND attribute_id = $attributeId";
+            $sql = "SELECT backend_type from " . $this->tableAttribute . " WHERE entity_type_id = " . $this->attributeTypeId . " AND attribute_id = $attributeId";
             $result = (string)$this->sqlQueryFetchOne($sql);
             $attributeType = $result;
         } catch (\Exception $e) {

@@ -7,32 +7,28 @@ use Magento\Framework\App\Helper\Context;
 class CustomerHelper extends BaseHelper
 {
     protected $session;
+    protected $tableCustomer;
+    protected $tableCustomerAttribute;
+    protected $tableAttribute;
+    protected $attributeTypeId;
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
         parent::__construct($context, $objectManager);
+        $this->attributeTypeId = 1;
         $this->session = $this->generateClassObject('Magento\Customer\Model\SessionFactory')->create();
+        $this->tableCustomer = $this->getSqlTableName("customer_entity");
+        $this->tableCustomerAttribute = $this->getSqlTableName("customer_entity_attribute");
+        $this->tableAttribute = $this->getSqlTableName("eav_attribute");
     }
 
-    public function getCustomerById($customerId = 0)
+    public function getCustomer($customerId = 0)
     {
-        $factory = $this->generateClassObject("Magento\Customer\Model\CustomerFactory")->create();
-        return $factory->load($customerId);
+        return $this->getCustomerById($customerId);
     }
 
-    public function getCustomAttributeValue($customer = null, $attribute = null)
+    public function getAttributeValue($customerId = null, $attribute = null)
     {
-        $value = null;
-        try {
-            $repository = $this->generateClassObject("Magento\Customer\Api\CustomerRepositoryInterface");
-            $customer = $repository->getById($customer->getId());
-            $attribute = $customer->getCustomAttribute($attribute);
-            $value = $attribute !== null ? $attribute->getValue() : false;
-        } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
-            $value = null;
-        } finally {
-            return $value;
-        }
+        return $this->getCustomerAttributeValue($customerId, $attribute);
     }
 
     public function getLoggedInGroup()
@@ -48,6 +44,80 @@ class CustomerHelper extends BaseHelper
 
     public function getLoggedInCustomer()
     {
-        return $this->isLoggedIn() ? $this->session->getCustomer() : null;
+        return $this->isLoggedIn() ? $this->getCustomer($this->getLoggedInCustomerId()) : null;
+    }
+
+    public function getLoggedInCustomerId()
+    {
+        return $this->isLoggedIn() ? $this->session->getCustomer()->getId() : 0;
+    }
+
+    private function getCustomerById($customerId = 0)
+    {
+        $factory = $this->generateClassObject("Magento\Customer\Model\CustomerFactory")->create();
+        return $factory->load($customerId);
+    }
+
+    private function getCustomerAttributeId($attributeCode)
+    {
+        $attributeId = 0;
+        try {
+            $sql = "SELECT attribute_id from " . $this->tableAttribute . " WHERE entity_type_id = " . $this->attributeTypeId . " AND attribute_code LIKE '$attributeCode'";
+            $result = (int)$this->sqlQueryFetchOne($sql);
+            $attributeId = $result;
+        } catch (\Exception $e) {
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $attributeId = 0;
+        } finally {
+            return $attributeId;
+        }
+    }
+
+    private function getCustomerAttributeTable($attributeCode)
+    {
+        $tableName = $this->tableCustomer;
+        try {
+            $attributeId = $this->getCustomerAttributeId($attributeCode);
+            $attributeType = $this->getCustomerAttributeType($attributeId);
+            $tableName .= "_" . $attributeType;
+            $tableName = $this->getSqlTableName($tableName);
+        } catch (\Exception $e) {
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $tableName = $this->tableCustomer;
+        } finally {
+            return $tableName;
+        }
+    }
+
+    private function getCustomerAttributeType($attributeId)
+    {
+        $attributeType = null;
+        try {
+            $sql = "SELECT backend_type from " . $this->tableAttribute . " WHERE entity_type_id = " . $this->attributeTypeId . " AND attribute_id = $attributeId";
+            $result = (string)$this->sqlQueryFetchOne($sql);
+            $attributeType = $result;
+        } catch (\Exception $e) {
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $attributeType = null;
+        } finally {
+            return $attributeType;
+        }
+    }
+
+    private function getCustomerAttributeValue($customerId, $attributeCode)
+    {
+        $value = null;
+        $attributeId = $this->getCustomerAttributeId($attributeCode);
+        try {
+            $tableName = $this->getCustomerAttributeTable($attributeCode);
+            $sql = "SELECT value FROM $tableName WHERE attribute_id = $attributeId AND entity_id = $customerId";
+            $result = $this->sqlQueryFetchOne($sql);
+            $value = $result;
+        } catch (\Exception $e) {
+            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $value = null;
+        } finally {
+            return $value;
+        }
     }
 }
