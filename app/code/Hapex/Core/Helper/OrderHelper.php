@@ -22,16 +22,7 @@ class OrderHelper extends BaseHelper
 
     public function getOrder($orderId)
     {
-        $order = null;
-        try {
-            $orderRepository = $this->generateClassObject("Magento\Sales\Model\OrderRepository");
-            $order = $orderRepository->get($orderId);
-        } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
-            $order = null;
-        } finally {
-            return $order;
-        }
+        return $this->getOrderById($orderId);
     }
 
     public function getOrderIdsByProductSku($productSku = null)
@@ -282,6 +273,20 @@ class OrderHelper extends BaseHelper
             $this->printLog("errors", $e->getMessage());
         } finally {
             return $fullName;
+        }
+    }
+
+    private function getOrderById($orderId)
+    {
+        $order = null;
+        try {
+            $orderRepository = $this->generateClassObject("Magento\Sales\Model\OrderRepository");
+            $order = $orderRepository->get($orderId);
+        } catch (\Exception $e) {
+            $this->errorLog($e->getMessage());
+            $order = null;
+        } finally {
+            return $order;
         }
     }
 }
