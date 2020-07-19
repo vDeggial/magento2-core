@@ -8,7 +8,6 @@ class CustomerHelper extends BaseHelper
 {
     protected $session;
     protected $tableCustomer;
-    protected $tableCustomerAttribute;
     protected $tableAttribute;
     protected $attributeTypeId;
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
@@ -17,7 +16,6 @@ class CustomerHelper extends BaseHelper
         $this->attributeTypeId = 1;
         $this->session = $this->generateClassObject('Magento\Customer\Model\SessionFactory')->create();
         $this->tableCustomer = $this->getSqlTableName("customer_entity");
-        $this->tableCustomerAttribute = $this->getSqlTableName("customer_entity_attribute");
         $this->tableAttribute = $this->getSqlTableName("eav_attribute");
     }
 
@@ -87,11 +85,10 @@ class CustomerHelper extends BaseHelper
         }
     }
 
-    private function getCustomerAttributeTable($attributeCode)
+    private function getCustomerAttributeTable($attributeId)
     {
         $tableName = $this->tableCustomer;
         try {
-            $attributeId = $this->getCustomerAttributeId($attributeCode);
             $attributeType = $this->getCustomerAttributeType($attributeId);
             $tableName .= "_" . $attributeType;
             $tableName = $this->getSqlTableName($tableName);
@@ -123,7 +120,7 @@ class CustomerHelper extends BaseHelper
         $value = null;
         $attributeId = $this->getCustomerAttributeId($attributeCode);
         try {
-            $tableName = $this->getCustomerAttributeTable($attributeCode);
+            $tableName = $this->getCustomerAttributeTable($attributeId);
             $sql = "SELECT value FROM $tableName WHERE attribute_id = $attributeId AND entity_id = $customerId";
             $result = $this->sqlQueryFetchOne($sql);
             $value = $result;

@@ -319,11 +319,10 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    private function getProductAttributeTable($attributeCode)
+    private function getProductAttributeTable($attributeId)
     {
         $tableName = $this->tableProduct;
         try {
-            $attributeId = $this->getProductAttributeId($attributeCode);
             $attributeType = $this->getProductAttributeType($attributeId);
             $tableName .= "_" . $attributeType;
             $tableName = $this->getSqlTableName($tableName);
@@ -370,7 +369,7 @@ class ProductHelper extends BaseHelper
         $value = null;
         $attributeId = $this->getProductAttributeId($attributeCode);
         try {
-            $tableName = $this->getProductAttributeTable($attributeCode);
+            $tableName = $this->getProductAttributeTable($attributeId);
             $sql = "SELECT value FROM $tableName WHERE attribute_id = $attributeId AND entity_id = $productId";
             $result = $this->sqlQueryFetchOne($sql);
             $value = $result;
