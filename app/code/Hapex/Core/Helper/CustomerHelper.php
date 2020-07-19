@@ -14,7 +14,7 @@ class CustomerHelper extends BaseHelper
     {
         parent::__construct($context, $objectManager);
         $this->attributeTypeId = 1;
-        $this->session = $this->generateClassObject('Magento\Customer\Model\SessionFactory')->create();
+        $this->session = $this->generateClassObject('Magento\Customer\Model\Session');
         $this->tableCustomer = $this->getSqlTableName("customer_entity");
         $this->tableAttribute = $this->getSqlTableName("eav_attribute");
     }
