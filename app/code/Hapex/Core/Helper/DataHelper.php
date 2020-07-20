@@ -51,7 +51,7 @@ class DataHelper extends BaseHelper
                 $data = $csvProcessor->getData($fileName);
             }
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $data = [];
         } finally {
             if (!empty($data) && $isFirstRowHeader) {
@@ -69,7 +69,7 @@ class DataHelper extends BaseHelper
             $csvProcessor->setEnclosure('"')->setDelimiter(',')->saveData("$path/$fileName", $data);
             $success = true;
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $success = false;
         } finally {
             return $success;

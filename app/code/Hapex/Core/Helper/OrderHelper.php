@@ -32,7 +32,7 @@ class OrderHelper extends BaseHelper
             $sql = "SELECT order_id FROM " . $this->tableOrderItem . " WHERE sku LIKE '$productSku' GROUP BY order_id";
             $result = array_column($this->sqlQueryFetchAll($sql), "order_id");
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $result = null;
         } finally {
             return $result;
@@ -46,7 +46,7 @@ class OrderHelper extends BaseHelper
             $sql = "SELECT entity_id FROM " . $this->tableOrder . " WHERE customer_id = $customerId GROUP BY entity_id ORDER BY created_at DESC";
             $result = array_column($this->sqlQueryFetchAll($sql), "entity_id");
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $result = null;
         } finally {
             return $result;
@@ -61,7 +61,7 @@ class OrderHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $date = (string)$result;
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $date = null;
         } finally {
             return $date;
@@ -76,7 +76,7 @@ class OrderHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $date = (string)$result;
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $date = null;
         } finally {
             return $date;
@@ -119,7 +119,7 @@ class OrderHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $qty = (int)$result;
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $qty = 0;
         } finally {
             return $qty;
@@ -134,7 +134,7 @@ class OrderHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $qty = (int)$result;
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $qty = 0;
         } finally {
             return $qty;
@@ -149,7 +149,7 @@ class OrderHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $qty = (int)$result;
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $qty = 0;
         } finally {
             return $qty;
@@ -164,7 +164,7 @@ class OrderHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $fullName = $result;
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $fullName = null;
         } finally {
             return $fullName;
@@ -179,7 +179,7 @@ class OrderHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $email = $result;
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $email = null;
         } finally {
             return $email;
@@ -192,7 +192,7 @@ class OrderHelper extends BaseHelper
         try {
             $address = $order->getBillingAddress();
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $address = null;
         } finally {
             return $address;
@@ -205,7 +205,7 @@ class OrderHelper extends BaseHelper
         try {
             $address = $order->getShippingAddress();
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $address = null;
         } finally {
             return $address;
@@ -219,7 +219,7 @@ class OrderHelper extends BaseHelper
             $address = $this->getOrderBillingAddress($order);
             $customerName = $address->getName();
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $customerName = null;
         } finally {
             return $customerName;
@@ -233,7 +233,7 @@ class OrderHelper extends BaseHelper
             $address = $this->getOrderBillingAddress($order);
             $customerEmail = $address->getEmail();
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $customerEmail = null;
         } finally {
             return $customerEmail;
@@ -250,7 +250,7 @@ class OrderHelper extends BaseHelper
                 }
             }
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $items = [];
         } finally {
             return $items;
@@ -265,7 +265,7 @@ class OrderHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $fullName = $result;
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $fullName = null;
             $this->printLog("errors", $e->getMessage());
         } finally {
@@ -280,7 +280,7 @@ class OrderHelper extends BaseHelper
             $orderRepository = $this->generateClassObject("Magento\Sales\Model\OrderRepository");
             $order = $orderRepository->get($orderId);
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $order = null;
         } finally {
             return $order;

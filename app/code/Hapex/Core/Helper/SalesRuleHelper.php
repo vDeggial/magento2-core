@@ -22,7 +22,7 @@ class SalesRuleHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $exists = $result && !empty($result);
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $exists = false;
         } finally {
             return $exists;
@@ -37,7 +37,7 @@ class SalesRuleHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $date = (string)$result;
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $date = null;
         } finally {
             return $date;
@@ -52,7 +52,7 @@ class SalesRuleHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $date = (string)$result;
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $date = null;
         } finally {
             return $date;
@@ -67,7 +67,7 @@ class SalesRuleHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $status = (int)$result;
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $status = 0;
         } finally {
             return $status;

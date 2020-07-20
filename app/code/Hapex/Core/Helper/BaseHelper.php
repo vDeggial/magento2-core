@@ -41,14 +41,14 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
             print_r($output);
             return true;
         } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             return false;
         }
     }
 
-    protected function errorLog($message = null)
+    protected function errorLog($method = null, $message = null)
     {
-        return $this->printLog("hapex_error_log", $message);
+        return $this->printLog("hapex_error_log", "$method :: $message");
     }
 
     protected function generateClassObject($class = "")
@@ -57,7 +57,7 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
         try {
             $object = $this->objectManager->get($class);
         } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $object = null;
         } finally {
             return $object;
@@ -71,7 +71,7 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $timezone = $this->generateClassObject("Magento\Framework\Stdlib\DateTime\TimezoneInterface");
             $date = $timezone->date();
         } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $date = null;
         } finally {
             return $date;
@@ -87,7 +87,7 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $tableName = $resource->getTableName($name);
             $tableExists = $resource->getConnection()->isTableExists($tableName);
         } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $tableName = null;
             $tableExists = false;
         } finally {
@@ -108,7 +108,7 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $beforeToDate = $toDate ? strtotime($currentDate) <= strtotime($toDate) ? true : false : true;
             $isWithinRange = $afterFromDate && $beforeToDate;
         } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $isWithinRange = false;
         } finally {
             return $isWithinRange;
@@ -160,7 +160,7 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
         try {
             $exists = strpos(@get_headers($remoteUrl) [0], '404') === false;
         } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $exists = false;
         } finally {
             return $exists;
@@ -197,7 +197,7 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
                 break;
             }
         } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $result = null;
         } finally {
             return $result;

@@ -28,7 +28,7 @@ class QuoteHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $exists = $result && !empty($result);
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $exists = false;
         } finally {
             return $exists;
@@ -42,7 +42,7 @@ class QuoteHelper extends BaseHelper
             $quoteFactory = $this->generateClassObject("Magento\Quote\Model\QuoteFactory");
             $quote = $this->quoteExists($quoteId) ? $quoteFactory->create()->load($quoteId) : null;
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $quote = null;
         } finally {
             return $quote;

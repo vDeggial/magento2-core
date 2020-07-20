@@ -63,7 +63,7 @@ class CustomerHelper extends BaseHelper
           $result = $this->sqlQueryFetchOne($sql);
           $customerGroup = (int)$result;
       } catch (\Exception $e) {
-          $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+          $this->errorLog(__METHOD__, $e->getMessage());
           $customerGroup = 0;
       } finally {
           return $customerGroup;
@@ -78,7 +78,7 @@ class CustomerHelper extends BaseHelper
             $result = (int)$this->sqlQueryFetchOne($sql);
             $attributeId = $result;
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $attributeId = 0;
         } finally {
             return $attributeId;
@@ -93,7 +93,7 @@ class CustomerHelper extends BaseHelper
             $tableName .= "_" . $attributeType;
             $tableName = $this->getSqlTableName($tableName);
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $tableName = $this->tableCustomer;
         } finally {
             return $tableName;
@@ -108,7 +108,7 @@ class CustomerHelper extends BaseHelper
             $result = (string)$this->sqlQueryFetchOne($sql);
             $attributeType = $result;
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $attributeType = null;
         } finally {
             return $attributeType;
@@ -125,7 +125,7 @@ class CustomerHelper extends BaseHelper
             $result = $this->sqlQueryFetchOne($sql);
             $value = $result;
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__ . " | " . $e->getMessage());
+            $this->errorLog(__METHOD__, $e->getMessage());
             $value = null;
         } finally {
             return $value;
