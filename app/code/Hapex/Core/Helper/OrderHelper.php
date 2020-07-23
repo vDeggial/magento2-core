@@ -111,6 +111,29 @@ class OrderHelper extends BaseHelper
       }
     }
 
+    public function getOrderCustomerId($order)
+    {
+        $customerId = 0;
+        try {
+            switch (true) {
+        case is_numeric($order):
+          $sql = "SELECT customer_id FROM " . $this->tableOrder . " where entity_id = $order";
+          $result = $this->sqlQueryFetchOne($sql);
+          $customerId = (int)$result;
+          break;
+
+        case is_object($order):
+          $customerId =  $order->getCustomer()->getId();
+          break;
+      }
+        } catch (\Exception $e) {
+            $this->errorLog(__METHOD__, $e->getMessage());
+            $customerId = 0;
+        } finally {
+            return $customerId;
+        }
+    }
+
     public function getQtyCanceled($orderId = null, $productSku = null)
     {
         $qty = 0;
