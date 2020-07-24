@@ -12,10 +12,9 @@ class DateHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
-      $this->objectManager = $objectManager;
-      $this->helperLog = $this->generateClassObject("Hapex\Core\Helper\LogHelper");
         parent::__construct($context);
-
+        $this->objectManager = $objectManager;
+        $this->helperLog = $this->objectManager->get("Hapex\Core\Helper\LogHelper");
     }
 
     public function getCurrentDate()
