@@ -9,18 +9,14 @@ class DbHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {
     protected $objectManager;
     protected $resource;
+    protected $helperLog;
 
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
+        parent::__construct($context);
         $this->objectManager = $objectManager;
         $this->resource = $this->objectManager->get("Magento\Framework\App\ResourceConnection");
-
-        parent::__construct($context);
-    }
-
-    public function setResource($resource = null)
-    {
-        $this->resource = $resource;
+        $this->helperLog = $this->objectManager->get("Hapex\Core\Helper\LogHelper");
     }
 
     public function getSqlTableName($name = null)
@@ -31,7 +27,7 @@ class DbHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $tableName = $this->resource->getTableName($name);
             $tableExists = $this->resource->getConnection()->isTableExists($tableName);
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $tableName = null;
             $tableExists = false;
         } finally {
@@ -84,7 +80,7 @@ class DbHelper extends \Magento\Framework\App\Helper\AbstractHelper
                 break;
             }
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $result = null;
         } finally {
             return $result;

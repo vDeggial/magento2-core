@@ -8,11 +8,15 @@ use Magento\Framework\App\Helper\Context;
 class UrlHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {
     protected $objectManager;
+    protected $helperLog;
+
 
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
-        $this->objectManager = $objectManager;
         parent::__construct($context);
+        $this->objectManager = $objectManager;
+        $this->helperLog = $this->objectManager->get("Hapex\Core\Helper\LogHelper");
+
     }
 
     public function getRemoteContent($url)
@@ -34,6 +38,7 @@ class UrlHelper extends \Magento\Framework\App\Helper\AbstractHelper
         try {
             $exists = strpos(@get_headers($remoteUrl) [0], '404') === false;
         } catch (\Exception $e) {
+            $this->errorLog(__METHOD__, $e->getMessage());
             $exists = false;
         } finally {
             return $exists;

@@ -10,11 +10,13 @@ class FileHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {
     protected $objectManager;
     protected $csvDirectory;
+    protected $helperLog;
 
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
-        $this->objectManager = $objectManager;
         parent::__construct($context);
+        $this->objectManager = $objectManager;
+        $this->helperLog = $this->objectManager->get("Hapex\Core\Helper\LogHelper");
     }
 
     public function getRootPath()
@@ -56,7 +58,7 @@ class FileHelper extends \Magento\Framework\App\Helper\AbstractHelper
                 $data = $csvProcessor->getData($fileName);
             }
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $data = [];
         } finally {
             if (!empty($data) && $isFirstRowHeader) {
@@ -74,7 +76,7 @@ class FileHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $csvProcessor->setEnclosure('"')->setDelimiter(',')->saveData("$path/$fileName", $data);
             $success = true;
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $success = false;
         } finally {
             return $success;

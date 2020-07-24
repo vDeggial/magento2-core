@@ -15,8 +15,8 @@ class CustomerHelper extends BaseHelper
         parent::__construct($context, $objectManager);
         $this->attributeTypeId = 1;
         $this->session = $this->generateClassObject('Magento\Customer\Model\Session');
-        $this->tableCustomer = $this->getSqlTableName("customer_entity");
-        $this->tableAttribute = $this->getSqlTableName("eav_attribute");
+        $this->tableCustomer = $this->helperDb->getSqlTableName("customer_entity");
+        $this->tableAttribute = $this->helperDb->getSqlTableName("eav_attribute");
     }
 
     public function getCustomer($customerId = 0)
@@ -60,10 +60,10 @@ class CustomerHelper extends BaseHelper
       $customerGroup = 0;
       try {
           $sql  = "SELECT group_id FROM " . $this->tableCustomer ." WHERE entity_id = $customerId";
-          $result = $this->sqlQueryFetchOne($sql);
+          $result = $this->helperDb->sqlQueryFetchOne($sql);
           $customerGroup = (int)$result;
       } catch (\Exception $e) {
-          $this->errorLog(__METHOD__, $e->getMessage());
+          $this->helperLog->errorLog(__METHOD__, $e->getMessage());
           $customerGroup = 0;
       } finally {
           return $customerGroup;
@@ -75,10 +75,10 @@ class CustomerHelper extends BaseHelper
         $attributeId = 0;
         try {
             $sql = "SELECT attribute_id from " . $this->tableAttribute . " WHERE entity_type_id = " . $this->attributeTypeId . " AND attribute_code LIKE '$attributeCode'";
-            $result = (int)$this->sqlQueryFetchOne($sql);
+            $result = (int)$this->helperDb->sqlQueryFetchOne($sql);
             $attributeId = $result;
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $attributeId = 0;
         } finally {
             return $attributeId;
@@ -91,9 +91,9 @@ class CustomerHelper extends BaseHelper
         try {
             $attributeType = $this->getCustomerAttributeType($attributeId);
             $tableName .= "_" . $attributeType;
-            $tableName = $this->getSqlTableName($tableName);
+            $tableName = $this->helperDb->getSqlTableName($tableName);
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $tableName = $this->tableCustomer;
         } finally {
             return $tableName;
@@ -105,10 +105,10 @@ class CustomerHelper extends BaseHelper
         $attributeType = null;
         try {
             $sql = "SELECT backend_type from " . $this->tableAttribute . " WHERE entity_type_id = " . $this->attributeTypeId . " AND attribute_id = $attributeId";
-            $result = (string)$this->sqlQueryFetchOne($sql);
+            $result = (string)$this->helperDb->sqlQueryFetchOne($sql);
             $attributeType = $result;
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $attributeType = null;
         } finally {
             return $attributeType;
@@ -122,10 +122,10 @@ class CustomerHelper extends BaseHelper
         try {
             $tableName = $this->getCustomerAttributeTable($attributeId);
             $sql = "SELECT value FROM $tableName WHERE attribute_id = $attributeId AND entity_id = $customerId";
-            $result = $this->sqlQueryFetchOne($sql);
+            $result = $this->helperDb->sqlQueryFetchOne($sql);
             $value = $result;
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $value = null;
         } finally {
             return $value;

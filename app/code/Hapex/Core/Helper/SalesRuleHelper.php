@@ -11,7 +11,7 @@ class SalesRuleHelper extends BaseHelper
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
         parent::__construct($context, $objectManager);
-        $this->tableSalesRule = $this->getSqlTableName("salesrule");
+        $this->tableSalesRule = $this->helperDb->getSqlTableName("salesrule");
     }
 
     public function ruleExists($ruleId)
@@ -19,10 +19,10 @@ class SalesRuleHelper extends BaseHelper
         $exists = false;
         try {
             $sql = "SELECT rule_id FROM " . $this->tableSalesRule . " WHERE rule_id = $ruleId";
-            $result = $this->sqlQueryFetchOne($sql);
+            $result = $this->helperDb->sqlQueryFetchOne($sql);
             $exists = $result && !empty($result);
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $exists = false;
         } finally {
             return $exists;
@@ -34,10 +34,10 @@ class SalesRuleHelper extends BaseHelper
         $date = null;
         try {
             $sql = "SELECT from_date FROM " . $this->tableSalesRule . " WHERE rule_id = $ruleId";
-            $result = $this->sqlQueryFetchOne($sql);
+            $result = $this->helperDb->sqlQueryFetchOne($sql);
             $date = (string)$result;
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $date = null;
         } finally {
             return $date;
@@ -49,10 +49,10 @@ class SalesRuleHelper extends BaseHelper
         $date = null;
         try {
             $sql = "SELECT to_date FROM " . $this->tableSalesRule . " WHERE rule_id = $ruleId";
-            $result = $this->sqlQueryFetchOne($sql);
+            $result = $this->helperDb->sqlQueryFetchOne($sql);
             $date = (string)$result;
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $date = null;
         } finally {
             return $date;
@@ -64,10 +64,10 @@ class SalesRuleHelper extends BaseHelper
         $status = 0;
         try {
             $sql = "SELECT is_active FROM " . $this->tableSalesRule . " WHERE rule_id = $ruleId";
-            $result = $this->sqlQueryFetchOne($sql);
+            $result = $this->helperDb->sqlQueryFetchOne($sql);
             $status = (int)$result;
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $status = 0;
         } finally {
             return $status;
@@ -78,9 +78,9 @@ class SalesRuleHelper extends BaseHelper
     {
         $isValid = false;
         try {
-            $isValid = $this->isCurrentDateWithinRange($this->getRuleFromDate($ruleId), $this->getRuleToDate($ruleId));
+            $isValid = $this->helperDate->isCurrentDateWithinRange($this->getRuleFromDate($ruleId), $this->getRuleToDate($ruleId));
         } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
+            $this->helperLog->errorLog($e->getMessage());
             $isValid = false;
         } finally {
             return $isValid;
@@ -92,10 +92,10 @@ class SalesRuleHelper extends BaseHelper
         $isSet = false;
         try {
             $sql = "UPDATE " . $this->tableSalesRule . " SET is_active = $status where rule_id = $ruleId";
-            $result = $this->sqlQuery($sql);
+            $result = $this->helperDb->sqlQuery($sql);
             $isSet = $result !== null;
         } catch (\Exception $e) {
-            $this->errorLog($e->getMessage());
+            $this->helperLog->errorLog($e->getMessage());
             $isSet = false;
         } finally {
             return $isSet;

@@ -3,7 +3,6 @@ namespace Hapex\Core\Helper;
 
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\App\Helper\Context;
-use Magento\Framework\App\Filesystem\DirectoryList;
 
 class DataHelper extends BaseHelper
 {

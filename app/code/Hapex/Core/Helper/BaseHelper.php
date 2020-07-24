@@ -41,7 +41,7 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
             print_r($output);
             return true;
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             return false;
         }
     }
@@ -57,7 +57,7 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
         try {
             $object = $this->objectManager->get($class);
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $object = null;
         } finally {
             return $object;

@@ -11,8 +11,8 @@ class QuoteHelper extends BaseHelper
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
         parent::__construct($context, $objectManager);
-        $this->tableQuote = $this->getSqlTableName('quote');
-        $this->tableQuoteItem = $this->getSqlTableName('quote_item');
+        $this->tableQuote = $this->helperDb->getSqlTableName('quote');
+        $this->tableQuoteItem = $this->helperDb->getSqlTableName('quote_item');
     }
 
     public function getQuote($quoteId)
@@ -25,10 +25,10 @@ class QuoteHelper extends BaseHelper
         $exists = false;
         try {
             $sql = "SELECT * FROM " . $this->tableQuote . " quote where quote.entity_id = $quoteId";
-            $result = $this->sqlQueryFetchOne($sql);
+            $result = $this->helperDb->sqlQueryFetchOne($sql);
             $exists = $result && !empty($result);
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $exists = false;
         } finally {
             return $exists;
@@ -42,7 +42,7 @@ class QuoteHelper extends BaseHelper
             $quoteFactory = $this->generateClassObject("Magento\Quote\Model\QuoteFactory");
             $quote = $this->quoteExists($quoteId) ? $quoteFactory->create()->load($quoteId) : null;
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $quote = null;
         } finally {
             return $quote;

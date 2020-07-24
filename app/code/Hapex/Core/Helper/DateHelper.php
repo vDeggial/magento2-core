@@ -8,11 +8,14 @@ use Magento\Framework\App\Helper\Context;
 class DateHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {
     protected $objectManager;
+    protected $helperLog;
 
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
-        $this->objectManager = $objectManager;
+      $this->objectManager = $objectManager;
+      $this->helperLog = $this->generateClassObject("Hapex\Core\Helper\LogHelper");
         parent::__construct($context);
+
     }
 
     public function getCurrentDate()
@@ -22,6 +25,7 @@ class DateHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $timezone = $this->objectManager->get("Magento\Framework\Stdlib\DateTime\TimezoneInterface");
             $date = $timezone->date();
         } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $date = null;
         } finally {
             return $date;
@@ -41,6 +45,7 @@ class DateHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $beforeToDate = $toDate ? strtotime($currentDate) <= strtotime($toDate) ? true : false : true;
             $isWithinRange = $afterFromDate && $beforeToDate;
         } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $isWithinRange = false;
         } finally {
             return $isWithinRange;
