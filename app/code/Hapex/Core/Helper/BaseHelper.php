@@ -11,11 +11,14 @@ use Magento\Framework\App\Helper\Context;
 class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {
     protected $objectManager;
+    protected $helperDb;
+    protected $helperLog;
 
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
         $this->objectManager = $objectManager;
-
+        $this->helperDb = $this->generateClassObject("Hapex\Core\Helper\DbHelper");
+        $this->helperLog = $this->generateClassObject("Hapex\Core\Helper\LogHelper");
         parent::__construct($context);
     }
 
@@ -32,7 +35,7 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     public function printLog($filename = null, $message = null)
     {
-        return $this->writeLogEntry($filename, $message);
+        return $this->helperLog->printLog($filename, $message);
     }
 
     public function sendOutput($output)
@@ -48,7 +51,7 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     protected function errorLog($method = null, $message = null)
     {
-        return $this->printLog("hapex_error_log", "$method :: $message");
+        return $this->helperLog->errorLog($method, $message);
     }
 
     protected function generateClassObject($class = "")
@@ -75,23 +78,6 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $date = null;
         } finally {
             return $date;
-        }
-    }
-
-    protected function getSqlTableName($name = null)
-    {
-        $tableName = null;
-        $tableExists = false;
-        try {
-            $resource = $this->getSqlResource();
-            $tableName = $resource->getTableName($name);
-            $tableExists = $resource->getConnection()->isTableExists($tableName);
-        } catch (\Exception $e) {
-            $this->errorLog(__METHOD__, $e->getMessage());
-            $tableName = null;
-            $tableExists = false;
-        } finally {
-            return $tableExists ? $tableName : null;
         }
     }
 
@@ -133,25 +119,29 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
         array_multisort(array_column($data, $sortColumn), $sortDirection, $data);
     }
 
+    protected function getSqlTableName($name = null)
+    {
+        return $this->helperDb->getSqlTableName($name);
+    }
+
     protected function sqlQuery($sql)
     {
-        return $this->queryExecute($sql);
+        return $this->helperDb->queryExecute($sql);
     }
 
     protected function sqlQueryFetchAll($sql, $limit = 0)
     {
-        $sql .= ($limit > 0) ? " LIMIT $limit" : "";
-        return $this->queryExecute($sql, "fetchAll");
+        return $this->helperDb->sqlQueryFetchAll($sql, $limit);
     }
 
     protected function sqlQueryFetchOne($sql)
     {
-        return $this->queryExecute($sql, "fetchOne");
+        return $this->helperDb->sqlQueryFetchOne($sql);
     }
 
     protected function sqlQueryFetchRow($sql)
     {
-        return $this->queryExecute($sql, "fetchRow");
+        return $this->helperDb->sqlQueryFetchRow($sql);
     }
 
     protected function urlExists($remoteUrl = "")
@@ -164,59 +154,6 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $exists = false;
         } finally {
             return $exists;
-        }
-    }
-
-    private function getSqlResource()
-    {
-        return $this->generateClassObject("Magento\Framework\App\ResourceConnection");
-    }
-
-    private function queryExecute($sql = null, $command = null)
-    {
-        $result = null;
-        try {
-            $resource = $this->getSqlResource();
-            $connection = $resource->getConnection();
-
-            switch ($command) {
-                case "fetchOne":
-                    $result = $connection->fetchOne($sql);
-                break;
-
-                case "fetchAll":
-                    $result = $connection->fetchAll($sql);
-                break;
-
-                case "fetchRow":
-                    $result = $connection->fetchRow($sql);
-                break;
-
-                default:
-                    $result = $connection->query($sql);
-                break;
-            }
-        } catch (\Exception $e) {
-            $this->errorLog(__METHOD__, $e->getMessage());
-            $result = null;
-        } finally {
-            return $result;
-        }
-    }
-
-    private function writeLogEntry($filename = null, $message = null)
-    {
-        try {
-            $writer = new Stream(BP . "/var/log/$filename.log");
-            $logger = new Logger();
-            $formatter = new Formatter\Simple();
-            $formatter->setDateTimeFormat("Y-m-d H:i:s T");
-            $writer->setFormatter($formatter);
-            $logger->addWriter($writer);
-            $logger->info($message);
-            return true;
-        } catch (\Exception $e) {
-            return false;
         }
     }
 }
