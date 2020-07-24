@@ -10,24 +10,24 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
     protected $objectManager;
     protected $helperDb;
     protected $helperLog;
+    protected $helperFile;
+    protected $helperDate;
+    protected $helperUrl;
 
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
         $this->objectManager = $objectManager;
         $this->helperDb = $this->generateClassObject("Hapex\Core\Helper\DbHelper");
         $this->helperLog = $this->generateClassObject("Hapex\Core\Helper\LogHelper");
+        $this->helperFile = $this->generateClassObject("Hapex\Core\Helper\FileHelper");
+        $this->helperDate = $this->generateClassObject("Hapex\Core\Helper\DateHelper");
+        $this->helperUrl = $this->generateClassObject("Hapex\Core\Helper\UrlHelper");
         parent::__construct($context);
-    }
-
-    public function getRootPath()
-    {
-        $directory = $this->generateClassObject("Magento\Framework\Filesystem\DirectoryList");
-        return $directory->getRoot();
     }
 
     public function getFileContents($path = "", $filename = "")
     {
-        return file_get_contents($this->getRootPath() . "/$path/$filename");
+        return $this->helperFile->getFileContents($path, $filename);
     }
 
     public function printLog($filename = null, $message = null)
@@ -66,49 +66,17 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     protected function getCurrentDate()
     {
-        $date = null;
-        try {
-            $timezone = $this->generateClassObject("Magento\Framework\Stdlib\DateTime\TimezoneInterface");
-            $date = $timezone->date();
-        } catch (\Exception $e) {
-            $this->errorLog(__METHOD__, $e->getMessage());
-            $date = null;
-        } finally {
-            return $date;
-        }
+        return $this->helperDate->getCurrentDate();
     }
 
     public function isCurrentDateWithinRange($fromDate, $toDate)
     {
-        $isWithinRange = false;
-        $afterFromDate = false;
-        $beforeToDate = false;
-        $currentDate = null;
-
-        try {
-            $currentDate = $this->getCurrentDate()->format('Y-m-d');
-            $afterFromDate = $fromDate ? strtotime($currentDate) >= strtotime($fromDate) ? true : false : true;
-            $beforeToDate = $toDate ? strtotime($currentDate) <= strtotime($toDate) ? true : false : true;
-            $isWithinRange = $afterFromDate && $beforeToDate;
-        } catch (\Exception $e) {
-            $this->errorLog(__METHOD__, $e->getMessage());
-            $isWithinRange = false;
-        } finally {
-            return $isWithinRange;
-        }
+        return $this->helperDate->isCurrentDateWithinRange($fromDate, $toDate);
     }
 
     protected function getRemoteContent($url)
     {
-        $options = array(
-            CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_USERAGENT      => "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7) Gecko/20040803 Firefox/0.9.3",
-    );
-        $handle = curl_init($url);
-        curl_setopt_array($handle, $options);
-        $htmlContent = curl_exec($handle);
-        curl_close($handle);
-        return $htmlContent;
+        return $this->helperUrl->getRemoteContent($url);
     }
 
     protected function sortDataByColumn(&$data = [], $sortColumn = "qty", $sortDirection = SORT_DESC)
@@ -143,14 +111,6 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     protected function urlExists($remoteUrl = "")
     {
-        $exists = false;
-        try {
-            $exists = strpos(@get_headers($remoteUrl) [0], '404') === false;
-        } catch (\Exception $e) {
-            $this->errorLog(__METHOD__, $e->getMessage());
-            $exists = false;
-        } finally {
-            return $exists;
-        }
+        return $this->helperUrl->urlExists($remoteUrl);
     }
 }
