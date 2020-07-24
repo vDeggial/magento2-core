@@ -20,19 +20,4 @@ class DataHelper extends BaseHelper
     {
         return $this->scopeConfig->getValue($path, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $scopeCode);
     }
-
-    public function getCsvFileData($fileName, $isFirstRowHeader = false)
-    {
-        return $this->helperFile->getCsvFileData($fileName, $isFirstRowHeader);
-    }
-
-    public function writeCsvFileData($fileName, $data)
-    {
-        $this->helperFile->writeCsvFileData($fileName, $data);
-    }
-
-    public function setCsvLocation($path)
-    {
-        $this->helperFile->setCsvLocation($path);
-    }
 }

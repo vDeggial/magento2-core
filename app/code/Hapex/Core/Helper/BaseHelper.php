@@ -25,14 +25,34 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
         parent::__construct($context);
     }
 
+    public function getLogHelper()
+    {
+        return $this->helperLog;
+    }
+
+    public function getDbHelper()
+    {
+        return $this->helperDb;
+    }
+
+    public function getFileHelper()
+    {
+        return $this->helperFile;
+    }
+
+    public function getDateHelper()
+    {
+        return $this->helperDate;
+    }
+
+    public function getUrlHelper()
+    {
+        return $this->helperUrl;
+    }
+
     public function getFileContents($path = "", $filename = "")
     {
         return $this->helperFile->getFileContents($path, $filename);
-    }
-
-    public function printLog($filename = null, $message = null)
-    {
-        return $this->helperLog->printLog($filename, $message);
     }
 
     public function sendOutput($output)
@@ -44,11 +64,6 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             return false;
         }
-    }
-
-    protected function errorLog($method = null, $message = null)
-    {
-        return $this->helperLog->errorLog($method, $message);
     }
 
     protected function generateClassObject($class = "")
@@ -64,53 +79,8 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
         }
     }
 
-    protected function getCurrentDate()
-    {
-        return $this->helperDate->getCurrentDate();
-    }
-
-    public function isCurrentDateWithinRange($fromDate, $toDate)
-    {
-        return $this->helperDate->isCurrentDateWithinRange($fromDate, $toDate);
-    }
-
-    protected function getRemoteContent($url)
-    {
-        return $this->helperUrl->getRemoteContent($url);
-    }
-
     protected function sortDataByColumn(&$data = [], $sortColumn = "qty", $sortDirection = SORT_DESC)
     {
         array_multisort(array_column($data, $sortColumn), $sortDirection, $data);
-    }
-
-    protected function getSqlTableName($name = null)
-    {
-        return $this->helperDb->getSqlTableName($name);
-    }
-
-    protected function sqlQuery($sql)
-    {
-        return $this->helperDb->queryExecute($sql);
-    }
-
-    protected function sqlQueryFetchAll($sql, $limit = 0)
-    {
-        return $this->helperDb->sqlQueryFetchAll($sql, $limit);
-    }
-
-    protected function sqlQueryFetchOne($sql)
-    {
-        return $this->helperDb->sqlQueryFetchOne($sql);
-    }
-
-    protected function sqlQueryFetchRow($sql)
-    {
-        return $this->helperDb->sqlQueryFetchRow($sql);
-    }
-
-    protected function urlExists($remoteUrl = "")
-    {
-        return $this->helperUrl->urlExists($remoteUrl);
     }
 }
