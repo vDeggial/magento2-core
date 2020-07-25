@@ -16,19 +16,18 @@ class UrlHelper extends \Magento\Framework\App\Helper\AbstractHelper
         parent::__construct($context);
         $this->objectManager = $objectManager;
         $this->helperLog = $this->objectManager->get("Hapex\Core\Helper\LogHelper");
-
     }
 
     public function getRemoteContent($url)
     {
+        $curl = $this->objectManager->get("Magento\Framework\HTTP\Client\Curl");
         $options = array(
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_USERAGENT      => "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7) Gecko/20040803 Firefox/0.9.3",
     );
-        $handle = curl_init($url);
-        curl_setopt_array($handle, $options);
-        $htmlContent = curl_exec($handle);
-        curl_close($handle);
+        $curl->setOptions($options);
+        $curl->get($url);
+        $htmlContent = $curl->getBody();
         return $htmlContent;
     }
 
@@ -36,9 +35,11 @@ class UrlHelper extends \Magento\Framework\App\Helper\AbstractHelper
     {
         $exists = false;
         try {
-            $exists = strpos(@get_headers($remoteUrl) [0], '404') === false;
+            $curl = $this->objectManager->get("Magento\Framework\HTTP\Client\Curl");
+            $curl->get($remoteUrl);
+            $exists = $curl->getStatus() === 200;
         } catch (\Exception $e) {
-            $this->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $exists = false;
         } finally {
             return $exists;

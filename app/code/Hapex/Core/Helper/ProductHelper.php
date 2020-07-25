@@ -115,7 +115,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    public function getProductGalleryImages($productId = 0, $width = 500)
+    /*public function getProductGalleryImages($productId = 0, $width = 500)
     {
         $imageList = [];
         try {
@@ -129,7 +129,7 @@ class ProductHelper extends BaseHelper
         } finally {
             return $imageList;
         }
-    }
+    }*/
 
     public function getProductId($productSku = null)
     {
@@ -443,7 +443,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    private function getProductMediaGalleryImages($productId)
+    /*private function getProductMediaGalleryImages($productId)
     {
         $images = [];
         try {
@@ -457,5 +457,5 @@ class ProductHelper extends BaseHelper
         } finally {
             return $images;
         }
-    }
+    }*/
 }

@@ -27,7 +27,8 @@ class FileHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     public function getFileContents($path = "", $filename = "")
     {
-        return file_get_contents($this->getRootPath() . "/$path/$filename");
+        $fileDriver = $this->objectManager->get("Magento\Framework\Filesystem\Driver\File");
+        return $fileDriver->fileGetContents($this->getRootPath() . "/$path/$filename");
     }
 
     public function getCsvFileData($fileName, $isFirstRowHeader = false)
