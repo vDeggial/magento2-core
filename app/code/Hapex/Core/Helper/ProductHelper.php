@@ -115,22 +115,6 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    /*public function getProductGalleryImages($productId = 0, $width = 500)
-    {
-        $imageList = [];
-        try {
-            $images = $this->getProductMediaGalleryImages($productId);
-            foreach ($images as $image) {
-                array_push($imageList, $this->getProductImageUrl($productId, $image->getFile(), $width));
-            }
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $imageList = [];
-        } finally {
-            return $imageList;
-        }
-    }*/
-
     public function getProductId($productSku = null)
     {
         $productId = 0;
@@ -442,20 +426,4 @@ class ProductHelper extends BaseHelper
             return $imageUrl;
         }
     }
-
-    /*private function getProductMediaGalleryImages($productId)
-    {
-        $images = [];
-        try {
-            $product = $this->getProductById($productId);
-            $galleryReadHandler = $this->generateClassObject("Magento\Catalog\Model\Product\Gallery\ReadHandler");
-            $galleryReadHandler->execute($product);
-            $images = $product->getMediaGalleryImages();
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $images = [];
-        } finally {
-            return $images;
-        }
-    }*/
 }
