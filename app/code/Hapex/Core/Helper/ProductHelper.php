@@ -134,7 +134,7 @@ class ProductHelper extends BaseHelper
     {
         $name = null;
         try {
-            $name = $this->helperAttribute->getProductAttributeValue("name");
+            $name = $this->helperAttribute->getProductAttributeValue($productId,"name");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $name = null;
@@ -160,7 +160,7 @@ class ProductHelper extends BaseHelper
     {
         $status = 0;
         try {
-            $status = (int)$this->helperAttribute->getProductAttributeValue("status");
+            $status = (int)$this->helperAttribute->getProductAttributeValue($productId,"status");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $status = 0;
@@ -216,7 +216,7 @@ class ProductHelper extends BaseHelper
     {
         $urlKey = null;
         try {
-            $urlKey = $this->helperAttribute->getProductAttributeValue("url_key");
+            $urlKey = $this->helperAttribute->getProductAttributeValue($productId,"url_key");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $urlKey = null;
@@ -258,7 +258,7 @@ class ProductHelper extends BaseHelper
     {
         $image = null;
         try {
-            $image = $this->helperAttribute->getProductAttributeValue("image");
+            $image = $this->helperAttribute->getProductAttributeValue($productId,"image");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $image = null;
