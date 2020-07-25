@@ -69,6 +69,36 @@ class ProductHelper extends BaseHelper
         return $this->getProductById($this->getProductId($productSku));
     }
 
+    public function getProductCreatedDate($productId = 0)
+    {
+        $productDate = null;
+        try {
+            $sql  = "SELECT created_at FROM " . $this->tableProduct ." WHERE entity_id = $productId";
+            $result = $this->helperDb->sqlQueryFetchOne($sql);
+            $productDate = (string)$result;
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $productDate = null;
+        } finally {
+            return $productDate;
+        }
+    }
+
+    public function getProductUpdatedDate($productId = 0)
+    {
+        $productDate = null;
+        try {
+            $sql  = "SELECT updated_at FROM " . $this->tableProduct ." WHERE entity_id = $productId";
+            $result = $this->helperDb->sqlQueryFetchOne($sql);
+            $productDate = (string)$result;
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $productDate = null;
+        } finally {
+            return $productDate;
+        }
+    }
+
     public function getProductDescription($productId)
     {
         $description = null;
