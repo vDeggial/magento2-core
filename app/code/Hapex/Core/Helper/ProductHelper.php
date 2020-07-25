@@ -7,27 +7,17 @@ use Magento\Framework\App\Helper\Context;
 class ProductHelper extends BaseHelper
 {
     protected $tableProduct;
-    protected $tableProductInt;
-    protected $tableProductOption;
-    protected $tableProductText;
-    protected $tableProductVarchar;
     protected $tableProductStock;
-    protected $tableAttribute;
     protected $tableGallery;
     protected $tableGalleryValue;
     protected $tableGalleryToEntity;
-    protected $attributeTypeId;
+    protected $helperAttribute;
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
         parent::__construct($context, $objectManager);
-        $this->attributeTypeId = 4;
+        $this->helperAttribute = $this->objectManager->get("Hapex\Core\Helper\ProductAttributeHelper");
         $this->tableProduct = $this->helperDb->getSqlTableName('catalog_product_entity');
-        $this->tableProductInt = $this->helperDb->getSqlTableName('catalog_product_entity_int');
-        $this->tableProductOption = $this->helperDb->getSqlTableName("eav_attribute_option_value");
-        $this->tableProductText = $this->helperDb->getSqlTableName('catalog_product_entity_text');
-        $this->tableProductVarchar = $this->helperDb->getSqlTableName('catalog_product_entity_varchar');
         $this->tableProductStock = $this->helperDb->getSqlTableName('cataloginventory_stock_item');
-        $this->tableAttribute = $this->helperDb->getSqlTableName("eav_attribute");
         $this->tableGallery = $this->helperDb->getSqlTableName("catalog_product_entity_media_gallery");
         $this->tableGalleryValue = $this->helperDb->getSqlTableName("catalog_product_entity_media_gallery_value");
         $this->tableGalleryToEntity = $this->helperDb->getSqlTableName("catalog_product_entity_media_gallery_value_to_entity");
@@ -38,24 +28,11 @@ class ProductHelper extends BaseHelper
         return $this->getProductById($productId);
     }
 
-    public function getProductAttributeData($productId = 0, $attributeCode = null)
-    {
-        return $this->getProductAttributeValue($productId, $attributeCode);
-    }
-
-    public function getProductAttributeSelect($productId = 0, $attributeCode = null)
-    {
-        $optionId = (int)$this->getProductAttributeValue($productId, $attributeCode);
-        return $this->getProductAttributeOptionValue($optionId);
-    }
-
     public function getProductAttributeSet($productId = 0)
     {
         $productAttributeSet = 0;
         try {
-            $sql  = "SELECT attribute_set_id FROM " . $this->tableProduct ." WHERE entity_id = $productId";
-            $result = $this->helperDb->sqlQueryFetchOne($sql);
-            $productAttributeSet = (int)$result;
+            $productAttributeSet = (int)$this->helperAttribute->getProductEntityAttributeValue($productId, "attribute_set_id");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $productAttributeSet = 0;
@@ -73,9 +50,7 @@ class ProductHelper extends BaseHelper
     {
         $productDate = null;
         try {
-            $sql  = "SELECT created_at FROM " . $this->tableProduct ." WHERE entity_id = $productId";
-            $result = $this->helperDb->sqlQueryFetchOne($sql);
-            $productDate = (string)$result;
+            $productDate = (string)$this->helperAttribute->getProductEntityAttributeValue($productId, "created_at");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $productDate = null;
@@ -88,9 +63,7 @@ class ProductHelper extends BaseHelper
     {
         $productDate = null;
         try {
-            $sql  = "SELECT updated_at FROM " . $this->tableProduct ." WHERE entity_id = $productId";
-            $result = $this->helperDb->sqlQueryFetchOne($sql);
-            $productDate = (string)$result;
+            $productDate = (string)$this->helperAttribute->getProductEntityAttributeValue($productId, "updated_at");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $productDate = null;
@@ -102,11 +75,8 @@ class ProductHelper extends BaseHelper
     public function getProductDescription($productId)
     {
         $description = null;
-        $attributeId = $this->getProductAttributeId("description");
         try {
-            $sql = "SELECT value FROM " . $this->tableProductText ." WHERE attribute_id = $attributeId AND entity_id = $productId";
-            $result = $this->helperDb->sqlQueryFetchOne($sql);
-            $description = (string)$result;
+            $description = $this->helperAttribute->getProductAttributeValue($productId, "description");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $description = null;
@@ -163,11 +133,8 @@ class ProductHelper extends BaseHelper
     public function getProductName($productId)
     {
         $name = null;
-        $attributeId = $this->getProductAttributeId("name");
         try {
-            $sql = "SELECT value FROM " . $this->tableProductVarchar . " WHERE attribute_id = $attributeId AND entity_id = $productId";
-            $result = $this->helperDb->sqlQueryFetchOne($sql);
-            $name = (string)$result;
+            $name = $this->helperAttribute->getProductAttributeValue("name");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $name = null;
@@ -180,9 +147,7 @@ class ProductHelper extends BaseHelper
     {
         $productSku = null;
         try {
-            $sql  = "SELECT sku FROM " . $this->tableProduct ." WHERE entity_id = $productId";
-            $result = $this->helperDb->sqlQueryFetchOne($sql);
-            $productSku = (string)$result;
+            $productSku = (string)$this->helperAttribute->getProductEntityAttributeValue($productId, "sku");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $productSku = null;
@@ -193,12 +158,9 @@ class ProductHelper extends BaseHelper
 
     public function getProductStatus($productId)
     {
-        $attributeId = $this->getProductAttributeId("status");
         $status = 0;
         try {
-            $sql = "SELECT value FROM " . $this->tableProductInt . " WHERE attribute_id = $attributeId AND entity_id = $productId";
-            $result = $this->helperDb->sqlQueryFetchOne($sql);
-            $status = (int)$result;
+            $status = (int)$this->helperAttribute->getProductAttributeValue("status");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $status = 0;
@@ -226,9 +188,7 @@ class ProductHelper extends BaseHelper
     {
         $productType = null;
         try {
-            $sql  = "SELECT type_id FROM " . $this->tableProduct ." WHERE entity_id = $productId";
-            $result = $this->helperDb->sqlQueryFetchOne($sql);
-            $productType = (string)$result;
+            $productType = (string)$this->helperAttribute->getProductEntityAttributeValue($productId, "type_id");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $productType = null;
@@ -240,15 +200,10 @@ class ProductHelper extends BaseHelper
     public function getProductUrl($productId)
     {
         $urlFactory = $this->generateClassObject("Magento\Framework\Url");
-        //$storeManager = $this->generateClassObject("Magento\Store\Model\StoreManagerInterface");
-        //$storeId = $storeManager->getStore()->getStoreId();
         $productUrl = null;
         try {
-            //$product = $this->getProductById($productId);
-            //$productUrl = $urlFactory->getUrl($product->getUrlKey());
             $urlKey = $this->getProductUrlKey($productId);
             $productUrl = $urlFactory->getUrl($urlKey);
-            //$productUrl = $urlFactory->getUrl('catalog/product/view', ['id' => $productId, '_nosid' => true, '_query' => ['___store' => $storeId]]);
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $productUrl = null;
@@ -260,11 +215,8 @@ class ProductHelper extends BaseHelper
     public function getProductUrlKey($productId)
     {
         $urlKey = null;
-        $attributeId = $this->getProductAttributeId("url_key");
         try {
-            $sql = "SELECT value FROM " . $this->tableProductVarchar . " WHERE attribute_id = $attributeId AND entity_id = $productId";
-            $result = $this->helperDb->sqlQueryFetchOne($sql);
-            $urlKey = (string)$result;
+            $urlKey = $this->helperAttribute->getProductAttributeValue("url_key");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $urlKey = null;
@@ -288,83 +240,6 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    private function getProductAttributeId($attributeCode)
-    {
-        $attributeId = 0;
-        try {
-            $sql = "SELECT attribute_id from " . $this->tableAttribute . " WHERE entity_type_id = " . $this->attributeTypeId . " AND attribute_code LIKE '$attributeCode'";
-            $result = (int)$this->helperDb->sqlQueryFetchOne($sql);
-            $attributeId = $result;
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $attributeId = 0;
-        } finally {
-            return $attributeId;
-        }
-    }
-
-    private function getProductAttributeTable($attributeId)
-    {
-        $tableName = $this->tableProduct;
-        try {
-            $attributeType = $this->getProductAttributeType($attributeId);
-            $tableName .= "_" . $attributeType;
-            $tableName = $this->helperDb->getSqlTableName($tableName);
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $tableName = $this->tableProduct;
-        } finally {
-            return $tableName;
-        }
-    }
-
-    private function getProductAttributeOptionValue($optionId)
-    {
-        $optionValue = null;
-        try {
-            $sql = "SELECT value from " . $this->tableProductOption . " WHERE option_id = $optionId";
-            $result = (string)$this->helperDb->sqlQueryFetchOne($sql);
-            $optionValue = $result;
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $optionValue = null;
-        } finally {
-            return $optionValue;
-        }
-    }
-
-    private function getProductAttributeType($attributeId)
-    {
-        $attributeType = null;
-        try {
-            $sql = "SELECT backend_type from " . $this->tableAttribute . " WHERE entity_type_id = " . $this->attributeTypeId . " AND attribute_id = $attributeId";
-            $result = (string)$this->helperDb->sqlQueryFetchOne($sql);
-            $attributeType = $result;
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $attributeType = null;
-        } finally {
-            return $attributeType;
-        }
-    }
-
-    private function getProductAttributeValue($productId, $attributeCode)
-    {
-        $value = null;
-        $attributeId = $this->getProductAttributeId($attributeCode);
-        try {
-            $tableName = $this->getProductAttributeTable($attributeId);
-            $sql = "SELECT value FROM $tableName WHERE attribute_id = $attributeId AND entity_id = $productId";
-            $result = $this->helperDb->sqlQueryFetchOne($sql);
-            $value = $result;
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $value = null;
-        } finally {
-            return $value;
-        }
-    }
-
     private function getProductById($productId)
     {
         $product = null;
@@ -382,11 +257,8 @@ class ProductHelper extends BaseHelper
     private function getProductImageFilename($productId)
     {
         $image = null;
-        $attributeId = 87;
         try {
-            $sql = "SELECT value FROM " . $this->tableProductVarchar . " WHERE attribute_id = $attributeId AND entity_id = $productId";
-            $result = $this->helperDb->sqlQueryFetchOne($sql);
-            $image = (string)$result;
+            $image = $this->helperAttribute->getProductAttributeValue("image");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $image = null;
