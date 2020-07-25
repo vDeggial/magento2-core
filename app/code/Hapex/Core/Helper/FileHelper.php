@@ -54,7 +54,8 @@ class FileHelper extends \Magento\Framework\App\Helper\AbstractHelper
     {
         $data = [];
         try {
-            if (file_exists($fileName)) {
+            $fileDriver = $this->objectManager->get("Magento\Framework\Filesystem\Driver\File");
+            if ($fileDriver->isExists($fileName)) {
                 $csvProcessor = $this->objectManager->get("Magento\Framework\File\Csv");
                 $data = $csvProcessor->getData($fileName);
             }
