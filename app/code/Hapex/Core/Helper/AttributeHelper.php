@@ -70,7 +70,6 @@ class AttributeHelper extends DbHelper
             $sql = "SELECT backend_type from " . $this->tableAttribute . " WHERE entity_type_id = $attributeTypeId AND attribute_id = $attributeId";
             $result = (string)$this->sqlQueryFetchOne($sql);
             $attributeType = $result;
-            $this->helperLog->errorLog(__METHOD__, $attributeType);
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $attributeType = null;
