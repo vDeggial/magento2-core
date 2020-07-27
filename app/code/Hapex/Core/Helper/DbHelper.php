@@ -37,51 +37,52 @@ class DbHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     public function sqlQuery($sql)
     {
-        return $this->queryExecute($sql);
+        $result = null;
+        try {
+            $result = $this->resource->getConnection()->query($sql);
+        } catch (\Exception $e) {
+            $result = null;
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+        } finally {
+            return $result;
+        }
     }
 
     public function sqlQueryFetchAll($sql, $limit = 0)
     {
         $sql .= ($limit > 0) ? " LIMIT $limit" : "";
-        return $this->queryExecute($sql, "fetchAll");
+        $result = null;
+        try {
+            $result = $this->resource->getConnection()->fetchAll($sql);
+        } catch (\Exception $e) {
+            $result = null;
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+        } finally {
+            return $result;
+        }
     }
 
     public function sqlQueryFetchOne($sql)
     {
-        return $this->queryExecute($sql, "fetchOne");
+        $result = null;
+        try {
+            $result = $this->resource->getConnection()->fetchOne($sql);
+        } catch (\Exception $e) {
+            $result = null;
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+        } finally {
+            return $result;
+        }
     }
 
     public function sqlQueryFetchRow($sql)
     {
-        return $this->queryExecute($sql, "fetchRow");
-    }
-
-    private function queryExecute($sql = null, $command = null)
-    {
         $result = null;
         try {
-            $connection = $this->resource->getConnection();
-
-            switch ($command) {
-                case "fetchOne":
-                    $result = $connection->fetchOne($sql);
-                break;
-
-                case "fetchAll":
-                    $result = $connection->fetchAll($sql);
-                break;
-
-                case "fetchRow":
-                    $result = $connection->fetchRow($sql);
-                break;
-
-                default:
-                    $result = $connection->query($sql);
-                break;
-            }
+            $result = $this->resource->getConnection()->fetchRow($sql);
         } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $result = null;
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
         } finally {
             return $result;
         }
