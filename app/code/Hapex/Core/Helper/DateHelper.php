@@ -40,8 +40,8 @@ class DateHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
         try {
             $currentDate = $this->getCurrentDate()->format('Y-m-d');
-            $afterFromDate = $fromDate ? strtotime($currentDate) >= strtotime($fromDate) ? true : false : true;
-            $beforeToDate = $toDate ? strtotime($currentDate) <= strtotime($toDate) ? true : false : true;
+            $afterFromDate = $fromDate ? strtotime($currentDate) >= strtotime($fromDate) : true;
+            $beforeToDate = $toDate ? strtotime($currentDate) <= strtotime($toDate) : true;
             $isWithinRange = $afterFromDate && $beforeToDate;
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
