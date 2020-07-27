@@ -7,14 +7,12 @@ use Magento\Framework\App\Helper\Context;
 class ProductAttributeHelper extends AttributeHelper
 {
     protected $tableProduct;
-    protected $tableProductOption;
     protected $attributeTypeId;
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
         parent::__construct($context, $objectManager);
         $this->attributeTypeId = 4;
         $this->tableProduct = $this->getSqlTableName('catalog_product_entity');
-        $this->tableProductOption = $this->getSqlTableName("eav_attribute_option_value");
     }
 
     public function getProductAttributeValue($productId, $attributeCode)

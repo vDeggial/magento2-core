@@ -7,14 +7,12 @@ use Magento\Framework\App\Helper\Context;
 class CustomerAttributeHelper extends AttributeHelper
 {
     protected $tableCustomer;
-    protected $tableCustomerOption;
     protected $attributeTypeId;
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
         parent::__construct($context, $objectManager);
         $this->attributeTypeId = 1;
         $this->tableCustomer = $this->getSqlTableName("customer_entity");
-        $this->tableCustomerOption = $this->getSqlTableName("eav_attribute_option_value");
     }
 
     public function getCustomerAttributeValue($customerId, $attributeCode)
