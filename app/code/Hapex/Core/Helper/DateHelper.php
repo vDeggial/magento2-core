@@ -34,15 +34,12 @@ class DateHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public function isCurrentDateWithinRange($fromDate, $toDate)
     {
         $isWithinRange = false;
-        $afterFromDate = false;
-        $beforeToDate = false;
         $currentDate = null;
 
         try {
             $currentDate = $this->getCurrentDate()->format('Y-m-d');
-            $afterFromDate = $fromDate ? strtotime($currentDate) >= strtotime($fromDate) : true;
-            $beforeToDate = $toDate ? strtotime($currentDate) <= strtotime($toDate) : true;
-            $isWithinRange = $afterFromDate && $beforeToDate;
+            $isWithinRange = ($fromDate ? strtotime($currentDate) >= strtotime($fromDate) : true)
+              && ($toDate ? strtotime($currentDate) <= strtotime($toDate) : true);
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $isWithinRange = false;
