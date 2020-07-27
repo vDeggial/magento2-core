@@ -78,6 +78,38 @@ class AttributeHelper extends DbHelper
         }
     }
 
+    public function getAttributeValue($tableName, $attributeTypeId, $attributeCode, $entityId)
+    {
+        $value = null;
+        $attributeId = $this->getAttributeId($attributeCode, $attributeTypeId);
+        try {
+            $tableName = $this->getAttributeTable($tableName, $attributeId, $attributeTypeId);
+            $sql = "SELECT value FROM $tableName WHERE attribute_id = $attributeId AND entity_id = $entityId";
+            $result = $this->sqlQueryFetchOne($sql);
+            $value = $result;
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $value = null;
+        } finally {
+            return $value;
+        }
+    }
+
+    public function getEntityAttributeValue($tableName = null, $fieldName = null, $entityId = 0)
+    {
+        $value = null;
+        try {
+            $sql  = "SELECT $fieldName FROM $tableName WHERE entity_id = $entityId";
+            $result = $this->sqlQueryFetchOne($sql);
+            $value = $result;
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $value = null;
+        } finally {
+            return $value;
+        }
+    }
+
     public function getAttributeOptionValue($optionId)
     {
         $optionValue = null;

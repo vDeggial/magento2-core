@@ -19,34 +19,12 @@ class CustomerAttributeHelper extends AttributeHelper
 
     public function getCustomerAttributeValue($customerId, $attributeCode)
     {
-        $value = null;
-        $attributeId = $this->getCustomerAttributeId($attributeCode);
-        try {
-            $tableName = $this->getCustomerAttributeTable($attributeId);
-            $sql = "SELECT value FROM $tableName WHERE attribute_id = $attributeId AND entity_id = $customerId";
-            $result = $this->sqlQueryFetchOne($sql);
-            $value = $result;
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $value = null;
-        } finally {
-            return $value;
-        }
+        return $this->getAttributeValue($this->tableCustomer, $this->attributeTypeId, $attributeCode, $customerId);
     }
 
     public function getCustomerEntityAttributeValue($customerId = 0, $fieldName = null)
     {
-        $value = null;
-        try {
-            $sql  = "SELECT $fieldName FROM " . $this->tableCustomer ." WHERE entity_id = $customerId";
-            $result = $this->sqlQueryFetchOne($sql);
-            $value = $result;
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $value = null;
-        } finally {
-            return $value;
-        }
+        return $this->getEntityAttributeValue($this->tableCustomer, $fieldName, $customerId);
     }
 
     public function getCustomerAttributeSelect($customerId = 0, $attributeCode = null)

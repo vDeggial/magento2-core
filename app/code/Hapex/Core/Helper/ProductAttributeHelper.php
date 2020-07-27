@@ -19,35 +19,12 @@ class ProductAttributeHelper extends AttributeHelper
 
     public function getProductAttributeValue($productId, $attributeCode)
     {
-        $value = null;
-        $attributeId = $this->getProductAttributeId($attributeCode);
-        try {
-            $tableName = $this->getProductAttributeTable($attributeId);
-            $sql = "SELECT value FROM $tableName WHERE attribute_id = $attributeId AND entity_id = $productId";
-            //$this->helperLog->errorLog(__METHOD__, $sql);
-            $result = $this->sqlQueryFetchOne($sql);
-            $value = $result;
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $value = null;
-        } finally {
-            return $value;
-        }
+        return $this->getAttributeValue($this->tableProduct, $this->attributeTypeId, $attributeCode, $productId);
     }
 
     public function getProductEntityAttributeValue($productId = 0, $fieldName = null)
     {
-        $value = null;
-        try {
-            $sql  = "SELECT $fieldName FROM " . $this->tableProduct ." WHERE entity_id = $productId";
-            $result = $this->sqlQueryFetchOne($sql);
-            $value = $result;
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $value = null;
-        } finally {
-            return $value;
-        }
+        return $this->getEntityAttributeValue($this->tableProduct, $fieldName, $productId);
     }
 
     public function getProductAttributeSelect($productId = 0, $attributeCode = null)
