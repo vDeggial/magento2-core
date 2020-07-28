@@ -49,11 +49,10 @@ class AttributeHelper extends DbHelper
         }
     }
 
-    public function getAttributeTable($attributeId, $attributeTypeCode)
+    public function getAttributeTable($attributeId, $attributeTypeId)
     {
         try {
-            $attributeTypeId = $this->getAttributeTypeId($attributeTypeCode);
-            $tableName = $this->getSqlTableName($this->getEntityTable($attributeTypeCode));
+            $tableName = $this->getSqlTableName($this->getEntityTable($attributeTypeId));
             $attributeType = $this->getAttributeType($attributeId, $attributeTypeId);
             $format = "%s_%s";
             $tableName = sprintf($format, $tableName, $attributeType);
@@ -80,13 +79,12 @@ class AttributeHelper extends DbHelper
         }
     }
 
-    public function getAttributeValue($attributeTypeCode, $attributeCode, $entityId)
+    public function getAttributeValue($attributeTypeId = 0, $attributeCode = null, $entityId = 0)
     {
         $value = null;
         try {
-            $attributeTypeId = $this->getAttributeTypeId($attributeTypeCode);
             $attributeId = $this->getAttributeId($attributeCode, $attributeTypeId);
-            $tableName = $this->getAttributeTable($attributeId, $attributeTypeCode);
+            $tableName = $this->getAttributeTable($attributeId, $attributeTypeId);
             $sql = "SELECT value FROM $tableName WHERE attribute_id = $attributeId AND entity_id = $entityId";
             $result = $this->sqlQueryFetchOne($sql);
             $value = $result;
@@ -98,11 +96,11 @@ class AttributeHelper extends DbHelper
         }
     }
 
-    public function getEntityAttributeValue($attributeTypeCode = null, $fieldName = null, $entityId = 0)
+    public function getEntityAttributeValue($attributeTypeId = 0, $fieldName = null, $entityId = 0)
     {
         $value = null;
         try {
-            $tableName = $this->getSqlTableName($this->getEntityTable($attributeTypeCode));
+            $tableName = $this->getSqlTableName($this->getEntityTable($attributeTypeId));
             $sql  = "SELECT $fieldName FROM $tableName WHERE entity_id = $entityId";
             $result = $this->sqlQueryFetchOne($sql);
             $value = $result;
@@ -143,18 +141,34 @@ class AttributeHelper extends DbHelper
             return $typeId;
         }
     }
-    protected function getEntityTable($typeCode = "")
+
+    protected function getAttributeTypeCode($typeId = 0)
     {
-        $typeId = 0;
+        $typeCode = null;
         try {
-            $sql = "SELECT entity_table FROM " . $this->tableEntityType . " WHERE entity_type_code LIKE '$typeCode'";
+            $sql = "SELECT entity_type_code FROM " . $this->tableEntityType . " WHERE entity_type_id = $typeId";
             $result = (string)$this->sqlQueryFetchOne($sql);
-            $typeId = $result;
+            $typeCode = $result;
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $typeId = 0;
+            $typeCode = null;
         } finally {
-            return $typeId;
+            return $typeCode;
+        }
+    }
+
+    protected function getEntityTable($typeId = 0)
+    {
+        $entityTable = null;
+        try {
+            $sql = "SELECT entity_table FROM " . $this->tableEntityType . " WHERE entity_type_id = $typeId";
+            $result = (string)$this->sqlQueryFetchOne($sql);
+            $entityTable = $result;
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $entityTable = null;
+        } finally {
+            return $entityTable;
         }
     }
 }
