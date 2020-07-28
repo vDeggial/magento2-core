@@ -6,37 +6,23 @@ use Magento\Framework\App\Helper\Context;
 
 class ProductAttributeHelper extends AttributeHelper
 {
-    protected $tableProduct;
-    protected $attributeTypeId;
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
         parent::__construct($context, $objectManager);
-        $this->attributeTypeId = 4;
-        $this->tableProduct = $this->getSqlTableName('catalog_product_entity');
     }
 
     public function getProductAttributeValue($productId, $attributeCode)
     {
-        return $this->getAttributeValue($this->tableProduct, $this->attributeTypeId, $attributeCode, $productId);
+        return $this->getAttributeValue("catalog_product", $attributeCode, $productId);
     }
 
     public function getProductEntityAttributeValue($productId = 0, $fieldName = null)
     {
-        return $this->getEntityAttributeValue($this->tableProduct, $fieldName, $productId);
+        return $this->getEntityAttributeValue("catalog_product", $fieldName, $productId);
     }
 
     public function getProductAttributeSelect($productId = 0, $attributeCode = null)
     {
         return $this->getAttributeOptionValue((int)$this->getProductAttributeValue($productId, $attributeCode));
-    }
-
-    public function getProductAttributeId($attributeCode)
-    {
-        return $this->getAttributeId($attributeCode, $this->attributeTypeId);
-    }
-
-    public function getProductAttributeTable($attributeId)
-    {
-        return $this->getAttributeTable($this->tableProduct, $attributeId, $this->attributeTypeId);
     }
 }

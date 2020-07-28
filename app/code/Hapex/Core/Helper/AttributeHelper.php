@@ -9,11 +9,13 @@ class AttributeHelper extends DbHelper
     protected $tableAttribute;
     protected $tableAttributeSet;
     protected $tableAttributeOption;
+    protected $tableEntityType;
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
         parent::__construct($context, $objectManager);
         $this->tableAttribute = $this->getSqlTableName("eav_attribute");
         $this->tableAttributeSet = $this->getSqlTableName("eav_attribute_set");
+        $this->tableEntityType = $this->getSqlTableName("eav_entity_type");
         $this->tableAttributeOption = $this->getSqlTableName("eav_attribute_option_value");
     }
 
@@ -32,7 +34,7 @@ class AttributeHelper extends DbHelper
         }
     }
 
-    public function getAttributeSetId($setName = "", $attributeTypeId = 1)
+    public function getAttributeSetId($setName = "", $attributeTypeId)
     {
         $attributeSetId = 0;
         try {
@@ -47,14 +49,14 @@ class AttributeHelper extends DbHelper
         }
     }
 
-    public function getAttributeTable($table, $attributeId, $attributeTypeId)
+    public function getAttributeTable($attributeId, $attributeTypeCode)
     {
-        $tableName = $table;
         try {
+            $attributeTypeId = $this->getAttributeTypeId($attributeTypeCode);
+            $tableName = $this->getSqlTableName($this->getEntityTable($attributeTypeCode));
             $attributeType = $this->getAttributeType($attributeId, $attributeTypeId);
             $format = "%s_%s";
-            $tableName = sprintf($format, $table, $attributeType);
-            $tableName = $this->getSqlTableName($tableName);
+            $tableName = sprintf($format, $tableName, $attributeType);
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $tableName = $table . "_";
@@ -78,12 +80,13 @@ class AttributeHelper extends DbHelper
         }
     }
 
-    public function getAttributeValue($tableName, $attributeTypeId, $attributeCode, $entityId)
+    public function getAttributeValue($attributeTypeCode, $attributeCode, $entityId)
     {
         $value = null;
-        $attributeId = $this->getAttributeId($attributeCode, $attributeTypeId);
         try {
-            $tableName = $this->getAttributeTable($tableName, $attributeId, $attributeTypeId);
+            $attributeTypeId = $this->getAttributeTypeId($attributeTypeCode);
+            $attributeId = $this->getAttributeId($attributeCode, $attributeTypeId);
+            $tableName = $this->getAttributeTable($attributeId, $attributeTypeCode);
             $sql = "SELECT value FROM $tableName WHERE attribute_id = $attributeId AND entity_id = $entityId";
             $result = $this->sqlQueryFetchOne($sql);
             $value = $result;
@@ -95,10 +98,11 @@ class AttributeHelper extends DbHelper
         }
     }
 
-    public function getEntityAttributeValue($tableName = null, $fieldName = null, $entityId = 0)
+    public function getEntityAttributeValue($attributeTypeCode = null, $fieldName = null, $entityId = 0)
     {
         $value = null;
         try {
+            $tableName = $this->getSqlTableName($this->getEntityTable($attributeTypeCode));
             $sql  = "SELECT $fieldName FROM $tableName WHERE entity_id = $entityId";
             $result = $this->sqlQueryFetchOne($sql);
             $value = $result;
@@ -122,6 +126,35 @@ class AttributeHelper extends DbHelper
             $optionValue = null;
         } finally {
             return $optionValue;
+        }
+    }
+
+    protected function getAttributeTypeId($typeCode = "")
+    {
+        $typeId = 0;
+        try {
+            $sql = "SELECT entity_type_id FROM " . $this->tableEntityType . " WHERE entity_type_code LIKE '$typeCode'";
+            $result = (int)$this->sqlQueryFetchOne($sql);
+            $typeId = $result;
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $typeId = 0;
+        } finally {
+            return $typeId;
+        }
+    }
+    protected function getEntityTable($typeCode = "")
+    {
+        $typeId = 0;
+        try {
+            $sql = "SELECT entity_table FROM " . $this->tableEntityType . " WHERE entity_type_code LIKE '$typeCode'";
+            $result = (string)$this->sqlQueryFetchOne($sql);
+            $typeId = $result;
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $typeId = 0;
+        } finally {
+            return $typeId;
         }
     }
 }
