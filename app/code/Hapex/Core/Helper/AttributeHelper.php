@@ -51,13 +51,14 @@ class AttributeHelper extends DbHelper
 
     public function getAttributeTable($attributeTypeId, $backendType)
     {
+        $tableName = null;
         try {
             $tableName = $this->getSqlTableName($this->getEntityTable($attributeTypeId));
             $format = "%s_%s";
             $tableName = sprintf($format, $tableName, $backendType);
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $tableName = $table . "_";
+            $tableName = null;
         } finally {
             return $tableName;
         }
