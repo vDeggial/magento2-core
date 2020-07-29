@@ -16,9 +16,9 @@ class CustomerAttributeHelper extends AttributeHelper
         return $this->getAttributeValue($this->getAttributeTypeId("customer"), $attributeCode, $customerId);
     }
 
-    public function getCustomerEntityAttributeValue($customerId = 0, $fieldName = null)
+    public function getCustomerEntityFieldValue($customerId = 0, $fieldName = null)
     {
-        return $this->getEntityAttributeValue($this->getAttributeTypeId("customer"), $fieldName, $customerId);
+        return $this->getEntityFieldValue($this->getAttributeTypeId("customer"), $fieldName, $customerId);
     }
 
     public function getCustomerAttributeSelect($customerId = 0, $attributeCode = null)

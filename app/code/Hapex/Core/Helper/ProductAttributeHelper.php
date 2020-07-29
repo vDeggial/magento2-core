@@ -16,9 +16,9 @@ class ProductAttributeHelper extends AttributeHelper
         return $this->getAttributeValue($this->getAttributeTypeId("catalog_product"), $attributeCode, $productId);
     }
 
-    public function getProductEntityAttributeValue($productId = 0, $fieldName = null)
+    public function getProductEntityFieldValue($productId = 0, $fieldName = null)
     {
-        return $this->getEntityAttributeValue($this->getAttributeTypeId("catalog_product"), $fieldName, $productId);
+        return $this->getEntityFieldValue($this->getAttributeTypeId("catalog_product"), $fieldName, $productId);
     }
 
     public function getProductAttributeSelect($productId = 0, $attributeCode = null)

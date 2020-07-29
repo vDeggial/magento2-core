@@ -96,7 +96,7 @@ class AttributeHelper extends DbHelper
         }
     }
 
-    public function getEntityAttributeValue($attributeTypeId = 0, $fieldName = null, $entityId = 0)
+    public function getEntityFieldValue($attributeTypeId = 0, $fieldName = null, $entityId = 0)
     {
         $value = null;
         try {

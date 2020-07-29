@@ -55,7 +55,7 @@ class CustomerHelper extends BaseHelper
     {
       $customerGroup = 0;
       try {
-          $customerGroup = (int)$this->helperAttribute->getCustomerEntityAttributeValue($customerId, "group_id");
+          $customerGroup = (int)$this->helperAttribute->getCustomerEntityFieldValue($customerId, "group_id");
       } catch (\Exception $e) {
           $this->helperLog->errorLog(__METHOD__, $e->getMessage());
           $customerGroup = 0;

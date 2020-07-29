@@ -32,7 +32,7 @@ class ProductHelper extends BaseHelper
     {
         $productAttributeSet = 0;
         try {
-            $productAttributeSet = (int)$this->helperAttribute->getProductEntityAttributeValue($productId, "attribute_set_id");
+            $productAttributeSet = (int)$this->helperAttribute->getProductEntityFieldValue($productId, "attribute_set_id");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $productAttributeSet = 0;
@@ -50,7 +50,7 @@ class ProductHelper extends BaseHelper
     {
         $productDate = null;
         try {
-            $productDate = (string)$this->helperAttribute->getProductEntityAttributeValue($productId, "created_at");
+            $productDate = (string)$this->helperAttribute->getProductEntityFieldValue($productId, "created_at");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $productDate = null;
@@ -63,7 +63,7 @@ class ProductHelper extends BaseHelper
     {
         $productDate = null;
         try {
-            $productDate = (string)$this->helperAttribute->getProductEntityAttributeValue($productId, "updated_at");
+            $productDate = (string)$this->helperAttribute->getProductEntityFieldValue($productId, "updated_at");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $productDate = null;
@@ -147,7 +147,7 @@ class ProductHelper extends BaseHelper
     {
         $productSku = null;
         try {
-            $productSku = (string)$this->helperAttribute->getProductEntityAttributeValue($productId, "sku");
+            $productSku = (string)$this->helperAttribute->getProductEntityFieldValue($productId, "sku");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $productSku = null;
@@ -188,7 +188,7 @@ class ProductHelper extends BaseHelper
     {
         $productType = null;
         try {
-            $productType = (string)$this->helperAttribute->getProductEntityAttributeValue($productId, "type_id");
+            $productType = (string)$this->helperAttribute->getProductEntityFieldValue($productId, "type_id");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $productType = null;
