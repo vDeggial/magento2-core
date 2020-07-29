@@ -49,13 +49,12 @@ class AttributeHelper extends DbHelper
         }
     }
 
-    public function getAttributeTable($attributeId, $attributeTypeId)
+    public function getAttributeTable($attributeTypeId, $backendType)
     {
         try {
             $tableName = $this->getSqlTableName($this->getEntityTable($attributeTypeId));
-            $attributeType = $this->getAttributeType($attributeId, $attributeTypeId);
             $format = "%s_%s";
-            $tableName = sprintf($format, $tableName, $attributeType);
+            $tableName = sprintf($format, $tableName, $backendType);
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $tableName = $table . "_";
@@ -64,7 +63,7 @@ class AttributeHelper extends DbHelper
         }
     }
 
-    public function getAttributeType($attributeId, $attributeTypeId)
+    public function getAttributeBackendType($attributeId, $attributeTypeId)
     {
         $attributeType = null;
         try {
@@ -84,10 +83,16 @@ class AttributeHelper extends DbHelper
         $value = null;
         try {
             $attributeId = $this->getAttributeId($attributeCode, $attributeTypeId);
-            $tableName = $this->getAttributeTable($attributeId, $attributeTypeId);
-            $sql = "SELECT value FROM $tableName WHERE attribute_id = $attributeId AND entity_id = $entityId";
-            $result = $this->sqlQueryFetchOne($sql);
-            $value = $result;
+            $backendType = $attributeId > 0 ? $this->getAttributeBackendType($attributeId, $attributeTypeId) : null;
+            switch ($attributeId > 0 && $backendType !== "static") {
+              case true:
+              $value = $this->getValue($entityId, $attributeTypeId, $attributeId, $backendType);
+              break;
+
+              default:
+              $value = $this->getEntityFieldValue($attributeTypeId, $attributeCode, $entityId);
+              break;
+            }
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $value = null;
@@ -169,6 +174,22 @@ class AttributeHelper extends DbHelper
             $entityTable = null;
         } finally {
             return $entityTable;
+        }
+    }
+
+    private function getValue($entityId, $attributeTypeId, $attributeId, $backendType)
+    {
+        $value = null;
+        try {
+            $tableName = $this->getAttributeTable($attributeTypeId, $backendType);
+            $sql = "SELECT value FROM $tableName WHERE attribute_id = $attributeId AND entity_id = $entityId";
+            $result = $this->sqlQueryFetchOne($sql);
+            $value = $result;
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $value = null;
+        } finally {
+            return $value;
         }
     }
 }
