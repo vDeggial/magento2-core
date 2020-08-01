@@ -57,9 +57,7 @@ class OrderHelper extends BaseHelper
     {
         $date = null;
         try {
-            $sql = "SELECT created_at FROM " . $this->tableOrder . " where order_id = $orderId";
-            $result = $this->helperDb->sqlQueryFetchOne($sql);
-            $date = (string)$result;
+            $date = (string)$this->getOrderFieldValue($orderId, "created_at");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $date = null;
@@ -72,9 +70,7 @@ class OrderHelper extends BaseHelper
     {
         $date = null;
         try {
-            $sql = "SELECT updated_at FROM " . $this->tableOrder . " where order_id = $orderId";
-            $result = $this->helperDb->sqlQueryFetchOne($sql);
-            $date = (string)$result;
+            $date = (string)$this->getOrderFieldValue($orderId, "updated_at");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $date = null;
@@ -117,9 +113,7 @@ class OrderHelper extends BaseHelper
         try {
             switch (true) {
         case is_numeric($order):
-          $sql = "SELECT customer_id FROM " . $this->tableOrder . " where entity_id = $order";
-          $result = $this->helperDb->sqlQueryFetchOne($sql);
-          $customerId = (int)$result;
+          $customerId = (int)$this->getOrderFieldValue($orderId, "customer_id");
           break;
 
         case is_object($order):
@@ -138,9 +132,7 @@ class OrderHelper extends BaseHelper
     {
         $qty = 0;
         try {
-            $sql = "SELECT sum(qty_canceled) FROM " . $this->tableOrderItem . " where order_id = $orderId AND sku LIKE '$productSku'";
-            $result = $this->helperDb->sqlQueryFetchOne($sql);
-            $qty = (int)$result;
+            $qty = (int)$this->getOrderItemFieldValue($orderId, $productSku, "sum(qty_canceled)");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $qty = 0;
@@ -153,9 +145,7 @@ class OrderHelper extends BaseHelper
     {
         $qty = 0;
         try {
-            $sql = "SELECT sum(qty_ordered) FROM " . $this->tableOrderItem . " where order_id = $orderId AND sku LIKE '$productSku'";
-            $result = $this->helperDb->sqlQueryFetchOne($sql);
-            $qty = (int)$result;
+            $qty = (int)$this->getOrderItemFieldValue($orderId, $productSku, "sum(qty_ordered)");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $qty = 0;
@@ -168,9 +158,7 @@ class OrderHelper extends BaseHelper
     {
         $qty = 0;
         try {
-            $sql = "SELECT sum(qty_refunded) FROM " . $this->tableOrderItem . " where order_id = $orderId AND sku LIKE '$productSku'";
-            $result = $this->helperDb->sqlQueryFetchOne($sql);
-            $qty = (int)$result;
+            $qty = (int)$this->getOrderItemFieldValue($orderId, $productSku, "sum(qty_refunded)");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $qty = 0;
@@ -183,9 +171,7 @@ class OrderHelper extends BaseHelper
     {
         $fullName = null;
         try {
-            $sql = "SELECT billing_name FROM " . $this->tableOrderGrid . " WHERE entity_id = $orderId";
-            $result = $this->helperDb->sqlQueryFetchOne($sql);
-            $fullName = $result;
+            $fullName = $this->getOrderGridFieldValue($orderId, "billing_name");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $fullName = null;
@@ -198,9 +184,7 @@ class OrderHelper extends BaseHelper
     {
         $email = null;
         try {
-            $sql = "SELECT customer_email FROM " . $this->tableOrderGrid . " WHERE entity_id = $orderId";
-            $result = $this->helperDb->sqlQueryFetchOne($sql);
-            $email = $result;
+            $email = $this->getOrderGridFieldValue($orderId, "customer_email");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $email = null;
@@ -284,9 +268,7 @@ class OrderHelper extends BaseHelper
     {
         $fullName = null;
         try {
-            $sql = "SELECT shipping_name FROM " . $this->tableOrderGrid . " WHERE entity_id = $orderId";
-            $result = $this->helperDb->sqlQueryFetchOne($sql);
-            $fullName = $result;
+            $fullName = $this->getOrderGridFieldValue($orderId, "shipping_name");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $fullName = null;
@@ -307,6 +289,45 @@ class OrderHelper extends BaseHelper
             $order = null;
         } finally {
             return $order;
+        }
+    }
+
+    private function getOrderFieldValue($orderId = null, $fieldName = null)
+    {
+        try {
+            $sql = "SELECT $fieldName FROM " . $this->tableOrder . " where entity_id = $orderId";
+            $result = $this->helperDb->sqlQueryFetchOne($sql);
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $result = null;
+        } finally {
+            return $result;
+        }
+    }
+
+    private function getOrderItemFieldValue($orderId = null, $productSku = null, $fieldName = null)
+    {
+        try {
+            $sql = "SELECT $fieldName FROM " . $this->tableOrderItem . " where order_id = $orderId AND sku LIKE '$productSku'";
+            $result = $this->helperDb->sqlQueryFetchOne($sql);
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $result = null;
+        } finally {
+            return $result;
+        }
+    }
+
+    private function getOrderGridFieldValue($orderId = null, $fieldName = null)
+    {
+        try {
+            $sql = "SELECT $fieldName FROM " . $this->tableOrderGrid . " where entity_id = $orderId";
+            $result = $this->helperDb->sqlQueryFetchOne($sql);
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $result = null;
+        } finally {
+            return $result;
         }
     }
 }
