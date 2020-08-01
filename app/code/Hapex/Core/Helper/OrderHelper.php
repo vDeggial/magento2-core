@@ -113,7 +113,7 @@ class OrderHelper extends BaseHelper
         try {
             switch (true) {
         case is_numeric($order):
-          $customerId = (int)$this->getOrderFieldValue($orderId, "customer_id");
+          $customerId = (int)$this->getOrderFieldValue($order, "customer_id");
           break;
 
         case is_object($order):
