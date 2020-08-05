@@ -19,10 +19,11 @@ class EavHelper extends DbHelper
         $this->tableAttributeOption = $this->getSqlTableName("eav_attribute_option_value");
     }
 
-    public function getAttributeId($attributeCode, $attributeTypeId)
+    public function getAttributeId($attributeCode = null, $attributeType = null)
     {
         $attributeId = 0;
         try {
+            $attributeTypeId = $this->getEntityTypeId($attributeType);
             $sql = "SELECT attribute_id from " . $this->tableAttribute . " WHERE entity_type_id = $attributeTypeId AND attribute_code LIKE '$attributeCode'";
             $result = (int)$this->sqlQueryFetchOne($sql);
             $attributeId = $result;
@@ -34,10 +35,11 @@ class EavHelper extends DbHelper
         }
     }
 
-    public function getAttributeSetId($setName = "", $attributeTypeId)
+    public function getAttributeSetId($setName = null, $attributeType = null)
     {
         $attributeSetId = 0;
         try {
+            $attributeTypeId = $this->getEntityTypeId($attributeType);
             $sql = "SELECT attribute_set_id from " . $this->tableAttributeSet . " WHERE entity_type_id = $attributeTypeId AND attribute_set_name LIKE '$setName'";
             $result = (int)$this->sqlQueryFetchOne($sql);
             $attributeSetId = $result;
@@ -49,13 +51,15 @@ class EavHelper extends DbHelper
         }
     }
 
-    public function getAttributeTable($attributeTypeId, $backendType)
+    public function getAttributeTable($attributeType = null, $backendType = null)
     {
         $tableName = null;
         try {
-            $tableName = $this->getSqlTableName($this->getEntityTable($attributeTypeId));
-            $format = "%s_%s";
-            $tableName = sprintf($format, $tableName, $backendType);
+            $tableName = $this->getSqlTableName($this->getEntityTable($attributeType));
+            if ($backendType !== null) {
+                $format = "%s_%s";
+                $tableName = sprintf($format, $tableName, $backendType);
+            }
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $tableName = null;
@@ -64,18 +68,19 @@ class EavHelper extends DbHelper
         }
     }
 
-    public function getAttributeBackendType($attributeId, $attributeTypeId)
+    public function getAttributeBackendType($attributeId = 0, $attributeType = null)
     {
-        $attributeType = null;
+        $backendType = null;
         try {
+            $attributeTypeId = $this->getEntityTypeId($attributeType);
             $sql = "SELECT backend_type from " . $this->tableAttribute . " WHERE entity_type_id = $attributeTypeId AND attribute_id = $attributeId";
             $result = (string)$this->sqlQueryFetchOne($sql);
-            $attributeType = $result;
+            $backendType = $result;
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $attributeType = null;
+            $backendType = null;
         } finally {
-            return $attributeType;
+            return $backendType;
         }
     }
 
@@ -83,16 +88,15 @@ class EavHelper extends DbHelper
     {
         $value = null;
         try {
-            $attributeTypeId = $this->getEntityTypeId($attributeType);
-            $attributeId = $this->getAttributeId($attributeCode, $attributeTypeId);
-            $backendType = $attributeId > 0 ? $this->getAttributeBackendType($attributeId, $attributeTypeId) : null;
+            $attributeId = $this->getAttributeId($attributeCode, $attributeType);
+            $backendType = $attributeId > 0 ? $this->getAttributeBackendType($attributeId, $attributeType) : null;
             switch ($attributeId > 0 && $backendType !== "static") {
               case true:
-              $value = $this->getValue($entityId, $attributeTypeId, $attributeId, $backendType);
+              $value = $this->getValue($entityId, $attributeType, $attributeId, $backendType);
               break;
 
               default:
-              $value = $this->getEntityFieldValue($attributeTypeId, $attributeCode, $entityId);
+              $value = $this->getEntityFieldValue($attributeType, $attributeCode, $entityId);
               break;
             }
         } catch (\Exception $e) {
@@ -107,8 +111,7 @@ class EavHelper extends DbHelper
     {
         $value = null;
         try {
-            $attributeTypeId = $this->getEntityTypeId($attributeType);
-            $tableName = $this->getSqlTableName($this->getEntityTable($attributeTypeId));
+            $tableName = $this->getSqlTableName($this->getEntityTable($attributeType));
             $sql  = "SELECT $fieldName FROM $tableName WHERE entity_id = $entityId";
             $result = $this->sqlQueryFetchOne($sql);
             $value = $result;
@@ -120,7 +123,7 @@ class EavHelper extends DbHelper
         }
     }
 
-    public function getAttributeOptionValue($optionId)
+    public function getAttributeOptionValue($optionId = 0)
     {
         $optionValue = null;
         try {
@@ -135,7 +138,7 @@ class EavHelper extends DbHelper
         }
     }
 
-    protected function getEntityTypeId($typeCode = "")
+    protected function getEntityTypeId($typeCode = null)
     {
         $typeId = 0;
         try {
@@ -150,7 +153,7 @@ class EavHelper extends DbHelper
         }
     }
 
-    protected function getAttributeTypeCode($typeId = 0)
+    protected function getEntityTypeCode($typeId = 0)
     {
         $typeCode = null;
         try {
@@ -165,10 +168,11 @@ class EavHelper extends DbHelper
         }
     }
 
-    protected function getEntityTable($typeId = 0)
+    protected function getEntityTable($type = null)
     {
         $entityTable = null;
         try {
+            $typeId = $this->getEntityTypeId($type);
             $sql = "SELECT entity_table FROM " . $this->tableEntityType . " WHERE entity_type_id = $typeId";
             $result = (string)$this->sqlQueryFetchOne($sql);
             $entityTable = $result;
@@ -180,11 +184,11 @@ class EavHelper extends DbHelper
         }
     }
 
-    private function getValue($entityId, $attributeTypeId, $attributeId, $backendType)
+    private function getValue($entityId = 0, $attributeType = null, $attributeId = 0, $backendType = null)
     {
         $value = null;
         try {
-            $tableName = $this->getAttributeTable($attributeTypeId, $backendType);
+            $tableName = $this->getAttributeTable($attributeType, $backendType);
             $sql = "SELECT value FROM $tableName WHERE attribute_id = $attributeId AND entity_id = $entityId";
             $result = $this->sqlQueryFetchOne($sql);
             $value = $result;
