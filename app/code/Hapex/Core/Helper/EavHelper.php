@@ -4,7 +4,7 @@ namespace Hapex\Core\Helper;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\App\Helper\Context;
 
-class AttributeHelper extends DbHelper
+class EavHelper extends DbHelper
 {
     protected $tableAttribute;
     protected $tableAttributeSet;

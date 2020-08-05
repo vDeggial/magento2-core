@@ -7,11 +7,11 @@ use Magento\Framework\App\Helper\Context;
 class CustomerHelper extends BaseHelper
 {
     protected $session;
-    protected $helperAttribute;
+    protected $helperEav;
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
         parent::__construct($context, $objectManager);
-        $this->helperAttribute = $this->objectManager->get("Hapex\Core\Helper\CustomerAttributeHelper");
+        $this->helperEav = $this->objectManager->get("Hapex\Core\Helper\CustomerEavHelper");
         $this->session = $this->generateClassObject('Magento\Customer\Model\Session');
     }
 
@@ -22,7 +22,7 @@ class CustomerHelper extends BaseHelper
 
     public function getAttributeValue($customerId = null, $attribute = null)
     {
-        return $this->helperAttribute->getCustomerAttributeValue($customerId, $attribute);
+        return $this->helperEav->getCustomerAttributeValue($customerId, $attribute);
     }
 
     public function getLoggedInGroup()
@@ -55,7 +55,7 @@ class CustomerHelper extends BaseHelper
     {
       $customerGroup = 0;
       try {
-          $customerGroup = (int)$this->helperAttribute->getCustomerEntityFieldValue($customerId, "group_id");
+          $customerGroup = (int)$this->helperEav->getCustomerEntityFieldValue($customerId, "group_id");
       } catch (\Exception $e) {
           $this->helperLog->errorLog(__METHOD__, $e->getMessage());
           $customerGroup = 0;

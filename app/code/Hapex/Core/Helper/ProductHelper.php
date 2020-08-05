@@ -11,11 +11,11 @@ class ProductHelper extends BaseHelper
     protected $tableGallery;
     protected $tableGalleryValue;
     protected $tableGalleryToEntity;
-    protected $helperAttribute;
+    protected $helperEav;
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
         parent::__construct($context, $objectManager);
-        $this->helperAttribute = $this->objectManager->get("Hapex\Core\Helper\ProductAttributeHelper");
+        $this->helperEav = $this->objectManager->get("Hapex\Core\Helper\ProductEavHelper");
         $this->tableProduct = $this->helperDb->getSqlTableName('catalog_product_entity');
         $this->tableProductStock = $this->helperDb->getSqlTableName('cataloginventory_stock_item');
         $this->tableGallery = $this->helperDb->getSqlTableName("catalog_product_entity_media_gallery");
@@ -32,7 +32,7 @@ class ProductHelper extends BaseHelper
     {
         $productAttributeSet = 0;
         try {
-            $productAttributeSet = (int)$this->helperAttribute->getProductEntityFieldValue($productId, "attribute_set_id");
+            $productAttributeSet = (int)$this->helperEav->getProductEntityFieldValue($productId, "attribute_set_id");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $productAttributeSet = 0;
@@ -50,7 +50,7 @@ class ProductHelper extends BaseHelper
     {
         $productDate = null;
         try {
-            $productDate = (string)$this->helperAttribute->getProductEntityFieldValue($productId, "created_at");
+            $productDate = (string)$this->helperEav->getProductEntityFieldValue($productId, "created_at");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $productDate = null;
@@ -63,7 +63,7 @@ class ProductHelper extends BaseHelper
     {
         $productDate = null;
         try {
-            $productDate = (string)$this->helperAttribute->getProductEntityFieldValue($productId, "updated_at");
+            $productDate = (string)$this->helperEav->getProductEntityFieldValue($productId, "updated_at");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $productDate = null;
@@ -76,7 +76,7 @@ class ProductHelper extends BaseHelper
     {
         $description = null;
         try {
-            $description = $this->helperAttribute->getProductAttributeValue($productId, "description");
+            $description = $this->helperEav->getProductAttributeValue($productId, "description");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $description = null;
@@ -134,7 +134,7 @@ class ProductHelper extends BaseHelper
     {
         $name = null;
         try {
-            $name = $this->helperAttribute->getProductAttributeValue($productId,"name");
+            $name = $this->helperEav->getProductAttributeValue($productId,"name");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $name = null;
@@ -147,7 +147,7 @@ class ProductHelper extends BaseHelper
     {
         $productSku = null;
         try {
-            $productSku = (string)$this->helperAttribute->getProductEntityFieldValue($productId, "sku");
+            $productSku = (string)$this->helperEav->getProductEntityFieldValue($productId, "sku");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $productSku = null;
@@ -160,7 +160,7 @@ class ProductHelper extends BaseHelper
     {
         $status = 0;
         try {
-            $status = (int)$this->helperAttribute->getProductAttributeValue($productId,"status");
+            $status = (int)$this->helperEav->getProductAttributeValue($productId,"status");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $status = 0;
@@ -188,7 +188,7 @@ class ProductHelper extends BaseHelper
     {
         $productType = null;
         try {
-            $productType = (string)$this->helperAttribute->getProductEntityFieldValue($productId, "type_id");
+            $productType = (string)$this->helperEav->getProductEntityFieldValue($productId, "type_id");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $productType = null;
@@ -216,7 +216,7 @@ class ProductHelper extends BaseHelper
     {
         $urlKey = null;
         try {
-            $urlKey = $this->helperAttribute->getProductAttributeValue($productId,"url_key");
+            $urlKey = $this->helperEav->getProductAttributeValue($productId,"url_key");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $urlKey = null;
@@ -258,7 +258,7 @@ class ProductHelper extends BaseHelper
     {
         $image = null;
         try {
-            $image = $this->helperAttribute->getProductAttributeValue($productId,"image");
+            $image = $this->helperEav->getProductAttributeValue($productId,"image");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $image = null;

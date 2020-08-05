@@ -4,7 +4,7 @@ namespace Hapex\Core\Helper;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\App\Helper\Context;
 
-class CustomerAttributeHelper extends AttributeHelper
+class CustomerEavHelper extends EavHelper
 {
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
