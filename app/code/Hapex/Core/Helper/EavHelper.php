@@ -79,10 +79,11 @@ class EavHelper extends DbHelper
         }
     }
 
-    public function getAttributeValue($attributeTypeId = 0, $attributeCode = null, $entityId = 0)
+    public function getAttributeValue($attributeType = null, $attributeCode = null, $entityId = 0)
     {
         $value = null;
         try {
+            $attributeTypeId = $this->getEntityTypeId($attributeType);
             $attributeId = $this->getAttributeId($attributeCode, $attributeTypeId);
             $backendType = $attributeId > 0 ? $this->getAttributeBackendType($attributeId, $attributeTypeId) : null;
             switch ($attributeId > 0 && $backendType !== "static") {
@@ -102,10 +103,11 @@ class EavHelper extends DbHelper
         }
     }
 
-    public function getEntityFieldValue($attributeTypeId = 0, $fieldName = null, $entityId = 0)
+    public function getEntityFieldValue($attributeType = null, $fieldName = null, $entityId = 0)
     {
         $value = null;
         try {
+            $attributeTypeId = $this->getEntityTypeId($attributeType);
             $tableName = $this->getSqlTableName($this->getEntityTable($attributeTypeId));
             $sql  = "SELECT $fieldName FROM $tableName WHERE entity_id = $entityId";
             $result = $this->sqlQueryFetchOne($sql);
@@ -133,7 +135,7 @@ class EavHelper extends DbHelper
         }
     }
 
-    protected function getAttributeTypeId($typeCode = "")
+    protected function getEntityTypeId($typeCode = "")
     {
         $typeId = 0;
         try {

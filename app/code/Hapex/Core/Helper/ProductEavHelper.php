@@ -13,12 +13,12 @@ class ProductEavHelper extends EavHelper
 
     public function getProductAttributeValue($productId, $attributeCode)
     {
-        return $this->getAttributeValue($this->getAttributeTypeId("catalog_product"), $attributeCode, $productId);
+        return $this->getAttributeValue("catalog_product", $attributeCode, $productId);
     }
 
     public function getProductEntityFieldValue($productId = 0, $fieldName = null)
     {
-        return $this->getEntityFieldValue($this->getAttributeTypeId("catalog_product"), $fieldName, $productId);
+        return $this->getEntityFieldValue("catalog_product", $fieldName, $productId);
     }
 
     public function getProductAttributeSelect($productId = 0, $attributeCode = null)

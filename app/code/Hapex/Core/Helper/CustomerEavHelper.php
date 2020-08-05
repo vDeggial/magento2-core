@@ -13,12 +13,12 @@ class CustomerEavHelper extends EavHelper
 
     public function getCustomerAttributeValue($customerId, $attributeCode)
     {
-        return $this->getAttributeValue($this->getAttributeTypeId("customer"), $attributeCode, $customerId);
+        return $this->getAttributeValue("customer", $attributeCode, $customerId);
     }
 
     public function getCustomerEntityFieldValue($customerId = 0, $fieldName = null)
     {
-        return $this->getEntityFieldValue($this->getAttributeTypeId("customer"), $fieldName, $customerId);
+        return $this->getEntityFieldValue("customer", $fieldName, $customerId);
     }
 
     public function getCustomerAttributeSelect($customerId = 0, $attributeCode = null)
