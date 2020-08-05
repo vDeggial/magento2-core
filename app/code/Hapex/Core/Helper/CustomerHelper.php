@@ -12,7 +12,7 @@ class CustomerHelper extends BaseHelper
     {
         parent::__construct($context, $objectManager);
         $this->helperEav = $this->objectManager->get("Hapex\Core\Helper\CustomerEavHelper");
-        $this->session = $this->generateClassObject('Magento\Customer\Model\Session');
+        $this->session = $this->generateClassObject('Magento\Customer\Model\SessionFactory')->create();
     }
 
     public function getCustomer($customerId = 0)
