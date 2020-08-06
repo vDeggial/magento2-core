@@ -15,7 +15,7 @@ class ProductHelper extends BaseHelper
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
         parent::__construct($context, $objectManager);
-        $this->helperEav = $this->objectManager->get("Hapex\Core\Helper\ProductEavHelper");
+        $this->helperEav = $this->generateClassObject(\Hapex\Core\Helper\ProductEavHelper::class);
         $this->tableProduct = $this->helperDb->getSqlTableName('catalog_product_entity');
         $this->tableProductStock = $this->helperDb->getSqlTableName('cataloginventory_stock_item');
         $this->tableGallery = $this->helperDb->getSqlTableName("catalog_product_entity_media_gallery");

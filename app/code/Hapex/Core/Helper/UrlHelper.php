@@ -15,7 +15,7 @@ class UrlHelper extends \Magento\Framework\App\Helper\AbstractHelper
     {
         parent::__construct($context);
         $this->objectManager = $objectManager;
-        $this->helperLog = $this->objectManager->get("Hapex\Core\Helper\LogHelper");
+        $this->helperLog = $this->objectManager->get(\Hapex\Core\Helper\LogHelper::class);
     }
 
     public function getRemoteContent($url)
@@ -38,7 +38,7 @@ class UrlHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     private function get($url = "")
     {
-        $curl = $this->objectManager->get("Magento\Framework\HTTP\Client\Curl");
+        $curl = $this->objectManager->get(\Magento\Framework\HTTP\Client\Curl::class);
         $options = array(
           CURLOPT_RETURNTRANSFER => 1,
           CURLOPT_USERAGENT      => "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7) Gecko/20040803 Firefox/0.9.3",
