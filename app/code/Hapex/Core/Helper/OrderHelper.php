@@ -282,7 +282,7 @@ class OrderHelper extends BaseHelper
     {
         $order = null;
         try {
-            $orderRepository = $this->generateClassObject("Magento\Sales\Model\OrderRepository");
+            $orderRepository = $this->generateClassObject(\Magento\Sales\Model\OrderRepository::class);
             $order = $orderRepository->get($orderId);
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());

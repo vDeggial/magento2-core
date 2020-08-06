@@ -17,11 +17,11 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
         $this->objectManager = $objectManager;
-        $this->helperDb = $this->generateClassObject("Hapex\Core\Helper\DbHelper");
-        $this->helperLog = $this->generateClassObject("Hapex\Core\Helper\LogHelper");
-        $this->helperFile = $this->generateClassObject("Hapex\Core\Helper\FileHelper");
-        $this->helperDate = $this->generateClassObject("Hapex\Core\Helper\DateHelper");
-        $this->helperUrl = $this->generateClassObject("Hapex\Core\Helper\UrlHelper");
+        $this->helperDb = $this->generateClassObject(\Hapex\Core\Helper\DbHelper::class);
+        $this->helperLog = $this->generateClassObject(\Hapex\Core\Helper\LogHelper::class);
+        $this->helperFile = $this->generateClassObject(\Hapex\Core\Helper\FileHelper::class);
+        $this->helperDate = $this->generateClassObject(\Hapex\Core\Helper\DateHelper::class);
+        $this->helperUrl = $this->generateClassObject(\Hapex\Core\Helper\UrlHelper::class);
         parent::__construct($context);
     }
 
@@ -50,7 +50,7 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
         return $this->helperUrl;
     }
 
-    public function getFileContents($path = "", $filename = "")
+    public function getFileContents($path = null, $filename = null)
     {
         return $this->helperFile->getFileContents($path, $filename);
     }
@@ -66,7 +66,7 @@ class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
         }
     }
 
-    protected function generateClassObject($class = "")
+    protected function generateClassObject($class = null)
     {
         $object = null;
         try {

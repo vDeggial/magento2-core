@@ -199,7 +199,7 @@ class ProductHelper extends BaseHelper
 
     public function getProductUrl($productId)
     {
-        $urlFactory = $this->generateClassObject("Magento\Framework\Url");
+        $urlFactory = $this->generateClassObject(\Magento\Framework\Url::class);
         $productUrl = null;
         try {
             $urlKey = $this->getProductUrlKey($productId);
@@ -244,7 +244,7 @@ class ProductHelper extends BaseHelper
     {
         $product = null;
         try {
-            $productFactory = $this->generateClassObject("Magento\Catalog\Model\ProductFactory");
+            $productFactory = $this->generateClassObject(\Magento\Catalog\Model\ProductFactory::class);
             $product = $this->productExists($productId) ? $productFactory->create()->load($productId) : null;
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
@@ -289,7 +289,7 @@ class ProductHelper extends BaseHelper
         $imageUrl = null;
         try {
             $product = $this->getProductById($productId);
-            $_imageHelper = $this->generateClassObject("Magento\Catalog\Helper\Image");
+            $_imageHelper = $this->generateClassObject(\Magento\Catalog\Helper\Image::class);
             $imageUrl = $_imageHelper->init($product, 'product_page_image_large')->keepAspectRatio(true)->setImageFile($imageFilename)->resize($width, null)->getUrl();
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());

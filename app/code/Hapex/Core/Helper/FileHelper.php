@@ -16,18 +16,18 @@ class FileHelper extends \Magento\Framework\App\Helper\AbstractHelper
     {
         parent::__construct($context);
         $this->objectManager = $objectManager;
-        $this->helperLog = $this->objectManager->get("Hapex\Core\Helper\LogHelper");
+        $this->helperLog = $this->objectManager->get(\Hapex\Core\Helper\LogHelper::class);
     }
 
     public function getRootPath()
     {
-        $directory = $this->objectManager->get("Magento\Framework\Filesystem\DirectoryList");
+        $directory = $this->objectManager->get(\Magento\Framework\Filesystem\DirectoryList::class);
         return $directory->getRoot();
     }
 
     public function getFileContents($path = "", $filename = "")
     {
-        $fileDriver = $this->objectManager->get("Magento\Framework\Filesystem\Driver\File");
+        $fileDriver = $this->objectManager->get(\Magento\Framework\Filesystem\Driver\File::class);
         return $fileDriver->fileGetContents($this->getRootPath() . "/$path/$filename");
     }
 
@@ -43,7 +43,7 @@ class FileHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     public function setCsvLocation($path)
     {
-        $directoryList = $this->objectManager->get("Magento\Framework\App\Filesystem\DirectoryList");
+        $directoryList = $this->objectManager->get(\Magento\Framework\App\Filesystem\DirectoryList::class);
         $this->csvDirectory = $directoryList->getPath(DirectoryList::PUB) . "/" . $path;
         // if (!is_dir($this->csvDirectory)) {
             //     mkdir($this->csvDirectory, 0777, true);
@@ -54,9 +54,9 @@ class FileHelper extends \Magento\Framework\App\Helper\AbstractHelper
     {
         $data = [];
         try {
-            $fileDriver = $this->objectManager->get("Magento\Framework\Filesystem\Driver\File");
+            $fileDriver = $this->objectManager->get(\Magento\Framework\Filesystem\Driver\File::class);
             if ($fileDriver->isExists($fileName)) {
-                $csvProcessor = $this->objectManager->get("Magento\Framework\File\Csv");
+                $csvProcessor = $this->objectManager->get(\Magento\Framework\File\Csv::class);
                 $data = $csvProcessor->getData($fileName);
             }
         } catch (\Exception $e) {
@@ -74,7 +74,7 @@ class FileHelper extends \Magento\Framework\App\Helper\AbstractHelper
     {
         $success = false;
         try {
-            $csvProcessor = $this->objectManager->get("Magento\Framework\File\Csv");
+            $csvProcessor = $this->objectManager->get(\Magento\Framework\File\Csv::class);
             $csvProcessor->setEnclosure('"')->setDelimiter(',')->saveData("$path/$fileName", $data);
             $success = true;
         } catch (\Exception $e) {

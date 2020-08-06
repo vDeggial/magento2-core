@@ -15,8 +15,8 @@ class DbHelper extends \Magento\Framework\App\Helper\AbstractHelper
     {
         parent::__construct($context);
         $this->objectManager = $objectManager;
-        $this->resource = $this->objectManager->get("Magento\Framework\App\ResourceConnection");
-        $this->helperLog = $this->objectManager->get("Hapex\Core\Helper\LogHelper");
+        $this->resource = $this->objectManager->get(\Magento\Framework\App\ResourceConnection::class);
+        $this->helperLog = $this->objectManager->get(\Hapex\Core\Helper\LogHelper::class);
     }
 
     public function getSqlTableName($name = null)

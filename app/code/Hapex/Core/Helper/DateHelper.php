@@ -14,14 +14,14 @@ class DateHelper extends \Magento\Framework\App\Helper\AbstractHelper
     {
         parent::__construct($context);
         $this->objectManager = $objectManager;
-        $this->helperLog = $this->objectManager->get("Hapex\Core\Helper\LogHelper");
+        $this->helperLog = $this->objectManager->get(\Hapex\Core\Helper\LogHelper::class);
     }
 
     public function getCurrentDate()
     {
         $date = null;
         try {
-            $timezone = $this->objectManager->get("Magento\Framework\Stdlib\DateTime\TimezoneInterface");
+            $timezone = $this->objectManager->get(\Magento\Framework\Stdlib\DateTime\TimezoneInterface::class);
             $date = $timezone->date();
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());

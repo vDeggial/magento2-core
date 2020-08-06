@@ -39,7 +39,7 @@ class QuoteHelper extends BaseHelper
     {
         $quote = null;
         try {
-            $quoteFactory = $this->generateClassObject("Magento\Quote\Model\QuoteFactory");
+            $quoteFactory = $this->generateClassObject(\Magento\Quote\Model\QuoteFactory::class);
             $quote = $this->quoteExists($quoteId) ? $quoteFactory->create()->load($quoteId) : null;
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());

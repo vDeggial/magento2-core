@@ -11,8 +11,8 @@ class CustomerHelper extends BaseHelper
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
         parent::__construct($context, $objectManager);
-        $this->helperEav = $this->objectManager->get("Hapex\Core\Helper\CustomerEavHelper");
-        $this->session = $this->generateClassObject('Magento\Customer\Model\SessionFactory')->create();
+        $this->helperEav = $this->generateClassObject(\Hapex\Core\Helper\CustomerEavHelper::class);
+        $this->session = $this->generateClassObject(\Magento\Customer\Model\SessionFactory::class)->create();
     }
 
     public function getCustomer($customerId = 0)
@@ -47,7 +47,7 @@ class CustomerHelper extends BaseHelper
 
     private function getCustomerById($customerId = 0)
     {
-        $factory = $this->generateClassObject("Magento\Customer\Model\CustomerFactory")->create();
+        $factory = $this->generateClassObject(\Magento\Customer\Model\CustomerFactory::class)->create();
         return $factory->load($customerId);
     }
 
