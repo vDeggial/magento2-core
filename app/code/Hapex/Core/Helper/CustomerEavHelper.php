@@ -1,8 +1,8 @@
 <?php
 namespace Hapex\Core\Helper;
 
-use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\App\Helper\Context;
+use Magento\Framework\ObjectManagerInterface;
 
 class CustomerEavHelper extends EavHelper
 {
@@ -23,6 +23,6 @@ class CustomerEavHelper extends EavHelper
 
     public function getCustomerAttributeSelect($customerId = 0, $attributeCode = null)
     {
-        return $this->getAttributeOptionValue((int)$this->getCustomerAttributeValue($customerId, $attributeCode));
+        return $this->getAttributeOptionValue((int) $this->getCustomerAttributeValue($customerId, $attributeCode));
     }
 }

@@ -1,8 +1,8 @@
 <?php
 namespace Hapex\Core\Helper;
 
-use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\App\Helper\Context;
+use Magento\Framework\ObjectManagerInterface;
 
 class CustomerHelper extends BaseHelper
 {
@@ -53,14 +53,14 @@ class CustomerHelper extends BaseHelper
 
     private function getCustomerGroup($customerId)
     {
-      $customerGroup = 0;
-      try {
-          $customerGroup = (int)$this->helperEav->getCustomerEntityFieldValue($customerId, "group_id");
-      } catch (\Exception $e) {
-          $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-          $customerGroup = 0;
-      } finally {
-          return $customerGroup;
-      }
+        $customerGroup = 0;
+        try {
+            $customerGroup = (int) $this->helperEav->getCustomerEntityFieldValue($customerId, "group_id");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $customerGroup = 0;
+        } finally {
+            return $customerGroup;
+        }
     }
 }

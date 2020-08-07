@@ -1,8 +1,8 @@
 <?php
 namespace Hapex\Core\Helper;
 
-use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\App\Helper\Context;
+use Magento\Framework\ObjectManagerInterface;
 
 class EavHelper extends DbHelper
 {
@@ -25,7 +25,7 @@ class EavHelper extends DbHelper
         try {
             $attributeTypeId = $this->getEntityTypeId($attributeType);
             $sql = "SELECT attribute_id from " . $this->tableAttribute . " WHERE entity_type_id = $attributeTypeId AND attribute_code LIKE '$attributeCode'";
-            $result = (int)$this->sqlQueryFetchOne($sql);
+            $result = (int) $this->sqlQueryFetchOne($sql);
             $attributeId = $result;
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
@@ -41,7 +41,7 @@ class EavHelper extends DbHelper
         try {
             $attributeTypeId = $this->getEntityTypeId($attributeType);
             $sql = "SELECT attribute_set_id from " . $this->tableAttributeSet . " WHERE entity_type_id = $attributeTypeId AND attribute_set_name LIKE '$setName'";
-            $result = (int)$this->sqlQueryFetchOne($sql);
+            $result = (int) $this->sqlQueryFetchOne($sql);
             $attributeSetId = $result;
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
@@ -74,7 +74,7 @@ class EavHelper extends DbHelper
         try {
             $attributeTypeId = $this->getEntityTypeId($attributeType);
             $sql = "SELECT backend_type from " . $this->tableAttribute . " WHERE entity_type_id = $attributeTypeId AND attribute_id = $attributeId";
-            $result = (string)$this->sqlQueryFetchOne($sql);
+            $result = (string) $this->sqlQueryFetchOne($sql);
             $backendType = $result;
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
@@ -91,13 +91,13 @@ class EavHelper extends DbHelper
             $attributeId = $this->getAttributeId($attributeCode, $attributeType);
             $backendType = $attributeId > 0 ? $this->getAttributeBackendType($attributeId, $attributeType) : null;
             switch ($attributeId > 0 && $backendType !== "static") {
-              case true:
-              $value = $this->getValue($entityId, $attributeType, $attributeId, $backendType);
-              break;
+                case true:
+                    $value = $this->getValue($entityId, $attributeType, $attributeId, $backendType);
+                    break;
 
-              default:
-              $value = $this->getEntityFieldValue($attributeType, $attributeCode, $entityId);
-              break;
+                default:
+                    $value = $this->getEntityFieldValue($attributeType, $attributeCode, $entityId);
+                    break;
             }
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
@@ -112,7 +112,7 @@ class EavHelper extends DbHelper
         $value = null;
         try {
             $tableName = $this->getSqlTableName($this->getEntityTable($attributeType));
-            $sql  = "SELECT $fieldName FROM $tableName WHERE entity_id = $entityId";
+            $sql = "SELECT $fieldName FROM $tableName WHERE entity_id = $entityId";
             $result = $this->sqlQueryFetchOne($sql);
             $value = $result;
         } catch (\Exception $e) {
@@ -128,7 +128,7 @@ class EavHelper extends DbHelper
         $optionValue = null;
         try {
             $sql = "SELECT value from " . $this->tableAttributeOption . " WHERE option_id = $optionId";
-            $result = (string)$this->sqlQueryFetchOne($sql);
+            $result = (string) $this->sqlQueryFetchOne($sql);
             $optionValue = $result;
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
@@ -143,7 +143,7 @@ class EavHelper extends DbHelper
         $typeId = 0;
         try {
             $sql = "SELECT entity_type_id FROM " . $this->tableEntityType . " WHERE entity_type_code LIKE '$typeCode'";
-            $result = (int)$this->sqlQueryFetchOne($sql);
+            $result = (int) $this->sqlQueryFetchOne($sql);
             $typeId = $result;
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
@@ -158,7 +158,7 @@ class EavHelper extends DbHelper
         $typeCode = null;
         try {
             $sql = "SELECT entity_type_code FROM " . $this->tableEntityType . " WHERE entity_type_id = $typeId";
-            $result = (string)$this->sqlQueryFetchOne($sql);
+            $result = (string) $this->sqlQueryFetchOne($sql);
             $typeCode = $result;
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
@@ -174,7 +174,7 @@ class EavHelper extends DbHelper
         try {
             $typeId = $this->getEntityTypeId($type);
             $sql = "SELECT entity_table FROM " . $this->tableEntityType . " WHERE entity_type_id = $typeId";
-            $result = (string)$this->sqlQueryFetchOne($sql);
+            $result = (string) $this->sqlQueryFetchOne($sql);
             $entityTable = $result;
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());

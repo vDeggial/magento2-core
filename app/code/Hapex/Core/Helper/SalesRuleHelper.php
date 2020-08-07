@@ -1,8 +1,8 @@
 <?php
 namespace Hapex\Core\Helper;
 
-use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\App\Helper\Context;
+use Magento\Framework\ObjectManagerInterface;
 
 class SalesRuleHelper extends BaseHelper
 {
@@ -32,7 +32,7 @@ class SalesRuleHelper extends BaseHelper
     {
         $action = null;
         try {
-            $action = (string)$this->getRuleFieldValue($ruleId, "simple_action");
+            $action = (string) $this->getRuleFieldValue($ruleId, "simple_action");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $action = null;
@@ -45,7 +45,7 @@ class SalesRuleHelper extends BaseHelper
     {
         $description = null;
         try {
-            $description = (string)$this->getRuleFieldValue($ruleId, "description");
+            $description = (string) $this->getRuleFieldValue($ruleId, "description");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $description = null;
@@ -58,7 +58,7 @@ class SalesRuleHelper extends BaseHelper
     {
         $name = null;
         try {
-            $name = (string)$this->getRuleFieldValue($ruleId, "name");;
+            $name = (string) $this->getRuleFieldValue($ruleId, "name");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $name = null;
@@ -71,7 +71,7 @@ class SalesRuleHelper extends BaseHelper
     {
         $date = null;
         try {
-            $date = (string)$this->getRuleFieldValue($ruleId, "from_date");;
+            $date = (string) $this->getRuleFieldValue($ruleId, "from_date");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $date = null;
@@ -84,7 +84,7 @@ class SalesRuleHelper extends BaseHelper
     {
         $date = null;
         try {
-            $date = (string)$this->getRuleFieldValue($ruleId, "to_date");
+            $date = (string) $this->getRuleFieldValue($ruleId, "to_date");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $date = null;
@@ -97,7 +97,7 @@ class SalesRuleHelper extends BaseHelper
     {
         $status = 0;
         try {
-            $status = (int)$this->getRuleFieldValue($ruleId, "is_active");
+            $status = (int) $this->getRuleFieldValue($ruleId, "is_active");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $status = 0;
@@ -110,7 +110,7 @@ class SalesRuleHelper extends BaseHelper
     {
         $uses = 0;
         try {
-            $uses = (int)$this->getRuleFieldValue($ruleId, "uses_per_customer");;
+            $uses = (int) $this->getRuleFieldValue($ruleId, "uses_per_customer");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $uses = 0;

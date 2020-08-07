@@ -1,8 +1,8 @@
 <?php
 namespace Hapex\Core\Helper;
 
-use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\App\Helper\Context;
+use Magento\Framework\ObjectManagerInterface;
 
 class OrderHelper extends BaseHelper
 {
@@ -57,7 +57,7 @@ class OrderHelper extends BaseHelper
     {
         $date = null;
         try {
-            $date = (string)$this->getOrderFieldValue($orderId, "created_at");
+            $date = (string) $this->getOrderFieldValue($orderId, "created_at");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $date = null;
@@ -70,7 +70,7 @@ class OrderHelper extends BaseHelper
     {
         $date = null;
         try {
-            $date = (string)$this->getOrderFieldValue($orderId, "updated_at");
+            $date = (string) $this->getOrderFieldValue($orderId, "updated_at");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $date = null;
@@ -82,29 +82,29 @@ class OrderHelper extends BaseHelper
     public function getOrderEmail($data)
     {
         switch (true) {
-        case is_numeric($data):
-          return $this->getCustomerEmail($data);
+            case is_numeric($data):
+                return $this->getCustomerEmail($data);
 
-        case is_object($data):
-          return $this->getOrderCustomerEmail($data);
+            case is_object($data):
+                return $this->getOrderCustomerEmail($data);
 
-        default:
-          return null;
-      }
+            default:
+                return null;
+        }
     }
 
     public function getOrderName($data)
     {
         switch (true) {
-        case is_numeric($data):
-          return $this->getBillingName($data);
+            case is_numeric($data):
+                return $this->getBillingName($data);
 
-        case is_object($data):
-          return $this->getOrderCustomerName($data);
+            case is_object($data):
+                return $this->getOrderCustomerName($data);
 
-        default:
-          return null;
-      }
+            default:
+                return null;
+        }
     }
 
     public function getOrderCustomerId($order)
@@ -112,14 +112,14 @@ class OrderHelper extends BaseHelper
         $customerId = 0;
         try {
             switch (true) {
-        case is_numeric($order):
-          $customerId = (int)$this->getOrderFieldValue($order, "customer_id");
-          break;
+                case is_numeric($order):
+                    $customerId = (int) $this->getOrderFieldValue($order, "customer_id");
+                    break;
 
-        case is_object($order):
-          $customerId =  $order->getCustomer()->getId();
-          break;
-      }
+                case is_object($order):
+                    $customerId = $order->getCustomer()->getId();
+                    break;
+            }
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $customerId = 0;
@@ -132,7 +132,7 @@ class OrderHelper extends BaseHelper
     {
         $qty = 0;
         try {
-            $qty = (int)$this->getOrderItemFieldValue($orderId, $productSku, "sum(qty_canceled)");
+            $qty = (int) $this->getOrderItemFieldValue($orderId, $productSku, "sum(qty_canceled)");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $qty = 0;
@@ -145,7 +145,7 @@ class OrderHelper extends BaseHelper
     {
         $qty = 0;
         try {
-            $qty = (int)$this->getOrderItemFieldValue($orderId, $productSku, "sum(qty_ordered)");
+            $qty = (int) $this->getOrderItemFieldValue($orderId, $productSku, "sum(qty_ordered)");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $qty = 0;
@@ -158,7 +158,7 @@ class OrderHelper extends BaseHelper
     {
         $qty = 0;
         try {
-            $qty = (int)$this->getOrderItemFieldValue($orderId, $productSku, "sum(qty_refunded)");
+            $qty = (int) $this->getOrderItemFieldValue($orderId, $productSku, "sum(qty_refunded)");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $qty = 0;

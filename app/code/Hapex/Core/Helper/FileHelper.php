@@ -1,10 +1,10 @@
 <?php
 namespace Hapex\Core\Helper;
 
+use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\App\Helper\Context;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\ObjectManagerInterface;
-use Magento\Framework\App\Helper\Context;
-use Magento\Framework\App\Filesystem\DirectoryList;
 
 class FileHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {
@@ -46,8 +46,8 @@ class FileHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $directoryList = $this->objectManager->get(\Magento\Framework\App\Filesystem\DirectoryList::class);
         $this->csvDirectory = $directoryList->getPath(DirectoryList::PUB) . "/" . $path;
         // if (!is_dir($this->csvDirectory)) {
-            //     mkdir($this->csvDirectory, 0777, true);
-            // }
+        //     mkdir($this->csvDirectory, 0777, true);
+        // }
     }
 
     protected function getCsvDataFile($fileName, $isFirstRowHeader = false)

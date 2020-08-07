@@ -1,12 +1,12 @@
 <?php
 namespace Hapex\Core\Helper;
 
-use Zend\Log\Writer\Stream;
-use Zend\Log\Logger;
-use Zend\Log\Formatter;
+use Magento\Framework\App\Helper\Context;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\ObjectManagerInterface;
-use Magento\Framework\App\Helper\Context;
+use Zend\Log\Formatter;
+use Zend\Log\Logger;
+use Zend\Log\Writer\Stream;
 
 class LogHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {

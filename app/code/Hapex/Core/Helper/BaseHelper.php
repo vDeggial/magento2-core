@@ -1,9 +1,9 @@
 <?php
 namespace Hapex\Core\Helper;
 
+use Magento\Framework\App\Helper\Context;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\ObjectManagerInterface;
-use Magento\Framework\App\Helper\Context;
 
 class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {

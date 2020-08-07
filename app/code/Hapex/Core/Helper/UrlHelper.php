@@ -1,15 +1,14 @@
 <?php
 namespace Hapex\Core\Helper;
 
+use Magento\Framework\App\Helper\Context;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\ObjectManagerInterface;
-use Magento\Framework\App\Helper\Context;
 
 class UrlHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {
     protected $objectManager;
     protected $helperLog;
-
 
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
@@ -40,8 +39,8 @@ class UrlHelper extends \Magento\Framework\App\Helper\AbstractHelper
     {
         $curl = $this->objectManager->get(\Magento\Framework\HTTP\Client\Curl::class);
         $options = array(
-          CURLOPT_RETURNTRANSFER => 1,
-          CURLOPT_USERAGENT      => "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7) Gecko/20040803 Firefox/0.9.3",
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_USERAGENT => "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7) Gecko/20040803 Firefox/0.9.3",
         );
         $curl->setOptions($options);
         $curl->get($url);
