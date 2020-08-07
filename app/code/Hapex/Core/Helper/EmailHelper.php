@@ -1,4 +1,5 @@
 <?php
+
 namespace Hapex\Core\Helper;
 
 use Magento\Framework\App\Area;
@@ -27,8 +28,7 @@ class EmailHelper extends BaseHelper
 
     protected function send($sender, $receiver, $templateId, $vars, $store = null, $area = Area::AREA_FRONTEND)
     {
-        try
-        {
+        try {
             $store = !$store ? $this->storeManager->getStore()->getStoreId() : $store;
 
             $this->inlineTranslation->suspend();

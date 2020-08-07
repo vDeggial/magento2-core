@@ -1,9 +1,9 @@
 <?php
+
 namespace Hapex\Core\Helper;
 
 //use Hapex\Core\Helper\LogHelper;
 use Magento\Framework\App\Helper\Context;
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\App\Helper\AbstractHelper;

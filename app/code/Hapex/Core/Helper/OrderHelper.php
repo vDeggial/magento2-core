@@ -1,9 +1,11 @@
 <?php
+
 namespace Hapex\Core\Helper;
 
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Sales\Model\OrderRepository;
+use Magento\Sales\Model\Order\Address;
 
 class OrderHelper extends BaseHelper
 {
@@ -196,12 +198,12 @@ class OrderHelper extends BaseHelper
 
     protected function getOrderBillingAddress($order = null)
     {
-        $address = null;
+        $address = $this->generateClassObject(Address::class);
         try {
             $address = $order->getBillingAddress();
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $address = null;
+            $address = $this->generateClassObject(Address::class);
         } finally {
             return $address;
         }
@@ -209,12 +211,12 @@ class OrderHelper extends BaseHelper
 
     protected function getOrderShippingAddress($order = null)
     {
-        $address = null;
+        $address = $this->generateClassObject(Address::class);
         try {
             $address = $order->getShippingAddress();
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $address = null;
+            $address = $this->generateClassObject(Address::class);
         } finally {
             return $address;
         }

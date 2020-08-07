@@ -1,11 +1,14 @@
 <?php
+
 namespace Hapex\Core\Helper;
 
+use DateTime;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use stdClass;
 
 class DateHelper extends AbstractHelper
 {
@@ -21,13 +24,13 @@ class DateHelper extends AbstractHelper
 
     public function getCurrentDate()
     {
-        $date = null;
+        $date = new DateTime();
         try {
             $timezone = $this->objectManager->get(TimezoneInterface::class);
             $date = $timezone->date();
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $date = null;
+            $date = new DateTime();
         } finally {
             return $date;
         }

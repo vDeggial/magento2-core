@@ -1,4 +1,5 @@
 <?php
+
 namespace Hapex\Core\Helper;
 
 use Magento\Framework\App\Helper\AbstractHelper;

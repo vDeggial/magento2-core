@@ -1,4 +1,5 @@
 <?php
+
 namespace Hapex\Core\Helper;
 
 use Magento\Catalog\Helper\Image as ImageHelper;

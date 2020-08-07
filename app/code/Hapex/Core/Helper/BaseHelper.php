@@ -1,10 +1,11 @@
 <?php
+
 namespace Hapex\Core\Helper;
 
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\ObjectManagerInterface;
+use Magento\Framework\DataObject;
 
 class BaseHelper extends AbstractHelper
 {
@@ -51,11 +52,6 @@ class BaseHelper extends AbstractHelper
         return $this->helperUrl;
     }
 
-    public function getFileContents($path = null, $filename = null)
-    {
-        return $this->helperFile->getFileContents($path, $filename);
-    }
-
     public function sendOutput($output)
     {
         try {
@@ -69,12 +65,12 @@ class BaseHelper extends AbstractHelper
 
     protected function generateClassObject($class = null)
     {
-        $object = null;
+        $object = new DataObject();
         try {
             $object = $this->objectManager->get($class);
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $object = null;
+            $object = new DataObject();
         } finally {
             return $object;
         }
