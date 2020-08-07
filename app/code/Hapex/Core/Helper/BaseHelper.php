@@ -18,11 +18,11 @@ class BaseHelper extends AbstractHelper
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
         $this->objectManager = $objectManager;
-        $this->helperDb = $this->generateClassObject(\Hapex\Core\Helper\DbHelper::class);
-        $this->helperLog = $this->generateClassObject(\Hapex\Core\Helper\LogHelper::class);
-        $this->helperFile = $this->generateClassObject(\Hapex\Core\Helper\FileHelper::class);
-        $this->helperDate = $this->generateClassObject(\Hapex\Core\Helper\DateHelper::class);
-        $this->helperUrl = $this->generateClassObject(\Hapex\Core\Helper\UrlHelper::class);
+        $this->helperDb = $this->generateClassObject(DbHelper::class);
+        $this->helperLog = $this->generateClassObject(LogHelper::class);
+        $this->helperFile = $this->generateClassObject(FileHelper::class);
+        $this->helperDate = $this->generateClassObject(DateHelper::class);
+        $this->helperUrl = $this->generateClassObject(UrlHelper::class);
         parent::__construct($context);
     }
 
