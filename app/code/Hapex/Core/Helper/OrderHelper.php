@@ -3,6 +3,7 @@ namespace Hapex\Core\Helper;
 
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\ObjectManagerInterface;
+use Magento\Sales\Model\OrderRepository;
 
 class OrderHelper extends BaseHelper
 {
@@ -282,7 +283,7 @@ class OrderHelper extends BaseHelper
     {
         $order = null;
         try {
-            $orderRepository = $this->generateClassObject(\Magento\Sales\Model\OrderRepository::class);
+            $orderRepository = $this->generateClassObject(OrderRepository::class);
             $order = $orderRepository->get($orderId);
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());

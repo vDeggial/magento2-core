@@ -1,11 +1,13 @@
 <?php
 namespace Hapex\Core\Helper;
 
+use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\ObjectManagerInterface;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 
-class DateHelper extends \Magento\Framework\App\Helper\AbstractHelper
+class DateHelper extends AbstractHelper
 {
     protected $objectManager;
     protected $helperLog;
@@ -14,14 +16,14 @@ class DateHelper extends \Magento\Framework\App\Helper\AbstractHelper
     {
         parent::__construct($context);
         $this->objectManager = $objectManager;
-        $this->helperLog = $this->objectManager->get(\Hapex\Core\Helper\LogHelper::class);
+        $this->helperLog = $this->objectManager->get(LogHelper::class);
     }
 
     public function getCurrentDate()
     {
         $date = null;
         try {
-            $timezone = $this->objectManager->get(\Magento\Framework\Stdlib\DateTime\TimezoneInterface::class);
+            $timezone = $this->objectManager->get(TimezoneInterface::class);
             $date = $timezone->date();
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());

@@ -1,8 +1,11 @@
 <?php
 namespace Hapex\Core\Helper;
 
+use Magento\Catalog\Helper\Image as ImageHelper;
+use Magento\Catalog\Model\ProductFactory;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\ObjectManagerInterface;
+use Magento\Framework\Url;
 
 class ProductHelper extends BaseHelper
 {
@@ -15,7 +18,7 @@ class ProductHelper extends BaseHelper
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
         parent::__construct($context, $objectManager);
-        $this->helperEav = $this->generateClassObject(\Hapex\Core\Helper\ProductEavHelper::class);
+        $this->helperEav = $this->generateClassObject(ProductEavHelper::class);
         $this->tableProduct = $this->helperDb->getSqlTableName('catalog_product_entity');
         $this->tableProductStock = $this->helperDb->getSqlTableName('cataloginventory_stock_item');
         $this->tableGallery = $this->helperDb->getSqlTableName("catalog_product_entity_media_gallery");
@@ -199,7 +202,7 @@ class ProductHelper extends BaseHelper
 
     public function getProductUrl($productId)
     {
-        $urlFactory = $this->generateClassObject(\Magento\Framework\Url::class);
+        $urlFactory = $this->generateClassObject(Url::class);
         $productUrl = null;
         try {
             $urlKey = $this->getProductUrlKey($productId);
@@ -244,7 +247,7 @@ class ProductHelper extends BaseHelper
     {
         $product = null;
         try {
-            $productFactory = $this->generateClassObject(\Magento\Catalog\Model\ProductFactory::class);
+            $productFactory = $this->generateClassObject(ProductFactory::class);
             $product = $this->productExists($productId) ? $productFactory->create()->load($productId) : null;
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
@@ -289,7 +292,7 @@ class ProductHelper extends BaseHelper
         $imageUrl = null;
         try {
             $product = $this->getProductById($productId);
-            $_imageHelper = $this->generateClassObject(\Magento\Catalog\Helper\Image::class);
+            $_imageHelper = $this->generateClassObject(ImageHelper::class);
             $imageUrl = $_imageHelper->init($product, 'product_page_image_large')->keepAspectRatio(true)->setImageFile($imageFilename)->resize($width, null)->getUrl();
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());

@@ -3,6 +3,7 @@ namespace Hapex\Core\Helper;
 
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\ObjectManagerInterface;
+use Magento\Quote\Model\QuoteFactory;
 
 class QuoteHelper extends BaseHelper
 {
@@ -39,7 +40,7 @@ class QuoteHelper extends BaseHelper
     {
         $quote = null;
         try {
-            $quoteFactory = $this->generateClassObject(\Magento\Quote\Model\QuoteFactory::class);
+            $quoteFactory = $this->generateClassObject(QuoteFactory::class);
             $quote = $this->quoteExists($quoteId) ? $quoteFactory->create()->load($quoteId) : null;
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());

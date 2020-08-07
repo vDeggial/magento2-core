@@ -1,36 +1,31 @@
 <?php
 namespace Hapex\Core\Helper;
 
+use Magento\Framework\App\Area;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\Translate\Inline\StateInterface;
+use Magento\Store\Model\StoreManagerInterface;
 
 class EmailHelper extends BaseHelper
 {
-    protected $scopeConfig;
 
     protected $inlineTranslation;
-
-    protected $logger;
-
-    protected $escaper;
 
     protected $transportBuilder;
 
     protected $storeManager;
 
-    public function __construct(Context $context, ObjectManagerInterface $objectManager, StateInterface $inlineTranslation, TransportBuilder $transportBuilder, \Magento\Store\Model\StoreManagerInterface $storeManager)
+    public function __construct(Context $context, ObjectManagerInterface $objectManager, StateInterface $inlineTranslation, TransportBuilder $transportBuilder, StoreManagerInterface $storeManager)
     {
         parent::__construct($context, $objectManager);
-        $this->scopeConfig = $context->getScopeConfig();
         $this->inlineTranslation = $inlineTranslation;
         $this->transportBuilder = $transportBuilder;
-        $this->logger = $context->getLogger();
         $this->storeManager = $storeManager;
     }
 
-    protected function send($sender, $receiver, $templateId, $vars, $store = null, $area = \Magento\Framework\App\Area::AREA_FRONTEND)
+    protected function send($sender, $receiver, $templateId, $vars, $store = null, $area = Area::AREA_FRONTEND)
     {
         try
         {

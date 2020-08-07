@@ -1,11 +1,12 @@
 <?php
 namespace Hapex\Core\Helper;
 
+use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\ObjectManagerInterface;
 
-class BaseHelper extends \Magento\Framework\App\Helper\AbstractHelper
+class BaseHelper extends AbstractHelper
 {
     protected $objectManager;
     protected $helperDb;
