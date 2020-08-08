@@ -63,7 +63,7 @@ class BaseHelper extends AbstractHelper
         }
     }
 
-    protected function generateClassObject($class = null)
+    public function generateClassObject($class = null)
     {
         $object = $this->objectManager->create(DataObject::class);
         try {
