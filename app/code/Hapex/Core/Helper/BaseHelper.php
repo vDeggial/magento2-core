@@ -65,12 +65,12 @@ class BaseHelper extends AbstractHelper
 
     protected function generateClassObject($class = null)
     {
-        $object = new DataObject();
+        $object = $this->objectManager->create(DataObject::class);
         try {
             $object = $this->objectManager->get($class);
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $object = new DataObject();
+            $object = $this->objectManager->create(DataObject::class);
         } finally {
             return $object;
         }
