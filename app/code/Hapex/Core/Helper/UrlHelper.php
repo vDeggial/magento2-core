@@ -2,22 +2,21 @@
 
 namespace Hapex\Core\Helper;
 
-use Magento\Framework\App\Helper\AbstractHelper;
-use Magento\Framework\App\Helper\Context;
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\HTTP\Client\Curl;
+use Magento\Framework\App\Helper\Context;
 use Magento\Framework\ObjectManagerInterface;
+use Magento\Framework\App\Helper\AbstractHelper;
 
 class UrlHelper extends AbstractHelper
 {
     protected $objectManager;
     protected $helperLog;
 
-    public function __construct(Context $context, ObjectManagerInterface $objectManager)
+    public function __construct(Context $context, ObjectManagerInterface $objectManager, LogHelper $helperLog)
     {
         parent::__construct($context);
         $this->objectManager = $objectManager;
-        $this->helperLog = $this->objectManager->get(LogHelper::class);
+        $this->helperLog = $helperLog;
     }
 
     public function getRemoteContent($url)

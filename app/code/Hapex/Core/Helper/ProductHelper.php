@@ -2,11 +2,11 @@
 
 namespace Hapex\Core\Helper;
 
-use Magento\Catalog\Helper\Image as ImageHelper;
+use Magento\Framework\Url;
 use Magento\Catalog\Model\ProductFactory;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\ObjectManagerInterface;
-use Magento\Framework\Url;
+use Magento\Catalog\Helper\Image as ImageHelper;
 
 class ProductHelper extends BaseHelper
 {
@@ -16,10 +16,10 @@ class ProductHelper extends BaseHelper
     protected $tableGalleryValue;
     protected $tableGalleryToEntity;
     protected $helperEav;
-    public function __construct(Context $context, ObjectManagerInterface $objectManager)
+    public function __construct(Context $context, ObjectManagerInterface $objectManager, ProductEavHelper $helperEav)
     {
         parent::__construct($context, $objectManager);
-        $this->helperEav = $this->generateClassObject(ProductEavHelper::class);
+        $this->helperEav = $helperEav;
         $this->tableProduct = $this->helperDb->getSqlTableName('catalog_product_entity');
         $this->tableProductStock = $this->helperDb->getSqlTableName('cataloginventory_stock_item');
         $this->tableGallery = $this->helperDb->getSqlTableName("catalog_product_entity_media_gallery");

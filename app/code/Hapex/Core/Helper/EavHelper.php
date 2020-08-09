@@ -3,6 +3,7 @@
 namespace Hapex\Core\Helper;
 
 use Magento\Framework\App\Helper\Context;
+use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\ObjectManagerInterface;
 
 class EavHelper extends DbHelper
@@ -11,9 +12,9 @@ class EavHelper extends DbHelper
     protected $tableAttributeSet;
     protected $tableAttributeOption;
     protected $tableEntityType;
-    public function __construct(Context $context, ObjectManagerInterface $objectManager)
+    public function __construct(Context $context, ObjectManagerInterface $objectManager, ResourceConnection $resource, LogHelper $helperLog)
     {
-        parent::__construct($context, $objectManager);
+        parent::__construct($context, $objectManager, $resource, $helperLog);
         $this->tableAttribute = $this->getSqlTableName("eav_attribute");
         $this->tableAttributeSet = $this->getSqlTableName("eav_attribute_set");
         $this->tableEntityType = $this->getSqlTableName("eav_entity_type");

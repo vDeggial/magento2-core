@@ -11,11 +11,11 @@ class CustomerHelper extends BaseHelper
 {
     protected $session;
     protected $helperEav;
-    public function __construct(Context $context, ObjectManagerInterface $objectManager)
+    public function __construct(Context $context, ObjectManagerInterface $objectManager, CustomerEavHelper $helperEav, SessionFactory $session)
     {
         parent::__construct($context, $objectManager);
-        $this->helperEav = $this->generateClassObject(CustomerEavHelper::class);
-        $this->session = $this->generateClassObject(SessionFactory::class)->create();
+        $this->helperEav = $helperEav;
+        $this->session = $session->create();
     }
 
     public function getCustomer($customerId = 0)

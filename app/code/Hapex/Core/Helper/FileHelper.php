@@ -16,11 +16,11 @@ class FileHelper extends AbstractHelper
     protected $csvDirectory;
     protected $helperLog;
 
-    public function __construct(Context $context, ObjectManagerInterface $objectManager)
+    public function __construct(Context $context, ObjectManagerInterface $objectManager, LogHelper $helperLog)
     {
         parent::__construct($context);
         $this->objectManager = $objectManager;
-        $this->helperLog = $this->objectManager->get(LogHelper::class);
+        $this->helperLog = $helperLog;
     }
 
     public function getRootPath()

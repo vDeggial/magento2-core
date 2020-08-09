@@ -2,7 +2,6 @@
 
 namespace Hapex\Core\Helper;
 
-//use Hapex\Core\Helper\LogHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\ObjectManagerInterface;
@@ -14,12 +13,12 @@ class DbHelper extends AbstractHelper
     protected $resource;
     protected $helperLog;
 
-    public function __construct(Context $context, ObjectManagerInterface $objectManager)
+    public function __construct(Context $context, ObjectManagerInterface $objectManager, ResourceConnection $resource, LogHelper $helperLog)
     {
         parent::__construct($context);
         $this->objectManager = $objectManager;
-        $this->resource = $this->objectManager->get(ResourceConnection::class);
-        $this->helperLog = $this->objectManager->get(LogHelper::class);
+        $this->resource = $resource;
+        $this->helperLog = $helperLog;
     }
 
     public function getSqlTableName($name = null)
