@@ -2,10 +2,10 @@
 
 namespace Hapex\Core\Helper;
 
+use Magento\Sales\Model\Order\Address;
+use Magento\Sales\Model\OrderRepository;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\ObjectManagerInterface;
-use Magento\Sales\Model\OrderRepository;
-use Magento\Sales\Model\Order\Address;
 
 class OrderHelper extends BaseHelper
 {
@@ -13,10 +13,14 @@ class OrderHelper extends BaseHelper
     protected $tableOrderGrid;
     protected $tableOrderItem;
     protected $tableOrderAddress;
+    protected $orderRepository;
+    protected $address;
 
-    public function __construct(Context $context, ObjectManagerInterface $objectManager)
+    public function __construct(Context $context, ObjectManagerInterface $objectManager, OrderRepository $orderRepository, Address $address)
     {
         parent::__construct($context, $objectManager);
+        $this->orderRepository = $orderRepository;
+        $this->address = $address;
         $this->tableOrder = $this->helperDb->getSqlTableName('sales_order');
         $this->tableOrderGrid = $this->helperDb->getSqlTableName('sales_order_grid');
         $this->tableOrderItem = $this->helperDb->getSqlTableName('sales_order_item');
@@ -198,12 +202,12 @@ class OrderHelper extends BaseHelper
 
     protected function getOrderBillingAddress($order = null)
     {
-        $address = $this->generateClassObject(Address::class);
+        $address = $this->address;
         try {
             $address = $order->getBillingAddress();
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $address = $this->generateClassObject(Address::class);
+            $address = $this->address;
         } finally {
             return $address;
         }
@@ -211,12 +215,12 @@ class OrderHelper extends BaseHelper
 
     protected function getOrderShippingAddress($order = null)
     {
-        $address = $this->generateClassObject(Address::class);
+        $address = $this->address;
         try {
             $address = $order->getShippingAddress();
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $address = $this->generateClassObject(Address::class);
+            $address = $this->address;
         } finally {
             return $address;
         }
@@ -275,7 +279,6 @@ class OrderHelper extends BaseHelper
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $fullName = null;
-            $this->helperLog->printLog("errors", $e->getMessage());
         } finally {
             return $fullName;
         }
@@ -285,8 +288,7 @@ class OrderHelper extends BaseHelper
     {
         $order = null;
         try {
-            $orderRepository = $this->generateClassObject(OrderRepository::class);
-            $order = $orderRepository->get($orderId);
+            $order = $this->orderRepository->get($orderId);
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $order = null;

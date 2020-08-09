@@ -10,12 +10,19 @@ use Magento\Framework\ObjectManagerInterface;
 class CustomerHelper extends BaseHelper
 {
     protected $session;
+    protected $customerFactory;
     protected $helperEav;
-    public function __construct(Context $context, ObjectManagerInterface $objectManager, CustomerEavHelper $helperEav, SessionFactory $session)
-    {
+    public function __construct(
+        Context $context,
+        ObjectManagerInterface $objectManager,
+        CustomerEavHelper $helperEav,
+        SessionFactory $sessionFactory,
+        CustomerFactory $customerFactory
+    ) {
         parent::__construct($context, $objectManager);
         $this->helperEav = $helperEav;
-        $this->session = $session->create();
+        $this->session = $sessionFactory->create();
+        $this->customerFactory = $customerFactory->create();
     }
 
     public function getCustomer($customerId = 0)
@@ -50,8 +57,7 @@ class CustomerHelper extends BaseHelper
 
     private function getCustomerById($customerId = 0)
     {
-        $factory = $this->generateClassObject(CustomerFactory::class)->create();
-        return $factory->load($customerId);
+        return $this->customerFactory->load($customerId);
     }
 
     private function getCustomerGroup($customerId)

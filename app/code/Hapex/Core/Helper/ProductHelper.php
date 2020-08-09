@@ -16,10 +16,22 @@ class ProductHelper extends BaseHelper
     protected $tableGalleryValue;
     protected $tableGalleryToEntity;
     protected $helperEav;
-    public function __construct(Context $context, ObjectManagerInterface $objectManager, ProductEavHelper $helperEav)
-    {
+    protected $productFactory;
+    protected $imageHelper;
+    protected $urlFramework;
+    public function __construct(
+        Context $context,
+        ObjectManagerInterface $objectManager,
+        ProductEavHelper $helperEav,
+        ProductFactory $productFactory,
+        ImageHelper $imageHelper,
+        Url $urlFramework
+    ) {
         parent::__construct($context, $objectManager);
         $this->helperEav = $helperEav;
+        $this->productFactory = $productFactory->create();
+        $this->imageHelper = $imageHelper;
+        $this->urlFramework = $urlFramework;
         $this->tableProduct = $this->helperDb->getSqlTableName('catalog_product_entity');
         $this->tableProductStock = $this->helperDb->getSqlTableName('cataloginventory_stock_item');
         $this->tableGallery = $this->helperDb->getSqlTableName("catalog_product_entity_media_gallery");
@@ -203,11 +215,10 @@ class ProductHelper extends BaseHelper
 
     public function getProductUrl($productId)
     {
-        $urlFactory = $this->generateClassObject(Url::class);
         $productUrl = null;
         try {
             $urlKey = $this->getProductUrlKey($productId);
-            $productUrl = $urlFactory->getUrl($urlKey);
+            $productUrl = $this->urlFramework->getUrl($urlKey);
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $productUrl = null;
@@ -248,8 +259,7 @@ class ProductHelper extends BaseHelper
     {
         $product = null;
         try {
-            $productFactory = $this->generateClassObject(ProductFactory::class);
-            $product = $this->productExists($productId) ? $productFactory->create()->load($productId) : null;
+            $product = $this->productExists($productId) ? $this->productFactory->load($productId) : null;
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $product = null;
@@ -293,8 +303,7 @@ class ProductHelper extends BaseHelper
         $imageUrl = null;
         try {
             $product = $this->getProductById($productId);
-            $_imageHelper = $this->generateClassObject(ImageHelper::class);
-            $imageUrl = $_imageHelper->init($product, 'product_page_image_large')->keepAspectRatio(true)->setImageFile($imageFilename)->resize($width, null)->getUrl();
+            $imageUrl = $this->imageHelper->init($product, 'product_page_image_large')->keepAspectRatio(true)->setImageFile($imageFilename)->resize($width, null)->getUrl();
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $imageUrl = null;
