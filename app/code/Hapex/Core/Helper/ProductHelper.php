@@ -39,6 +39,11 @@ class ProductHelper extends BaseHelper
         $this->tableGalleryToEntity = $this->helperDb->getSqlTableName("catalog_product_entity_media_gallery_value_to_entity");
     }
 
+    public function getEavHelper()
+    {
+        return $this->helperEav;
+    }
+
     public function getProduct($productId)
     {
         return $this->getProductById($productId);
