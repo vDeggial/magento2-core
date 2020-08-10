@@ -10,9 +10,11 @@ class QuoteHelper extends BaseHelper
 {
     protected $tableQuote;
     protected $tableQuoteItem;
-    public function __construct(Context $context, ObjectManagerInterface $objectManager)
+    protected $quoteFactory;
+    public function __construct(Context $context, ObjectManagerInterface $objectManager, QuoteFactory $quoteFactory)
     {
         parent::__construct($context, $objectManager);
+        $this->quoteFactory = $quoteFactory->create();
         $this->tableQuote = $this->helperDb->getSqlTableName('quote');
         $this->tableQuoteItem = $this->helperDb->getSqlTableName('quote_item');
     }
@@ -41,8 +43,7 @@ class QuoteHelper extends BaseHelper
     {
         $quote = null;
         try {
-            $quoteFactory = $this->generateClassObject(QuoteFactory::class);
-            $quote = $this->quoteExists($quoteId) ? $quoteFactory->create()->load($quoteId) : null;
+            $quote = $this->quoteExists($quoteId) ? $this->quoteFactory->load($quoteId) : null;
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $quote = null;
