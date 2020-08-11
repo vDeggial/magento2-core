@@ -58,7 +58,7 @@ class EavHelper extends DbHelper
         $tableName = null;
         try {
             $tableName = $this->getSqlTableName($this->getEntityTable($attributeType));
-            if ($backendType !== null) {
+            if (isset($backendType)) {
                 $format = "%s_%s";
                 $tableName = sprintf($format, $tableName, $backendType);
             }

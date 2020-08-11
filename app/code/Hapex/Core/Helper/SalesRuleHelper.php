@@ -139,7 +139,7 @@ class SalesRuleHelper extends BaseHelper
         try {
             $sql = "UPDATE " . $this->tableSalesRule . " SET is_active = $status where rule_id = $ruleId";
             $result = $this->helperDb->sqlQuery($sql);
-            $isSet = $result !== null;
+            $isSet = isset($result);
         } catch (\Exception $e) {
             $this->helperLog->errorLog($e->getMessage());
             $isSet = false;
