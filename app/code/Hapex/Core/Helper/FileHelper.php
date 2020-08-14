@@ -51,14 +51,19 @@ class FileHelper extends AbstractHelper
 
     public function getFiles($path = null, $extension = null)
     {
-        $files = array();
+        $files = [];
         $fullPath = $this->getRootPath() . $path;
         foreach ($this->fileDriver->readDirectory($fullPath) as $file) {
-            if ($this->getFileExtension($file) === $extension) {
-                $files[] = $file;
-            }
+            $this->processFile($files, $file, $extension);
         }
         return $files;
+    }
+
+    private function processFile(&$files = [], $file = null, $extension = null)
+    {
+        if ($this->getFileExtension($file) === $extension) {
+            $files[] = $file;
+        }
     }
 
     public function getFileExtension($filename = null)
@@ -68,11 +73,7 @@ class FileHelper extends AbstractHelper
 
     public function getFileSize($filename = null)
     {
-        $fileSize = 0;
-        if ($this->fileExists($filename)) {
-            $fileSize = filesize($filename);
-        }
-        return $fileSize;
+        return $this->fileExists($filename) ? filesize($filename) : 0;
     }
 
     public function getRootFilePath($path = null, $filename = null)
@@ -114,18 +115,26 @@ class FileHelper extends AbstractHelper
     {
         $data = [];
         try {
-            if ($this->fileExists($fileName)) {
-                $data = $this->csvProcessor->getData($fileName);
-            }
+            $data = $this->getCsv($fileName);
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $data = [];
         } finally {
-            if (!empty($data) && $isFirstRowHeader) {
-                array_shift($data);
-            }
+            $this->shiftData($data, $isFirstRowHeader);
             return $data;
         }
+    }
+
+    private function shiftData(&$data = [], $isFirstRowHeader = false)
+    {
+        if (!empty($data) && $isFirstRowHeader) {
+            array_shift($data);
+        }
+    }
+
+    private function getCsv($fileName = null)
+    {
+        return $this->fileExists($fileName) ? $this->csvProcessor->getData($fileName) : [];
     }
 
     protected function writeCsvDataFile($path, $fileName, $data = [])
