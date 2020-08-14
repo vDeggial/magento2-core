@@ -5,7 +5,6 @@ namespace Hapex\Core\Helper;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Filesystem\Driver\File;
 use Magento\Framework\File\Csv;
 use Magento\Framework\ObjectManagerInterface;
@@ -15,24 +14,63 @@ class FileHelper extends AbstractHelper
     protected $objectManager;
     protected $csvDirectory;
     protected $helperLog;
+    protected $directoryList;
+    protected $fileDriver;
+    protected $csvProcessor;
 
-    public function __construct(Context $context, ObjectManagerInterface $objectManager, LogHelper $helperLog)
-    {
+    public function __construct(
+        Context $context,
+        ObjectManagerInterface $objectManager,
+        LogHelper $helperLog,
+        DirectoryList $directoryList,
+        File $fileDriver,
+        Csv $csvProcessor
+    ) {
         parent::__construct($context);
         $this->objectManager = $objectManager;
         $this->helperLog = $helperLog;
+        $this->directoryList = $directoryList;
+        $this->fileDriver = $fileDriver;
+        $this->csvProcessor = $csvProcessor;
     }
 
     public function getRootPath()
     {
-        $directory = $this->objectManager->get(DirectoryList::class);
-        return $directory->getRoot();
+        return $this->directoryList->getRoot();
+    }
+
+    public function fileExists($path = null)
+    {
+        return $this->fileDriver->isExists($path);
+    }
+
+    public function deleteFile($path = null)
+    {
+        return $this->fileDriver->deleteFile($path);
+    }
+
+    public function getFiles($path = null, $extension = null)
+    {
+        $files = array();
+        $rootPath = $this->getRootPath();
+        foreach (glob($rootPath . "$path/*.$extension") as $file) {
+            $files[] = $file;
+        }
+        return $files;
+    }
+
+    public function getFileSize($filename = null)
+    {
+        $fileSize = 0;
+        if ($this->fileExists($filename)) {
+            $fileSize = filesize($filename);
+        }
+        return $fileSize;
     }
 
     public function getFileContents($path = "", $filename = "")
     {
-        $fileDriver = $this->objectManager->get(File::class);
-        return $fileDriver->fileGetContents($this->getRootPath() . "/$path/$filename");
+        return $this->fileDriver->fileGetContents($this->getRootPath() . "/$path/$filename");
     }
 
     public function getCsvFileData($fileName, $isFirstRowHeader = false)
@@ -47,21 +85,15 @@ class FileHelper extends AbstractHelper
 
     public function setCsvLocation($path)
     {
-        $directoryList = $this->objectManager->get(DirectoryList::class);
-        $this->csvDirectory = $directoryList->getPath(DirectoryList::PUB) . "/" . $path;
-        // if (!is_dir($this->csvDirectory)) {
-        //     mkdir($this->csvDirectory, 0777, true);
-        // }
+        $this->csvDirectory = $this->directoryList->getPath(DirectoryList::PUB) . "/" . $path;
     }
 
     protected function getCsvDataFile($fileName, $isFirstRowHeader = false)
     {
         $data = [];
         try {
-            $fileDriver = $this->objectManager->get(File::class);
-            if ($fileDriver->isExists($fileName)) {
-                $csvProcessor = $this->objectManager->get(Csv::class);
-                $data = $csvProcessor->getData($fileName);
+            if ($this->fileExists($fileName)) {
+                $data = $this->csvProcessor->getData($fileName);
             }
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
@@ -78,8 +110,7 @@ class FileHelper extends AbstractHelper
     {
         $success = false;
         try {
-            $csvProcessor = $this->objectManager->get(Csv::class);
-            $csvProcessor->setEnclosure('"')->setDelimiter(',')->saveData("$path/$fileName", $data);
+            $this->csvProcessor->setEnclosure('"')->setDelimiter(',')->saveData("$path/$fileName", $data);
             $success = true;
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
