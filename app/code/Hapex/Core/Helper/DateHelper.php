@@ -32,8 +32,8 @@ class DateHelper extends AbstractHelper
         $isAfter = false;
         $isBefore = false;
         try {
-            $isAfter = $this->isDateBefore($fromDate);
-            $isBefore = $this->isDateAfter($toDate);
+            $isAfter = $this->isDateAfter($fromDate);
+            $isBefore = $this->isDateBefore($toDate);
             $isWithinRange = $isAfter && $isBefore;
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
