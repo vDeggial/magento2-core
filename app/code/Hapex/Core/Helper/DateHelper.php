@@ -2,57 +2,56 @@
 
 namespace Hapex\Core\Helper;
 
-use DateTime;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
-use stdClass;
 
 class DateHelper extends AbstractHelper
 {
     protected $objectManager;
     protected $helperLog;
+    protected $timezone;
 
-    public function __construct(Context $context, ObjectManagerInterface $objectManager, LogHelper $helperLog)
+    public function __construct(Context $context, ObjectManagerInterface $objectManager, LogHelper $helperLog, TimezoneInterface $timezone)
     {
         parent::__construct($context);
         $this->objectManager = $objectManager;
         $this->helperLog = $helperLog;
+        $this->timezone = $timezone;
     }
 
     public function getCurrentDate()
     {
-        $date = new DateTime();
-        try {
-            $timezone = $this->objectManager->get(TimezoneInterface::class);
-            $date = $timezone->date();
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $date = new DateTime();
-        } finally {
-            return $date;
-        }
+        return $this->timezone->date();
     }
 
     public function isCurrentDateWithinRange($fromDate, $toDate)
     {
         $isWithinRange = false;
-        $afterFromDate = false;
-        $beforeToDate = false;
-        $currentDate = null;
-
+        $isAfter = false;
+        $isBefore = false;
         try {
-            $currentDate = $this->getCurrentDate()->format('Y-m-d');
-            $afterFromDate = $fromDate ? strtotime($currentDate) >= strtotime($fromDate) : true;
-            $beforeToDate = $toDate ? strtotime($currentDate) <= strtotime($toDate) : true;
-            $isWithinRange = $afterFromDate && $beforeToDate;
+            $isAfter = $this->isDateBefore($fromDate);
+            $isBefore = $this->isDateAfter($toDate);
+            $isWithinRange = $isAfter && $isBefore;
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $isWithinRange = false;
         } finally {
             return $isWithinRange;
         }
+    }
+
+    private function isDateBefore($date = null)
+    {
+        $currentDate = $this->getCurrentDate()->format('Y-m-d');
+        return isset($date) ? strtotime($currentDate) <= strtotime($date) : true;
+    }
+
+    private function isDateAfter($date = null)
+    {
+        $currentDate = $this->getCurrentDate()->format('Y-m-d');
+        return isset($date) ? strtotime($currentDate) >= strtotime($date) : true;
     }
 }
