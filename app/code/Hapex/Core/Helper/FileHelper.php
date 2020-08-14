@@ -75,14 +75,29 @@ class FileHelper extends AbstractHelper
         return $fileSize;
     }
 
+    public function getRootFilePath($path = null, $filename = null)
+    {
+        return $this->getRootPath() . "/$path/$filename";
+    }
+
+    public function getDirectoryPath($path = null)
+    {
+        return $this->getRootPath() . "/" . $path;
+    }
+
+    public function getFilePath($path = null, $filename = null)
+    {
+        return "$path/$filename";
+    }
+
     public function getFileContents($path = "", $filename = "")
     {
-        return $this->fileDriver->fileGetContents($this->getRootPath() . "/$path/$filename");
+        return $this->fileDriver->fileGetContents($this->getFilePath($path, $filename));
     }
 
     public function getCsvFileData($fileName, $isFirstRowHeader = false)
     {
-        return $this->getCsvDataFile($this->csvDirectory . "/" . "$fileName", $isFirstRowHeader);
+        return $this->getCsvDataFile($this->getFilePath($this->csvDirectory, $fileName), $isFirstRowHeader);
     }
 
     public function writeCsvFileData($fileName, $data)
@@ -92,7 +107,7 @@ class FileHelper extends AbstractHelper
 
     public function setCsvLocation($path)
     {
-        $this->csvDirectory = $this->directoryList->getPath(DirectoryList::PUB) . "/" . $path;
+        $this->csvDirectory = $this->getDirectoryPath(DirectoryList::PUB. "/" .$path);
     }
 
     protected function getCsvDataFile($fileName, $isFirstRowHeader = false)
@@ -117,7 +132,7 @@ class FileHelper extends AbstractHelper
     {
         $success = false;
         try {
-            $this->csvProcessor->setEnclosure('"')->setDelimiter(',')->saveData("$path/$fileName", $data);
+            $this->csvProcessor->setEnclosure('"')->setDelimiter(',')->saveData($this->getFilePath($path, $fileName), $data);
             $success = true;
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
