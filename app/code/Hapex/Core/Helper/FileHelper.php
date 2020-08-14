@@ -70,7 +70,7 @@ class FileHelper extends AbstractHelper
     {
         $fileSize = 0;
         if ($this->fileExists($filename)) {
-            $fileSize = $this->fileDriver->stats($filename)["size"];
+            $fileSize = filesize($filename);
         }
         return $fileSize;
     }
