@@ -41,7 +41,7 @@ class FileHelper extends AbstractHelper
 
     public function fileExists($path = null)
     {
-        return $this->fileDriver->isExists($path);
+        return $this->fileDriver->isExists($path) && $this->fileDriver->isFile($path);
     }
 
     public function deleteFile($path = null)
@@ -63,14 +63,14 @@ class FileHelper extends AbstractHelper
 
     public function getFileExtension($filename = null)
     {
-        return pathinfo($filename, PATHINFO_EXTENSION);
+        return substr(strrchr($filename,'.'),1);
     }
 
     public function getFileSize($filename = null)
     {
         $fileSize = 0;
         if ($this->fileExists($filename)) {
-            $fileSize = filesize($filename);
+            $fileSize = $this->fileDriver->stats($filename)["size"];
         }
         return $fileSize;
     }
