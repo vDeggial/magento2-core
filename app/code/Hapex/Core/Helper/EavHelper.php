@@ -58,15 +58,20 @@ class EavHelper extends DbHelper
         $tableName = null;
         try {
             $tableName = $this->getSqlTableName($this->getEntityTable($attributeType));
-            if (isset($backendType)) {
-                $format = "%s_%s";
-                $tableName = sprintf($format, $tableName, $backendType);
-            }
+            $this->setTableName($tableName, $backendType);
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $tableName = null;
         } finally {
             return $tableName;
+        }
+    }
+
+    private function setTableName(&$tableName = null, $backendType = null)
+    {
+        if (isset($backendType)) {
+            $format = "%s_%s";
+            $tableName = sprintf($format, $tableName, $backendType);
         }
     }
 
@@ -91,7 +96,7 @@ class EavHelper extends DbHelper
         $value = null;
         try {
             $attributeId = $this->getAttributeId($attributeCode, $attributeType);
-            $backendType = $attributeId > 0 ? $this->getAttributeBackendType($attributeId, $attributeType) : null;
+            $backendType = $this->getBackendType($attributeId, $attributeType);
             switch ($attributeId > 0 && $backendType !== "static") {
                 case true:
                     $value = $this->getValue($entityId, $attributeType, $attributeId, $backendType);
@@ -107,6 +112,11 @@ class EavHelper extends DbHelper
         } finally {
             return $value;
         }
+    }
+
+    private function getBackendType($attributeId = 0, $attributeType = null)
+    {
+        return $attributeId > 0 ? $this->getAttributeBackendType($attributeId, $attributeType) : null;
     }
 
     public function getEntityFieldValue($attributeType = null, $fieldName = null, $entityId = 0)
