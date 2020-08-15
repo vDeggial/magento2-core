@@ -7,12 +7,16 @@ use Magento\Framework\ObjectManagerInterface;
 
 class SalesRuleHelper extends BaseHelper
 {
-    protected $tableSalesRule;
+    protected $tableRule;
+    protected $tableRuleCustomer;
+    protected $tableRuleCoupon;
 
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
         parent::__construct($context, $objectManager);
-        $this->tableSalesRule = $this->helperDb->getSqlTableName("salesrule");
+        $this->tableRule = $this->helperDb->getSqlTableName("salesrule");
+        $this->tableRuleCustomer = $this->helperDb->getSqlTableName("salesrule_customer");
+        $this->tableRuleCoupon = $this->helperDb->getSqlTableName("salesrule_coupon");
     }
 
     public function ruleExists($ruleId)
@@ -52,6 +56,45 @@ class SalesRuleHelper extends BaseHelper
             $description = null;
         } finally {
             return $description;
+        }
+    }
+
+    public function getRuleDiscountAmount($ruleId = 0)
+    {
+        $amount = 0;
+        try {
+            $amount = (int) $this->getRuleFieldValue($ruleId, "discount_amount");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $amount = 0;
+        } finally {
+            return $amount;
+        }
+    }
+
+    public function getRuleDiscountQuantity($ruleId = 0)
+    {
+        $quantity = 0;
+        try {
+            $quantity = (int) $this->getRuleFieldValue($ruleId, "discount_qty");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $quantity = 0;
+        } finally {
+            return $quantity;
+        }
+    }
+
+    public function getRuleDiscountStep($ruleId = 0)
+    {
+        $step = 0;
+        try {
+            $step = (int) $this->getRuleFieldValue($ruleId, "discount_step");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $step = 0;
+        } finally {
+            return $step;
         }
     }
 
@@ -120,6 +163,45 @@ class SalesRuleHelper extends BaseHelper
         }
     }
 
+    public function getRuleCouponCode($ruleId = 0)
+    {
+        $code = null;
+        try {
+            $code = $this->getRuleCouponFieldValue($ruleId, "code");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $code = null;
+        } finally {
+            return $code;
+        }
+    }
+
+    public function getRuleCouponTimesUsed($ruleId = 0)
+    {
+        $uses = 0;
+        try {
+            $uses = (int) $this->getRuleCouponFieldValue($ruleId, "times_used");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $uses = 0;
+        } finally {
+            return $uses;
+        }
+    }
+
+    public function getRuleTimesUsed($ruleId = 0, $customerId = 0)
+    {
+        $uses = 0;
+        try {
+            $uses = (int) $this->getRuleCustomerFieldValue($ruleId, $customerId, "times_used");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $uses = 0;
+        } finally {
+            return $uses;
+        }
+    }
+
     public function isActiveDates($ruleId)
     {
         $isValid = false;
@@ -133,11 +215,55 @@ class SalesRuleHelper extends BaseHelper
         }
     }
 
-    public function setRuleStatus($ruleId, $status = 0)
+    public function setRuleStatus($ruleId = 0, $status = 0)
+    {
+        return $this->setRuleFieldValue($ruleId, "is_active", $status);
+    }
+
+    private function getRuleFieldValue($ruleId = 0, $fieldName = null)
+    {
+        try {
+            $sql = "SELECT $fieldName FROM " . $this->tableRule . " WHERE rule_id = $ruleId";
+            $result = $this->helperDb->sqlQueryFetchOne($sql);
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $result = null;
+        } finally {
+            return $result;
+        }
+    }
+
+    private function getRuleCouponFieldValue($ruleId = 0, $fieldName = null)
+    {
+        try {
+            $sql = "SELECT $fieldName FROM " . $this->tableRuleCoupon . " WHERE rule_id = $ruleId";
+            $result = $this->helperDb->sqlQueryFetchOne($sql);
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $result = null;
+        } finally {
+            return $result;
+        }
+    }
+
+    private function getRuleCustomerFieldValue($ruleId = 0, $customerId = 0, $fieldName = null)
+    {
+        try {
+            $sql = "SELECT $fieldName FROM " . $this->tableRuleCustomer . " WHERE rule_id = $ruleId and customer_id = $customerId";
+            $result = $this->helperDb->sqlQueryFetchOne($sql);
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $result = null;
+        } finally {
+            return $result;
+        }
+    }
+
+    private function setRuleFieldValue($ruleId = 0, $fieldName = null, $value = null)
     {
         $isSet = false;
         try {
-            $sql = "UPDATE " . $this->tableSalesRule . " SET is_active = $status where rule_id = $ruleId";
+            $sql = "UPDATE " . $this->tableRule . " SET $fieldName = $value where rule_id = $ruleId";
             $result = $this->helperDb->sqlQuery($sql);
             $isSet = isset($result);
         } catch (\Exception $e) {
@@ -145,19 +271,6 @@ class SalesRuleHelper extends BaseHelper
             $isSet = false;
         } finally {
             return $isSet;
-        }
-    }
-
-    protected function getRuleFieldValue($ruleId = 0, $fieldName = null)
-    {
-        try {
-            $sql = "SELECT $fieldName FROM " . $this->tableSalesRule . " WHERE rule_id = $ruleId";
-            $result = $this->helperDb->sqlQueryFetchOne($sql);
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $result = null;
-        } finally {
-            return $result;
         }
     }
 }
