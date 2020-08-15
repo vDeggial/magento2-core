@@ -71,7 +71,7 @@ class ProductHelper extends BaseHelper
     {
         $productDate = null;
         try {
-            $productDate = (string) $this->helperEav->getProductEntityFieldValue($productId, "created_at");
+            $productDate =  $this->helperEav->getProductEntityFieldValue($productId, "created_at");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $productDate = null;
@@ -84,7 +84,7 @@ class ProductHelper extends BaseHelper
     {
         $productDate = null;
         try {
-            $productDate = (string) $this->helperEav->getProductEntityFieldValue($productId, "updated_at");
+            $productDate =  $this->helperEav->getProductEntityFieldValue($productId, "updated_at");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $productDate = null;
@@ -168,7 +168,7 @@ class ProductHelper extends BaseHelper
     {
         $productSku = null;
         try {
-            $productSku = (string) $this->helperEav->getProductEntityFieldValue($productId, "sku");
+            $productSku =  $this->helperEav->getProductEntityFieldValue($productId, "sku");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $productSku = null;
@@ -209,7 +209,7 @@ class ProductHelper extends BaseHelper
     {
         $productType = null;
         try {
-            $productType = (string) $this->helperEav->getProductEntityFieldValue($productId, "type_id");
+            $productType =  $this->helperEav->getProductEntityFieldValue($productId, "type_id");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $productType = null;

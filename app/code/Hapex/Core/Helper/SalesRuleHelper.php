@@ -33,7 +33,7 @@ class SalesRuleHelper extends BaseHelper
     {
         $action = null;
         try {
-            $action = (string) $this->getRuleFieldValue($ruleId, "simple_action");
+            $action = $this->getRuleFieldValue($ruleId, "simple_action");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $action = null;
@@ -46,7 +46,7 @@ class SalesRuleHelper extends BaseHelper
     {
         $description = null;
         try {
-            $description = (string) $this->getRuleFieldValue($ruleId, "description");
+            $description = $this->getRuleFieldValue($ruleId, "description");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $description = null;
@@ -59,7 +59,7 @@ class SalesRuleHelper extends BaseHelper
     {
         $name = null;
         try {
-            $name = (string) $this->getRuleFieldValue($ruleId, "name");
+            $name = $this->getRuleFieldValue($ruleId, "name");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $name = null;
@@ -72,7 +72,7 @@ class SalesRuleHelper extends BaseHelper
     {
         $date = null;
         try {
-            $date = (string) $this->getRuleFieldValue($ruleId, "from_date");
+            $date = $this->getRuleFieldValue($ruleId, "from_date");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $date = null;
@@ -85,7 +85,7 @@ class SalesRuleHelper extends BaseHelper
     {
         $date = null;
         try {
-            $date = (string) $this->getRuleFieldValue($ruleId, "to_date");
+            $date = $this->getRuleFieldValue($ruleId, "to_date");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $date = null;

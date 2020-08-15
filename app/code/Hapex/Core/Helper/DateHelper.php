@@ -46,12 +46,12 @@ class DateHelper extends AbstractHelper
     private function isDateBefore($date = null)
     {
         $currentDate = $this->getCurrentDate()->format('Y-m-d');
-        return $date ? strtotime($currentDate) <= strtotime($date) : true;
+        return isset($date) ? strtotime($currentDate) <= strtotime($date) : true;
     }
 
     private function isDateAfter($date = null)
     {
         $currentDate = $this->getCurrentDate()->format('Y-m-d');
-        return $date ? strtotime($currentDate) >= strtotime($date) : true;
+        return isset($date) ? strtotime($currentDate) >= strtotime($date) : true;
     }
 }

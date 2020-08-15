@@ -81,7 +81,7 @@ class EavHelper extends DbHelper
         try {
             $attributeTypeId = $this->getEntityTypeId($attributeType);
             $sql = "SELECT backend_type from " . $this->tableAttribute . " WHERE entity_type_id = $attributeTypeId AND attribute_id = $attributeId";
-            $result = (string) $this->sqlQueryFetchOne($sql);
+            $result =  $this->sqlQueryFetchOne($sql);
             $backendType = $result;
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
@@ -140,7 +140,7 @@ class EavHelper extends DbHelper
         $optionValue = null;
         try {
             $sql = "SELECT value from " . $this->tableAttributeOption . " WHERE option_id = $optionId";
-            $result = (string) $this->sqlQueryFetchOne($sql);
+            $result = $this->sqlQueryFetchOne($sql);
             $optionValue = $result;
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
@@ -170,7 +170,7 @@ class EavHelper extends DbHelper
         $typeCode = null;
         try {
             $sql = "SELECT entity_type_code FROM " . $this->tableEntityType . " WHERE entity_type_id = $typeId";
-            $result = (string) $this->sqlQueryFetchOne($sql);
+            $result = $this->sqlQueryFetchOne($sql);
             $typeCode = $result;
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
@@ -186,7 +186,7 @@ class EavHelper extends DbHelper
         try {
             $typeId = $this->getEntityTypeId($type);
             $sql = "SELECT entity_table FROM " . $this->tableEntityType . " WHERE entity_type_id = $typeId";
-            $result = (string) $this->sqlQueryFetchOne($sql);
+            $result =  $this->sqlQueryFetchOne($sql);
             $entityTable = $result;
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());

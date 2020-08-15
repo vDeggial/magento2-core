@@ -64,7 +64,7 @@ class OrderHelper extends BaseHelper
     {
         $date = null;
         try {
-            $date = (string) $this->getOrderFieldValue($orderId, "created_at");
+            $date =  $this->getOrderFieldValue($orderId, "created_at");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $date = null;
@@ -77,7 +77,7 @@ class OrderHelper extends BaseHelper
     {
         $date = null;
         try {
-            $date = (string) $this->getOrderFieldValue($orderId, "updated_at");
+            $date =  $this->getOrderFieldValue($orderId, "updated_at");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $date = null;
