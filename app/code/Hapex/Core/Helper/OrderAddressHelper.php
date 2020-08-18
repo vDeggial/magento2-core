@@ -51,8 +51,7 @@ class OrderAddressHelper extends BaseHelper
     {
         $customerName = null;
         try {
-            $address = $this->getOrderBillingAddress($order);
-            $customerName = $address->getName();
+            $customerName = $this->getOrderBillingAddress($order)->getName();
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $customerName = null;
@@ -65,8 +64,7 @@ class OrderAddressHelper extends BaseHelper
     {
         $customerEmail = null;
         try {
-            $address = $this->getOrderBillingAddress($order);
-            $customerEmail = $address->getEmail();
+            $customerEmail = $this->getOrderBillingAddress($order)->getEmail();
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $customerEmail = null;

@@ -35,11 +35,6 @@ class OrderHelper extends BaseHelper
         return $this->getOrderById($orderId);
     }
 
-    public function getOrderIdsByProductSku($productSku = null)
-    {
-        return $this->helperItem->getOrderIdsByProductSku($productSku);
-    }
-
     public function getOrderIdsByCustomerId($customerId = 0)
     {
         $result = null;
@@ -80,26 +75,6 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getOrderIdEmail($orderId = 0)
-    {
-        return $this->helperGrid->getCustomerEmail($orderId);
-    }
-
-    public function getOrderEmail($order = null)
-    {
-        return $this->helperAddress->getOrderCustomerEmail($order);
-    }
-
-    public function getOrderIdName($orderId = 0)
-    {
-        return $this->helperGrid->getBillingName($orderId);
-    }
-
-    public function getOrderName($order = null)
-    {
-        return $this->helperAddress->getOrderCustomerName($order);
-    }
-
     public function getOrderIdCustomerid($orderId = 0)
     {
         $customerId = 0;
@@ -126,51 +101,6 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getQtyCanceled($orderId = 0, $productSku = null)
-    {
-        return $this->helperItem->getQtyCanceled($orderId, $productSku);
-    }
-
-    public function getQtyOrdered($orderId = 0, $productSku = null)
-    {
-        return $this->helperItem->getQtyOrdered($orderId, $productSku);
-    }
-
-    public function getQtyRefunded($orderId = 0, $productSku = null)
-    {
-        return $this->helperItem->getQtyRefunded($orderId, $productSku);
-    }
-
-    protected function getBillingName($orderId = 0)
-    {
-        return $this->helperGrid->getBillingName($orderId);
-    }
-
-    protected function getCustomerEmail($orderId = 0)
-    {
-        return $this->helperGrid->getCustomerEmail($orderId);
-    }
-
-    protected function getOrderBillingAddress($order = null)
-    {
-        return $this->helperAddress->getOrderBillingAddress($order);
-    }
-
-    protected function getOrderShippingAddress($order = null)
-    {
-        return $this->helperAddress->getOrderShippingAddress($order);
-    }
-
-    protected function getOrderCustomerName($order = null)
-    {
-        return $this->helperAddress->getOrderCustomerName($order);
-    }
-
-    protected function getOrderCustomerEmail($order = null)
-    {
-        return $this->helperAddress->getOrderCustomerEmail($order);
-    }
-
     protected function getOrderItems($order = null)
     {
         $items = [];
@@ -186,11 +116,6 @@ class OrderHelper extends BaseHelper
         } finally {
             return $items;
         }
-    }
-
-    protected function getShippingName($orderId = 0)
-    {
-        return $this->helperGrid->getShippingName($orderId);
     }
 
     private function getOrderById($orderId)
