@@ -86,47 +86,44 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getOrderEmail($data)
+    public function getOrderIdEmail($orderId = 0)
     {
-        switch (true) {
-            case is_numeric($data):
-                return $this->getCustomerEmail($data);
-
-            case is_object($data):
-                return $this->getOrderCustomerEmail($data);
-
-            default:
-                return null;
-        }
+        return $this->getCustomerEmail($orderId);
     }
 
-    public function getOrderName($data)
+    public function getOrderEmail($order = null)
     {
-        switch (true) {
-            case is_numeric($data):
-                return $this->getBillingName($data);
-
-            case is_object($data):
-                return $this->getOrderCustomerName($data);
-
-            default:
-                return null;
-        }
+        return $this->getOrderCustomerEmail($order);
     }
 
-    public function getOrderCustomerId($order)
+    public function getOrderIdName($orderId = 0)
+    {
+        return $this->getBillingName($orderId);
+    }
+
+    public function getOrderName($order = null)
+    {
+        return $this->getOrderCustomerName($order);
+    }
+
+    public function getOrderIdCustomerid($orderId = 0)
     {
         $customerId = 0;
         try {
-            switch (true) {
-                case is_numeric($order):
-                    $customerId = (int) $this->getOrderFieldValue($order, "customer_id");
-                    break;
+            $customerId = (int) $this->getOrderFieldValue($orderId, "customer_id");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $customerId = 0;
+        } finally {
+            return $customerId;
+        }
+    }
 
-                case is_object($order):
-                    $customerId = $order->getCustomer()->getId();
-                    break;
-            }
+    public function getOrderCustomerId($order = null)
+    {
+        $customerId = 0;
+        try {
+            $customerId = $order->getCustomer()->getId();
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $customerId = 0;
