@@ -71,4 +71,33 @@ class OrderAddressHelper extends BaseHelper
             return $customerEmail;
         }
     }
+
+    public function getAddressInfo($address = null)
+    {
+        $info = null;
+
+        try {
+            if (isset($address)) {
+                $info = [];
+                $info["name"] = $address->getName();
+                $street = $address->getStreet();
+                $info["street"] = isset($street[0]) ? $street[0] : null;
+
+                $info["city"] = $address->getCity();
+                $info["region"] = $address->getRegion();
+                $info["postCode"] = $address->getPostcode();
+
+                $countryId = $address->getCountryId();
+                if (isset($countryId)) {
+                    $country = $this->countryFactory->loadByCode($countryId);
+                    $info["country"] = $country->getName();
+                }
+            }
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $info = null;
+        } finally {
+            return $info;
+        }
+    }
 }
