@@ -2,7 +2,6 @@
 
 namespace Hapex\Core\Helper;
 
-use Magento\Sales\Model\Order\Address;
 use Magento\Sales\Model\OrderRepository;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\ObjectManagerInterface;
@@ -10,21 +9,25 @@ use Magento\Framework\ObjectManagerInterface;
 class OrderHelper extends BaseHelper
 {
     protected $tableOrder;
-    protected $tableOrderGrid;
-    protected $tableOrderItem;
-    protected $tableOrderAddress;
     protected $orderRepository;
-    protected $address;
+    protected $helperItem;
+    protected $helperGrid;
+    protected $helperAddress;
 
-    public function __construct(Context $context, ObjectManagerInterface $objectManager, OrderRepository $orderRepository, Address $address)
-    {
+    public function __construct(
+        Context $context,
+        ObjectManagerInterface $objectManager,
+        OrderItemHelper $helperItem,
+        OrderGridHelper $helperGrid,
+        OrderAddressHelper $helperAddress,
+        OrderRepository $orderRepository
+    ) {
         parent::__construct($context, $objectManager);
+        $this->helperItem = $helperItem;
+        $this->helperGrid = $helperGrid;
+        $this->helperAddress = $helperAddress;
         $this->orderRepository = $orderRepository;
-        $this->address = $address;
         $this->tableOrder = $this->helperDb->getSqlTableName('sales_order');
-        $this->tableOrderGrid = $this->helperDb->getSqlTableName('sales_order_grid');
-        $this->tableOrderItem = $this->helperDb->getSqlTableName('sales_order_item');
-        $this->tableOrderAddress = $this->helperDb->getSqlTableName('sales_order_address');
     }
 
     public function getOrder($orderId)
@@ -34,16 +37,7 @@ class OrderHelper extends BaseHelper
 
     public function getOrderIdsByProductSku($productSku = null)
     {
-        $result = null;
-        try {
-            $sql = "SELECT order_id FROM " . $this->tableOrderItem . " WHERE sku LIKE '$productSku' GROUP BY order_id";
-            $result = array_column($this->helperDb->sqlQueryFetchAll($sql), "order_id");
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $result = null;
-        } finally {
-            return $result;
-        }
+        return $this->helperItem->getOrderIdsByProductSku($productSku);
     }
 
     public function getOrderIdsByCustomerId($customerId = 0)
@@ -88,22 +82,22 @@ class OrderHelper extends BaseHelper
 
     public function getOrderIdEmail($orderId = 0)
     {
-        return $this->getCustomerEmail($orderId);
+        return $this->helperGrid->getCustomerEmail($orderId);
     }
 
     public function getOrderEmail($order = null)
     {
-        return $this->getOrderCustomerEmail($order);
+        return $this->helperAddress->getOrderCustomerEmail($order);
     }
 
     public function getOrderIdName($orderId = 0)
     {
-        return $this->getBillingName($orderId);
+        return $this->helperGrid->getBillingName($orderId);
     }
 
     public function getOrderName($order = null)
     {
-        return $this->getOrderCustomerName($order);
+        return $this->helperAddress->getOrderCustomerName($order);
     }
 
     public function getOrderIdCustomerid($orderId = 0)
@@ -132,123 +126,49 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getQtyCanceled($orderId = null, $productSku = null)
+    public function getQtyCanceled($orderId = 0, $productSku = null)
     {
-        $qty = 0;
-        try {
-            $qty = (int) $this->getOrderItemFieldValue($orderId, $productSku, "sum(qty_canceled)");
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $qty = 0;
-        } finally {
-            return $qty;
-        }
+        return $this->helperItem->getQtyCanceled($orderId, $productSku);
     }
 
-    public function getQtyOrdered($orderId = null, $productSku = null)
+    public function getQtyOrdered($orderId = 0, $productSku = null)
     {
-        $qty = 0;
-        try {
-            $qty = (int) $this->getOrderItemFieldValue($orderId, $productSku, "sum(qty_ordered)");
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $qty = 0;
-        } finally {
-            return $qty;
-        }
+        return $this->helperItem->getQtyOrdered($orderId, $productSku);
     }
 
-    public function getQtyRefunded($orderId = null, $productSku = null)
+    public function getQtyRefunded($orderId = 0, $productSku = null)
     {
-        $qty = 0;
-        try {
-            $qty = (int) $this->getOrderItemFieldValue($orderId, $productSku, "sum(qty_refunded)");
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $qty = 0;
-        } finally {
-            return $qty;
-        }
+        return $this->helperItem->getQtyRefunded($orderId, $productSku);
     }
 
-    protected function getBillingName($orderId = null)
+    protected function getBillingName($orderId = 0)
     {
-        $fullName = null;
-        try {
-            $fullName = $this->getOrderGridFieldValue($orderId, "billing_name");
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $fullName = null;
-        } finally {
-            return $fullName;
-        }
+        return $this->helperGrid->getBillingName($orderId);
     }
 
-    protected function getCustomerEmail($orderId = null)
+    protected function getCustomerEmail($orderId = 0)
     {
-        $email = null;
-        try {
-            $email = $this->getOrderGridFieldValue($orderId, "customer_email");
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $email = null;
-        } finally {
-            return $email;
-        }
+        return $this->helperGrid->getCustomerEmail($orderId);
     }
 
     protected function getOrderBillingAddress($order = null)
     {
-        $address = $this->address;
-        try {
-            $address = $order->getBillingAddress();
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $address = $this->address;
-        } finally {
-            return $address;
-        }
+        return $this->helperAddress->getOrderBillingAddress($order);
     }
 
     protected function getOrderShippingAddress($order = null)
     {
-        $address = $this->address;
-        try {
-            $address = $order->getShippingAddress();
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $address = $this->address;
-        } finally {
-            return $address;
-        }
+        return $this->helperAddress->getOrderShippingAddress($order);
     }
 
     protected function getOrderCustomerName($order = null)
     {
-        $customerName = null;
-        try {
-            $address = $this->getOrderBillingAddress($order);
-            $customerName = $address->getName();
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $customerName = null;
-        } finally {
-            return $customerName;
-        }
+        return $this->helperAddress->getOrderCustomerName($order);
     }
 
     protected function getOrderCustomerEmail($order = null)
     {
-        $customerEmail = null;
-        try {
-            $address = $this->getOrderBillingAddress($order);
-            $customerEmail = $address->getEmail();
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $customerEmail = null;
-        } finally {
-            return $customerEmail;
-        }
+        return $this->helperAddress->getOrderCustomerEmail($order);
     }
 
     protected function getOrderItems($order = null)
@@ -268,17 +188,9 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    protected function getShippingName($orderId = null)
+    protected function getShippingName($orderId = 0)
     {
-        $fullName = null;
-        try {
-            $fullName = $this->getOrderGridFieldValue($orderId, "shipping_name");
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $fullName = null;
-        } finally {
-            return $fullName;
-        }
+        return $this->helperGrid->getShippingName($orderId);
     }
 
     private function getOrderById($orderId)
@@ -298,32 +210,6 @@ class OrderHelper extends BaseHelper
     {
         try {
             $sql = "SELECT $fieldName FROM " . $this->tableOrder . " where entity_id = $orderId";
-            $result = $this->helperDb->sqlQueryFetchOne($sql);
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $result = null;
-        } finally {
-            return $result;
-        }
-    }
-
-    private function getOrderItemFieldValue($orderId = null, $productSku = null, $fieldName = null)
-    {
-        try {
-            $sql = "SELECT $fieldName FROM " . $this->tableOrderItem . " where order_id = $orderId AND sku LIKE '$productSku'";
-            $result = $this->helperDb->sqlQueryFetchOne($sql);
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $result = null;
-        } finally {
-            return $result;
-        }
-    }
-
-    private function getOrderGridFieldValue($orderId = null, $fieldName = null)
-    {
-        try {
-            $sql = "SELECT $fieldName FROM " . $this->tableOrderGrid . " where entity_id = $orderId";
             $result = $this->helperDb->sqlQueryFetchOne($sql);
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
