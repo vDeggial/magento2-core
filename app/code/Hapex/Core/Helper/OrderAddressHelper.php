@@ -4,18 +4,21 @@ namespace Hapex\Core\Helper;
 
 use Magento\Sales\Model\Order\Address;
 use Magento\Framework\App\Helper\Context;
+use Magento\Directory\Model\CountryFactory;
 use Magento\Framework\ObjectManagerInterface;
 
 class OrderAddressHelper extends BaseHelper
 {
     protected $tableOrderAddress;
     protected $address;
+    protected $countryFactory;
 
     public function __construct(Context $context, ObjectManagerInterface $objectManager, Address $address)
     {
         parent::__construct($context, $objectManager);
         $this->address = $address;
         $this->tableOrderAddress = $this->helperDb->getSqlTableName('sales_order_address');
+        $this->countryFactory = $this->generateClassObject(CountryFactory::class)->create();
     }
 
     public function getOrderBillingAddress($order = null)
@@ -75,23 +78,15 @@ class OrderAddressHelper extends BaseHelper
     public function getAddressInfo($address = null)
     {
         $info = null;
-
         try {
             if (isset($address)) {
                 $info = [];
                 $info["name"] = $address->getName();
-                $street = $address->getStreet();
-                $info["street"] = isset($street[0]) ? $street[0] : null;
-
+                $info["street"] = $this->getStreet($address->getStreet());
                 $info["city"] = $address->getCity();
                 $info["region"] = $address->getRegion();
                 $info["postCode"] = $address->getPostcode();
-
-                $countryId = $address->getCountryId();
-                if (isset($countryId)) {
-                    $country = $this->countryFactory->loadByCode($countryId);
-                    $info["country"] = $country->getName();
-                }
+                $info["country"] = $this->getCountry($address->getCountryId());
             }
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
@@ -99,5 +94,26 @@ class OrderAddressHelper extends BaseHelper
         } finally {
             return $info;
         }
+    }
+
+    private function getCountry($countryId = 0)
+    {
+        $name = null;
+        try {
+            if (isset($countryId)) {
+                $country = $this->countryFactory->loadByCode($countryId);
+                $name = $country->getName();
+            }
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $name = null;
+        } finally {
+            return $name;
+        }
+    }
+
+    private function getStreet($data = [])
+    {
+        return isset($data[0]) ? $data[0] : null;
     }
 }

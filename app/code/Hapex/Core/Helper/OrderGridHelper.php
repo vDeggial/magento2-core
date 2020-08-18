@@ -20,7 +20,6 @@ class OrderGridHelper extends BaseHelper
         $fullName = null;
         try {
             $fullName = $this->getOrderGridFieldValue($orderId, "billing_name");
-            $this->helperLog->errorLog(__METHOD__, $fullName);
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $fullName = null;
