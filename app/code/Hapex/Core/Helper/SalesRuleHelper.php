@@ -8,15 +8,19 @@ use Magento\Framework\ObjectManagerInterface;
 class SalesRuleHelper extends BaseHelper
 {
     protected $tableRule;
-    protected $tableRuleCustomer;
-    protected $tableRuleCoupon;
+    protected $helperCoupon;
+    protected $helperCustomer;
 
-    public function __construct(Context $context, ObjectManagerInterface $objectManager)
-    {
+    public function __construct(
+        Context $context,
+        ObjectManagerInterface $objectManager,
+        SalesRuleCouponHelper $helperCoupon,
+        SalesRuleCustomerHelper $helperCustomer
+    ) {
         parent::__construct($context, $objectManager);
+        $this->helperCoupon = $helperCoupon;
+        $this->helperCustomer = $helperCustomer;
         $this->tableRule = $this->helperDb->getSqlTableName("salesrule");
-        $this->tableRuleCustomer = $this->helperDb->getSqlTableName("salesrule_customer");
-        $this->tableRuleCoupon = $this->helperDb->getSqlTableName("salesrule_coupon");
     }
 
     public function ruleExists($ruleId)
@@ -163,45 +167,6 @@ class SalesRuleHelper extends BaseHelper
         }
     }
 
-    public function getRuleCouponCode($ruleId = 0)
-    {
-        $code = null;
-        try {
-            $code = $this->getRuleCouponFieldValue($ruleId, "code");
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $code = null;
-        } finally {
-            return $code;
-        }
-    }
-
-    public function getRuleCouponTimesUsed($ruleId = 0)
-    {
-        $uses = 0;
-        try {
-            $uses = (int) $this->getRuleCouponFieldValue($ruleId, "times_used");
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $uses = 0;
-        } finally {
-            return $uses;
-        }
-    }
-
-    public function getRuleTimesUsed($ruleId = 0, $customerId = 0)
-    {
-        $uses = 0;
-        try {
-            $uses = (int) $this->getRuleCustomerFieldValue($ruleId, $customerId, "times_used");
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $uses = 0;
-        } finally {
-            return $uses;
-        }
-    }
-
     public function isActiveDates($ruleId)
     {
         $isValid = false;
@@ -224,32 +189,6 @@ class SalesRuleHelper extends BaseHelper
     {
         try {
             $sql = "SELECT $fieldName FROM " . $this->tableRule . " WHERE rule_id = $ruleId";
-            $result = $this->helperDb->sqlQueryFetchOne($sql);
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $result = null;
-        } finally {
-            return $result;
-        }
-    }
-
-    private function getRuleCouponFieldValue($ruleId = 0, $fieldName = null)
-    {
-        try {
-            $sql = "SELECT $fieldName FROM " . $this->tableRuleCoupon . " WHERE rule_id = $ruleId";
-            $result = $this->helperDb->sqlQueryFetchOne($sql);
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $result = null;
-        } finally {
-            return $result;
-        }
-    }
-
-    private function getRuleCustomerFieldValue($ruleId = 0, $customerId = 0, $fieldName = null)
-    {
-        try {
-            $sql = "SELECT $fieldName FROM " . $this->tableRuleCustomer . " WHERE rule_id = $ruleId and customer_id = $customerId";
             $result = $this->helperDb->sqlQueryFetchOne($sql);
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
