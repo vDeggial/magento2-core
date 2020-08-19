@@ -8,18 +8,18 @@ use Magento\Framework\ObjectManagerInterface;
 class SalesRuleHelper extends BaseHelper
 {
     protected $tableRule;
-    protected $helperCoupon;
-    protected $helperCustomer;
+    protected $helperRuleCoupon;
+    protected $helperRuleCustomer;
 
     public function __construct(
         Context $context,
         ObjectManagerInterface $objectManager,
-        SalesRuleCouponHelper $helperCoupon,
-        SalesRuleCustomerHelper $helperCustomer
+        SalesRuleCouponHelper $helperRuleCoupon,
+        SalesRuleCustomerHelper $helperRuleCustomer
     ) {
         parent::__construct($context, $objectManager);
-        $this->helperCoupon = $helperCoupon;
-        $this->helperCustomer = $helperCustomer;
+        $this->helperRuleCoupon = $helperRuleCoupon;
+        $this->helperRuleCustomer = $helperRuleCustomer;
         $this->tableRule = $this->helperDb->getSqlTableName("salesrule");
     }
 
