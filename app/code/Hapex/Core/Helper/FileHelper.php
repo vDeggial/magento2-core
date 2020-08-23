@@ -16,22 +16,19 @@ class FileHelper extends AbstractHelper
     protected $helperLog;
     protected $directoryList;
     protected $fileDriver;
-    protected $csvProcessor;
 
     public function __construct(
         Context $context,
         ObjectManagerInterface $objectManager,
         LogHelper $helperLog,
         DirectoryList $directoryList,
-        File $fileDriver,
-        Csv $csvProcessor
+        File $fileDriver
     ) {
         parent::__construct($context);
         $this->objectManager = $objectManager;
         $this->helperLog = $helperLog;
         $this->directoryList = $directoryList;
         $this->fileDriver = $fileDriver;
-        $this->csvProcessor = $csvProcessor;
     }
 
     public function getRootPath()
@@ -94,60 +91,5 @@ class FileHelper extends AbstractHelper
     public function getFileContents($path = "", $filename = "")
     {
         return $this->fileDriver->fileGetContents($this->getFilePath($path, $filename));
-    }
-
-    public function getCsvFileData($fileName, $isFirstRowHeader = false)
-    {
-        return $this->getCsvDataFile($this->getFilePath($this->csvDirectory, $fileName), $isFirstRowHeader);
-    }
-
-    public function writeCsvFileData($fileName, $data)
-    {
-        $this->writeCsvDataFile($this->csvDirectory, $fileName, $data);
-    }
-
-    public function setCsvLocation($path)
-    {
-        $this->csvDirectory = $this->getDirectoryPath(DirectoryList::PUB. "/" .$path);
-    }
-
-    protected function getCsvDataFile($fileName, $isFirstRowHeader = false)
-    {
-        $data = [];
-        try {
-            $data = $this->getCsv($fileName);
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $data = [];
-        } finally {
-            $this->shiftData($data, $isFirstRowHeader);
-            return $data;
-        }
-    }
-
-    private function shiftData(&$data = [], $isFirstRowHeader = false)
-    {
-        if (!empty($data) && $isFirstRowHeader) {
-            array_shift($data);
-        }
-    }
-
-    private function getCsv($fileName = null)
-    {
-        return $this->fileExists($fileName) ? $this->csvProcessor->getData($fileName) : [];
-    }
-
-    protected function writeCsvDataFile($path, $fileName, $data = [])
-    {
-        $success = false;
-        try {
-            $this->csvProcessor->setEnclosure('"')->setDelimiter(',')->saveData($this->getFilePath($path, $fileName), $data);
-            $success = true;
-        } catch (\Exception $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $success = false;
-        } finally {
-            return $success;
-        }
     }
 }
