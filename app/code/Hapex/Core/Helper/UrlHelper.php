@@ -28,8 +28,12 @@ class UrlHelper extends AbstractHelper
 
     public function sendSlackWebhook($webhookUrl = null, $message = null)
     {
-        $data = json_encode(["text" => $message]);
-        return $this->sendRemoteContent($webhookUrl, $data, "application/json");
+        return $this->sendWebhook($webhookUrl, json_encode(["text" => $message]), "application/json");
+    }
+
+    public function sendWebhook($webhookUrl = null, $message = null, $contentType = "text/plain")
+    {
+        return $this->sendRemoteContent($webhookUrl, $message, $contentType);
     }
 
     public function sendRemoteContent($url = null, $data = null, $contentType = null)
