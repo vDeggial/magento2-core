@@ -24,6 +24,17 @@ class UrlHelper extends AbstractHelper
         return $this->get($url)->getBody();
     }
 
+    public function sendSlackWebhook($webhookUrl = null, $message = null)
+    {
+        $data = json_encode(["text" => $message]);
+        return $this->sendRemoteContent($webhookUrl, $data, "application/json");
+    }
+
+    public function sendRemoteContent($url = null, $data = null, $contentType = null)
+    {
+        return $this->post($url, $data, $contentType);
+    }
+
     public function urlExists($remoteUrl = "")
     {
         $exists = false;
@@ -46,6 +57,19 @@ class UrlHelper extends AbstractHelper
         );
         $curl->setOptions($options);
         $curl->get($url);
+        return $curl;
+    }
+
+    private function post($url = null, $data = null, $contentType = "application/json")
+    {
+        $curl = $this->objectManager->get(Curl::class);
+        $options = array(
+            CURLOPT_CONNECTTIMEOUT => 2,
+            CURLOPT_TIMEOUT => 3,
+        );
+        $curl->setOptions($options);
+        $curl->addHeader("Content-Type", $contentType);
+        $curl->post($url, $data);
         return $curl;
     }
 }
