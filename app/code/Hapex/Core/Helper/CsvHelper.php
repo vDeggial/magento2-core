@@ -29,7 +29,7 @@ class CsvHelper extends BaseHelper
 
     public function writeCsvFileData($fileName, $data)
     {
-        $this->writeCsvDataFile($this->csvDirectory, $fileName, $data);
+        $this->writeCsv($this->csvDirectory, $fileName, $data);
     }
 
     public function setCsvLocation($path)
