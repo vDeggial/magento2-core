@@ -52,25 +52,35 @@ class UrlHelper extends AbstractHelper
 
     private function get($url = null)
     {
-        $options = [
-            CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_USERAGENT => "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7) Gecko/20040803 Firefox/0.9.3",
-        ];
-        $this->curl->setOptions($options);
-        $this->curl->get($url);
-        return $this->curl;
+        try {
+            $options = [
+                CURLOPT_RETURNTRANSFER => 1,
+                CURLOPT_USERAGENT => "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7) Gecko/20040803 Firefox/0.9.3",
+            ];
+            $this->curl->setOptions($options);
+            $this->curl->get($url);
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+        } finally {
+            return $this->curl;
+        }
     }
 
     private function post($url = null, $data = null, $contentType = "application/json")
     {
-        $options = [
-            CURLOPT_CONNECTTIMEOUT => 2,
-            CURLOPT_TIMEOUT => 3,
-        ];
-        $headers = ["Content-Type" => $contentType];
-        $this->curl->setOptions($options);
-        $this->curl->setHeaders($headers);
-        $this->curl->post($url, $data);
-        return $this->curl;
+        try {
+            $options = [
+                CURLOPT_CONNECTTIMEOUT => 2,
+                CURLOPT_TIMEOUT => 3,
+            ];
+            $headers = ["Content-Type" => $contentType];
+            $this->curl->setOptions($options);
+            $this->curl->setHeaders($headers);
+            $this->curl->post($url, $data);
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+        } finally {
+            return $this->curl;
+        }
     }
 }
