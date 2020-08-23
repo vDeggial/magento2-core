@@ -11,15 +11,17 @@ class UrlHelper extends AbstractHelper
 {
     protected $objectManager;
     protected $helperLog;
+    protected $curl;
 
-    public function __construct(Context $context, ObjectManagerInterface $objectManager, LogHelper $helperLog)
+    public function __construct(Context $context, ObjectManagerInterface $objectManager, Curl $curl, LogHelper $helperLog)
     {
         parent::__construct($context);
         $this->objectManager = $objectManager;
+        $this->curl = $curl;
         $this->helperLog = $helperLog;
     }
 
-    public function getRemoteContent($url)
+    public function getRemoteContent($url = null)
     {
         return $this->get($url)->getBody();
     }
@@ -35,7 +37,7 @@ class UrlHelper extends AbstractHelper
         return $this->post($url, $data, $contentType);
     }
 
-    public function urlExists($remoteUrl = "")
+    public function urlExists($remoteUrl = null)
     {
         $exists = false;
         try {
@@ -48,28 +50,27 @@ class UrlHelper extends AbstractHelper
         }
     }
 
-    private function get($url = "")
+    private function get($url = null)
     {
-        $curl = $this->objectManager->get(Curl::class);
-        $options = array(
+        $options = [
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_USERAGENT => "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7) Gecko/20040803 Firefox/0.9.3",
-        );
-        $curl->setOptions($options);
-        $curl->get($url);
-        return $curl;
+        ];
+        $this->curl->setOptions($options);
+        $this->curl->get($url);
+        return $this->curl;
     }
 
     private function post($url = null, $data = null, $contentType = "application/json")
     {
-        $curl = $this->objectManager->get(Curl::class);
-        $options = array(
+        $options = [
             CURLOPT_CONNECTTIMEOUT => 2,
             CURLOPT_TIMEOUT => 3,
-        );
-        $curl->setOptions($options);
-        $curl->addHeader("Content-Type", $contentType);
-        $curl->post($url, $data);
-        return $curl;
+        ];
+        $headers = ["Content-Type" => $contentType];
+        $this->curl->setOptions($options);
+        $this->curl->setHeaders($headers);
+        $this->curl->post($url, $data);
+        return $this->curl;
     }
 }
