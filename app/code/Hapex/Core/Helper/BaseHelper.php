@@ -52,6 +52,11 @@ class BaseHelper extends AbstractHelper
         return $this->helperUrl;
     }
 
+    protected function getArrayValue(&$array = [], $index = 0, $defaultValue = null)
+    {
+        return isset($array[$index]) ? $array[$index] : $defaultValue;
+    }
+
     public function sendOutput($output)
     {
         try {
