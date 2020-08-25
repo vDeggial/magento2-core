@@ -112,6 +112,6 @@ class OrderAddressHelper extends BaseHelper
 
     private function getStreet($data = [])
     {
-        return isset($data[0]) ? $data[0] : null;
+        return $this->getArrayValue($data, 0);
     }
 }

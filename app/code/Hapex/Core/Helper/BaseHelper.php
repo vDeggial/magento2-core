@@ -54,7 +54,7 @@ class BaseHelper extends AbstractHelper
 
     protected function getArrayValue(&$array = [], $index = 0, $defaultValue = null)
     {
-        return isset($array[$index]) ? $array[$index] : $defaultValue;
+        return $array[$index] ?? $defaultValue;
     }
 
     public function sendOutput($output)
