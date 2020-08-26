@@ -52,7 +52,7 @@ class BaseHelper extends AbstractHelper
         return $this->helperUrl;
     }
 
-    protected function getArrayValue(&$array = [], $index = 0, $defaultValue = null)
+    protected function getArrayValue($array = [], $index = 0, $defaultValue = null)
     {
         return $array[$index] ?? $defaultValue;
     }
