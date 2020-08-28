@@ -101,6 +101,22 @@ class OrderHelper extends BaseHelper
         }
     }
 
+    public function isGuestOrder($order = null)
+    {
+        $isGuestOrder = false;
+        try{
+            $isGuestOrder = $order->getCustomerIsGuest();
+        }
+        catch (\Exception $e)
+        {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $isGuestOrder = false;
+        }
+        finally{
+            return $isGuestOrder;
+        }
+    }
+
     protected function getOrderItems($order = null)
     {
         $items = [];
