@@ -30,6 +30,11 @@ class CustomerHelper extends BaseHelper
         return $this->getCustomerById($customerId);
     }
 
+    public function getCustomerByEmail($email = null)
+    {
+        return $this->customerFactory->loadByEmail($email);
+    }
+
     public function getAttributeValue($customerId = null, $attribute = null)
     {
         return $this->helperEav->getCustomerAttributeValue($customerId, $attribute);
