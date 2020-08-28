@@ -32,7 +32,8 @@ class CustomerHelper extends BaseHelper
 
     public function getCustomerByEmail($email = null)
     {
-        return $this->customerFactory->loadByEmail($email);
+        $websiteId = $this->generateClassObject(\Magento\Store\Model\StoreManagerInterface::class)->getStore()->getWebsiteId();
+        return $this->customerFactory->setWebsiteId($websiteId)->loadByEmail($email);
     }
 
     public function getAttributeValue($customerId = null, $attribute = null)
