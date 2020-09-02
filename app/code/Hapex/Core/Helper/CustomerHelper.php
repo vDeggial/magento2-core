@@ -47,6 +47,19 @@ class CustomerHelper extends BaseHelper
         }
     }
 
+    public function getCustomerDob($customerId)
+    {
+        $customerDob = null;
+        try {
+            $customerDob = $this->helperEav->getCustomerEntityFieldValue($customerId, "dob");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $customerDob = null;
+        } finally {
+            return $customerDob;
+        }
+    }
+
     public function getCustomerEmail($customerId)
     {
         $customerEmail = null;
@@ -70,6 +83,19 @@ class CustomerHelper extends BaseHelper
             $customerGroup = 0;
         } finally {
             return $customerGroup;
+        }
+    }
+
+    public function getCustomerStatus($customerId)
+    {
+        $customerStatus = 0;
+        try {
+            $customerStatus = (int) $this->helperEav->getCustomerEntityFieldValue($customerId, "is_active");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $customerStatus = 0;
+        } finally {
+            return $customerStatus;
         }
     }
 
