@@ -50,6 +50,32 @@ class SalesRuleHelper extends BaseHelper
         }
     }
 
+    public function getRuleApplyToShipping($ruleId = 0)
+    {
+        $applyToShipping = 0;
+        try {
+            $applyToShipping = (int) $this->getRuleFieldValue($ruleId, "apply_to_shipping");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $applyToShipping = 0;
+        } finally {
+            return $applyToShipping;
+        }
+    }
+
+    public function getRuleCouponType($ruleId = 0)
+    {
+        $type = 0;
+        try {
+            $type = (int) $this->getRuleFieldValue($ruleId, "coupon_type");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $type = 0;
+        } finally {
+            return $type;
+        }
+    }
+
     public function getRuleDescription($ruleId = 0)
     {
         $description = null;
@@ -141,6 +167,45 @@ class SalesRuleHelper extends BaseHelper
         }
     }
 
+    public function getRuleIsAdvanced($ruleId = 0)
+    {
+        $isAdvanced = 0;
+        try {
+            $isAdvanced = (int) $this->getRuleFieldValue($ruleId, "is_advanced");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $isAdvanced = 0;
+        } finally {
+            return $isAdvanced;
+        }
+    }
+
+    public function getRuleIsRss($ruleId = 0)
+    {
+        $isRss = 0;
+        try {
+            $isRss = (int) $this->getRuleFieldValue($ruleId, "is_rss");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $isRss = 0;
+        } finally {
+            return $isRss;
+        }
+    }
+
+    public function getRuleSortOrder($ruleId = 0)
+    {
+        $order = 0;
+        try {
+            $order = (int) $this->getRuleFieldValue($ruleId, "sort_order");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $order = 0;
+        } finally {
+            return $order;
+        }
+    }
+
     public function getRuleStatus($ruleId = 0)
     {
         $status = 0;
@@ -151,6 +216,45 @@ class SalesRuleHelper extends BaseHelper
             $status = 0;
         } finally {
             return $status;
+        }
+    }
+
+    public function getRuleStopProcessing($ruleId = 0)
+    {
+        $stopProcessing = 0;
+        try {
+            $stopProcessing = (int) $this->getRuleFieldValue($ruleId, "stop_rules_processing");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $stopProcessing = 0;
+        } finally {
+            return $stopProcessing;
+        }
+    }
+
+    public function getRuleTimesUsed($ruleId = 0)
+    {
+        $uses = 0;
+        try {
+            $uses = (int) $this->getRuleFieldValue($ruleId, "times_used");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $uses = 0;
+        } finally {
+            return $uses;
+        }
+    }
+
+    public function getRuleUsesPerCoupon($ruleId = 0)
+    {
+        $uses = 0;
+        try {
+            $uses = (int) $this->getRuleFieldValue($ruleId, "uses_per_coupon");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $uses = 0;
+        } finally {
+            return $uses;
         }
     }
 

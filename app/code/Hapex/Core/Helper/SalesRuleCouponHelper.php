@@ -28,11 +28,76 @@ class SalesRuleCouponHelper extends BaseHelper
         }
     }
 
+    public function getRuleCouponExpirationDate($ruleId = 0)
+    {
+        $date = null;
+        try {
+            $date = $this->getRuleCouponFieldValue($ruleId, "expiration_date");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $date = null;
+        } finally {
+            return $date;
+        }
+    }
+
+    public function getRuleCouponIsPrimary($ruleId = 0)
+    {
+        $isPrimary = 0;
+        try {
+            $isPrimary = (int) $this->getRuleCouponFieldValue($ruleId, "is_primary");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $isPrimary = 0;
+        } finally {
+            return $isPrimary;
+        }
+    }
+
     public function getRuleCouponTimesUsed($ruleId = 0)
     {
         $uses = 0;
         try {
             $uses = (int) $this->getRuleCouponFieldValue($ruleId, "times_used");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $uses = 0;
+        } finally {
+            return $uses;
+        }
+    }
+
+    public function getRuleCouponType($ruleId = 0)
+    {
+        $type = 0;
+        try {
+            $type = (int) $this->getRuleCouponFieldValue($ruleId, "type");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $type = 0;
+        } finally {
+            return $type;
+        }
+    }
+
+    public function getRuleCouponUsageLimit($ruleId = 0)
+    {
+        $uses = 0;
+        try {
+            $uses = (int) $this->getRuleCouponFieldValue($ruleId, "usage_limit");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $uses = 0;
+        } finally {
+            return $uses;
+        }
+    }
+
+    public function getRuleCouponUsagePerCustomer($ruleId = 0)
+    {
+        $uses = 0;
+        try {
+            $uses = (int) $this->getRuleCouponFieldValue($ruleId, "usage_per_customer");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $uses = 0;
