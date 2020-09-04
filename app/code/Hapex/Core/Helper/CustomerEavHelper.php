@@ -13,7 +13,7 @@ class CustomerEavHelper extends EavHelper
         parent::__construct($context, $objectManager, $resource, $helperLog);
     }
 
-    public function getCustomerAttributeValue($customerId, $attributeCode)
+    public function getCustomerAttributeValue($customerId = 0, $attributeCode)
     {
         return $this->getAttributeValue("customer", $attributeCode, $customerId);
     }

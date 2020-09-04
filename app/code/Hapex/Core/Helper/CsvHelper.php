@@ -22,22 +22,22 @@ class CsvHelper extends BaseHelper
         $this->csvProcessor = $csvProcessor;
     }
 
-    public function getCsvFileData($fileName, $isFirstRowHeader = false)
+    public function getCsvFileData($fileName = null, $isFirstRowHeader = false)
     {
         return $this->getCsvDataFile($this->helperFile->getFilePath($this->csvDirectory, $fileName), $isFirstRowHeader);
     }
 
-    public function writeCsvFileData($fileName, $data)
+    public function writeCsvFileData($fileName = null, $data = [])
     {
         $this->writeCsv($this->csvDirectory, $fileName, $data);
     }
 
-    public function setCsvLocation($path)
+    public function setCsvLocation($path = null)
     {
         $this->csvDirectory = $this->helperFile->getDirectoryPath(DirectoryList::PUB. "/" .$path);
     }
 
-    protected function getCsvDataFile($fileName, $isFirstRowHeader = false)
+    protected function getCsvDataFile($fileName = null, $isFirstRowHeader = false)
     {
         $data = [];
         try {
@@ -63,7 +63,7 @@ class CsvHelper extends BaseHelper
         return $this->helperFile->fileExists($fileName) ? $this->csvProcessor->getData($fileName) : [];
     }
 
-    protected function writeCsv($path, $fileName, $data = [])
+    protected function writeCsv($path = null, $fileName = null, $data = [])
     {
         $success = false;
         try {

@@ -57,7 +57,7 @@ class BaseHelper extends AbstractHelper
         return $array[$index] ?? $defaultValue;
     }
 
-    public function sendOutput($output)
+    public function sendOutput($output = null)
     {
         try {
             print_r($output);

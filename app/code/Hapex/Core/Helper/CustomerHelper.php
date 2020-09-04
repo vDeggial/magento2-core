@@ -47,7 +47,7 @@ class CustomerHelper extends BaseHelper
         }
     }
 
-    public function getCustomerDob($customerId)
+    public function getCustomerDob($customerId = 0)
     {
         $customerDob = null;
         try {
@@ -60,7 +60,7 @@ class CustomerHelper extends BaseHelper
         }
     }
 
-    public function getCustomerEmail($customerId)
+    public function getCustomerEmail($customerId = 0)
     {
         $customerEmail = null;
         try {
@@ -73,7 +73,7 @@ class CustomerHelper extends BaseHelper
         }
     }
 
-    public function getCustomerGroup($customerId)
+    public function getCustomerGroup($customerId = 0)
     {
         $customerGroup = 0;
         try {
@@ -86,7 +86,7 @@ class CustomerHelper extends BaseHelper
         }
     }
 
-    public function getCustomerStatus($customerId)
+    public function getCustomerStatus($customerId = 0)
     {
         $customerStatus = 0;
         try {
@@ -99,7 +99,7 @@ class CustomerHelper extends BaseHelper
         }
     }
 
-    public function getCustomerGender($customerId)
+    public function getCustomerGender($customerId = 0)
     {
         $customerGender = 0;
         try {
@@ -112,7 +112,7 @@ class CustomerHelper extends BaseHelper
         }
     }
 
-    public function getCustomerFirstName($customerId)
+    public function getCustomerFirstName($customerId = 0)
     {
         $customerName = null;
         try {
@@ -125,7 +125,7 @@ class CustomerHelper extends BaseHelper
         }
     }
 
-    public function getCustomerLastName($customerId)
+    public function getCustomerLastName($customerId = 0)
     {
         $customerName = null;
         try {
@@ -138,7 +138,7 @@ class CustomerHelper extends BaseHelper
         }
     }
 
-    public function getCustomerIdByEmail($customerEmail)
+    public function getCustomerIdByEmail($customerEmail = null)
     {
         $customerId = 0;
         try {
@@ -152,7 +152,7 @@ class CustomerHelper extends BaseHelper
         }
     }
 
-    public function getAttributeValue($customerId = null, $attribute = null)
+    public function getAttributeValue($customerId = 0, $attribute = null)
     {
         return $this->helperEav->getCustomerAttributeValue($customerId, $attribute);
     }

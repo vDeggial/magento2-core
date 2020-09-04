@@ -15,7 +15,7 @@ class OrderGridHelper extends BaseHelper
         $this->tableOrderGrid = $this->helperDb->getSqlTableName('sales_order_grid');
     }
 
-    public function getBillingName($orderId = null)
+    public function getBillingName($orderId = 0)
     {
         $fullName = null;
         try {
@@ -28,7 +28,7 @@ class OrderGridHelper extends BaseHelper
         }
     }
 
-    public function getCustomerEmail($orderId = null)
+    public function getCustomerEmail($orderId = 0)
     {
         $email = null;
         try {
@@ -41,7 +41,7 @@ class OrderGridHelper extends BaseHelper
         }
     }
 
-    public function getShippingName($orderId = null)
+    public function getShippingName($orderId = 0)
     {
         $fullName = null;
         try {
@@ -54,7 +54,7 @@ class OrderGridHelper extends BaseHelper
         }
     }
 
-    private function getOrderGridFieldValue($orderId = null, $fieldName = null)
+    private function getOrderGridFieldValue($orderId = 0, $fieldName = null)
     {
         try {
             $sql = "SELECT $fieldName FROM " . $this->tableOrderGrid . " where entity_id = $orderId";

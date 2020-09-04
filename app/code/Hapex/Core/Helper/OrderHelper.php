@@ -37,19 +37,32 @@ class OrderHelper extends BaseHelper
 
     public function getOrderIdsByCustomerId($customerId = 0)
     {
-        $result = null;
+        $result = [];
         try {
             $sql = "SELECT entity_id FROM " . $this->tableOrder . " WHERE customer_id = $customerId GROUP BY entity_id ORDER BY created_at DESC";
             $result = array_column($this->helperDb->sqlQueryFetchAll($sql), "entity_id");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $result = null;
+            $result = [];
         } finally {
             return $result;
         }
     }
 
-    public function getOrderCreatedDate($orderId = null)
+    public function getOrderAppliedRuleIds($orderId = 0)
+    {
+        $ruleIds = null;
+        try {
+            $ruleIds = $this->getOrderFieldValue($orderId, "applied_rule_ids");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $ruleIds = null;
+        } finally {
+            return $ruleIds;
+        }
+    }
+
+    public function getOrderCreatedDate($orderId = 0)
     {
         $date = null;
         try {
@@ -62,7 +75,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getOrderUpdatedDate($orderId = null)
+    public function getOrderUpdatedDate($orderId = 0)
     {
         $date = null;
         try {
@@ -75,11 +88,24 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getOrderIdCustomerid($orderId = 0)
+    public function getOrderCouponCode($orderId = 0)
+    {
+        $code = null;
+        try {
+            $code = $this->getOrderFieldValue($orderId, "coupon_code");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $code = null;
+        } finally {
+            return $code;
+        }
+    }
+
+    public function getOrderCustomerId($orderId = 0)
     {
         $customerId = 0;
         try {
-            $customerId = (int) $this->getOrderFieldValue($orderId, "customer_id");
+            $customerId = $this->getOrderFieldValue($orderId, "customer_id");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $customerId = 0;
@@ -88,7 +114,59 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getOrderCustomerId($order = null)
+    public function getOrderCustomerGroupId($orderId = 0)
+    {
+        $groupId = 0;
+        try {
+            $groupId = $this->getOrderFieldValue($orderId, "customer_group_id");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $groupId = 0;
+        } finally {
+            return $groupId;
+        }
+    }
+
+    public function getOrderDiscountAmount($orderId = 0)
+    {
+        $amount = 0;
+        try {
+            $amount = $this->getOrderFieldValue($orderId, "discount_amount");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $amount = 0;
+        } finally {
+            return $amount;
+        }
+    }
+
+    public function getOrderGrandTotal($orderId = 0)
+    {
+        $total = 0;
+        try {
+            $total = $this->getOrderFieldValue($orderId, "grand_total");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $total = 0;
+        } finally {
+            return $total;
+        }
+    }
+
+    public function getOrderIncrementId($orderId = 0)
+    {
+        $incrementId = null;
+        try {
+            $incrementId = $this->getOrderFieldValue($orderId, "increment_id");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $incrementId = null;
+        } finally {
+            return $incrementId;
+        }
+    }
+
+    public function getCustomerId($order = null)
     {
         $customerId = 0;
         try {
@@ -98,6 +176,149 @@ class OrderHelper extends BaseHelper
             $customerId = 0;
         } finally {
             return $customerId;
+        }
+    }
+
+    public function getOrderIsVirtual($orderId = 0)
+    {
+        $isVirtual = 0;
+        try {
+            $isVirtual = (int) $this->getOrderFieldValue($orderId, "total_item_count");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $isVirtual = 0;
+        } finally {
+            return $isVirtual;
+        }
+    }
+
+    public function getOrderShippingAmount($orderId = 0)
+    {
+        $amount = 0;
+        try {
+            $amount = $this->getOrderFieldValue($orderId, "shipping_amount");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $amount = 0;
+        } finally {
+            return $amount;
+        }
+    }
+
+    public function getOrderShippingMethod($orderId = 0)
+    {
+        $method = null;
+        try {
+            $method = $this->getOrderFieldValue($orderId, "coupon_code");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $method = null;
+        } finally {
+            return $method;
+        }
+    }
+
+    public function getOrderState($orderId = 0)
+    {
+        $state = null;
+        try {
+            $state = $this->getOrderFieldValue($orderId, "state");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $state = null;
+        } finally {
+            return $state;
+        }
+    }
+
+    public function getOrderStatus($orderId = 0)
+    {
+        $status = null;
+        try {
+            $status = $this->getOrderFieldValue($orderId, "status");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $status = null;
+        } finally {
+            return $status;
+        }
+    }
+
+    public function getOrderSubtotal($orderId = 0)
+    {
+        $total = 0;
+        try {
+            $total = $this->getOrderFieldValue($orderId, "subtotal");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $total = 0;
+        } finally {
+            return $total;
+        }
+    }
+
+    public function getOrderTaxAmount($orderId = 0)
+    {
+        $amount = 0;
+        try {
+            $amount = $this->getOrderFieldValue($orderId, "tax_amount");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $amount = 0;
+        } finally {
+            return $amount;
+        }
+    }
+
+    public function getOrderTotalPaid($orderId = 0)
+    {
+        $amount = 0;
+        try {
+            $amount = $this->getOrderFieldValue($orderId, "total_paid");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $amount = 0;
+        } finally {
+            return $amount;
+        }
+    }
+
+    public function getOrderTotalItemCount($orderId = 0)
+    {
+        $count = 0;
+        try {
+            $count = (int) $this->getOrderFieldValue($orderId, "total_item_count");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $count = 0;
+        } finally {
+            return $count;
+        }
+    }
+
+    public function getOrderTotalQtyOrdered($orderId = 0)
+    {
+        $count = 0;
+        try {
+            $count = (int) $this->getOrderFieldValue($orderId, "total_qty_ordered");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $count = 0;
+        } finally {
+            return $count;
+        }
+    }
+
+    public function getOrderCustomerIsGuest($orderId = 0)
+    {
+        $isGuest = 0;
+        try {
+            $isGuest = (int) $this->getOrderFieldValue($orderId, "customer_is_guest");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $isGuest = 0;
+        } finally {
+            return $isGuest;
         }
     }
 
@@ -134,7 +355,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    private function getOrderById($orderId)
+    private function getOrderById($orderId = 0)
     {
         $order = null;
         try {
@@ -147,7 +368,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    private function getOrderFieldValue($orderId = null, $fieldName = null)
+    private function getOrderFieldValue($orderId = 0, $fieldName = null)
     {
         try {
             $sql = "SELECT $fieldName FROM " . $this->tableOrder . " where entity_id = $orderId";

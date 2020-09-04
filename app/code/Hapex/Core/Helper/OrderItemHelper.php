@@ -32,7 +32,7 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
-    public function getQtyCanceled($orderId = null, $productSku = null)
+    public function getQtyCanceled($orderId = 0, $productSku = null)
     {
         $qty = 0;
         try {
@@ -45,7 +45,7 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
-    public function getQtyOrdered($orderId = null, $productSku = null)
+    public function getQtyOrdered($orderId = 0, $productSku = null)
     {
         $qty = 0;
         try {
@@ -58,7 +58,7 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
-    public function getQtyRefunded($orderId = null, $productSku = null)
+    public function getQtyRefunded($orderId = 0, $productSku = null)
     {
         $qty = 0;
         try {
@@ -71,7 +71,7 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
-    public function getQtyShipped($orderId = null, $productSku = null)
+    public function getQtyShipped($orderId = 0, $productSku = null)
     {
         $qty = 0;
         try {
@@ -99,7 +99,7 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
-    public function getProductId($orderId = null, $productSku = null)
+    public function getProductId($orderId = 0, $productSku = null)
     {
         $productid = 0;
         try {
@@ -112,7 +112,7 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
-    public function getProductName($orderId = null, $productSku = null)
+    public function getProductName($orderId = 0, $productSku = null)
     {
         $name = 0;
         try {
@@ -126,7 +126,7 @@ class OrderItemHelper extends BaseHelper
     }
 
 
-    private function getOrderItemFieldValue($orderId = null, $productSku = null, $fieldName = null)
+    private function getOrderItemFieldValue($orderId = 0, $productSku = null, $fieldName = null)
     {
         try {
             $sql = "SELECT $fieldName FROM " . $this->tableOrderItem . " where order_id = $orderId AND sku LIKE '$productSku'";

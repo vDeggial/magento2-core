@@ -93,7 +93,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    public function getProductDescription($productId)
+    public function getProductDescription($productId = 0)
     {
         $description = null;
         try {
@@ -151,7 +151,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    public function getProductName($productId)
+    public function getProductName($productId = 0)
     {
         $name = null;
         try {
@@ -177,7 +177,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    public function getProductStatus($productId)
+    public function getProductStatus($productId = 0)
     {
         $status = 0;
         try {
@@ -190,7 +190,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    public function getProductStockQty($productId)
+    public function getProductStockQty($productId = 0)
     {
         $qty = 0;
         try {
@@ -218,7 +218,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    public function getProductUrl($productId)
+    public function getProductUrl($productId = 0)
     {
         $productUrl = null;
         try {
@@ -232,7 +232,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    public function getProductUrlKey($productId)
+    public function getProductUrlKey($productId = 0)
     {
         $urlKey = null;
         try {
@@ -245,7 +245,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    public function productExists($productId)
+    public function productExists($productId = 0)
     {
         $exists = false;
         try {
@@ -260,7 +260,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    private function getProductById($productId)
+    private function getProductById($productId = 0)
     {
         $product = null;
         try {
@@ -273,7 +273,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    private function getProductImageFilename($productId)
+    private function getProductImageFilename($productId = 0)
     {
         $image = null;
         try {

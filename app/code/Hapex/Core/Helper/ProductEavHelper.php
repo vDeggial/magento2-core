@@ -13,7 +13,7 @@ class ProductEavHelper extends EavHelper
         parent::__construct($context, $objectManager, $resource, $helperLog);
     }
 
-    public function getProductAttributeValue($productId, $attributeCode)
+    public function getProductAttributeValue($productId = 0, $attributeCode)
     {
         return $this->getAttributeValue("catalog_product", $attributeCode, $productId);
     }

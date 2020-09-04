@@ -26,7 +26,7 @@ class DateHelper extends AbstractHelper
         return $this->timezone->date();
     }
 
-    public function isCurrentDateWithinRange($fromDate, $toDate)
+    public function isCurrentDateWithinRange($fromDate = null, $toDate = null)
     {
         $isWithinRange = false;
         $isAfter = false;

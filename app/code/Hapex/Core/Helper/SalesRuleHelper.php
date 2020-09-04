@@ -23,7 +23,7 @@ class SalesRuleHelper extends BaseHelper
         $this->tableRule = $this->helperDb->getSqlTableName("salesrule");
     }
 
-    public function ruleExists($ruleId)
+    public function ruleExists($ruleId = 0)
     {
         $exists = false;
         try {

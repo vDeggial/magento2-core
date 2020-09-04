@@ -19,12 +19,12 @@ class QuoteHelper extends BaseHelper
         $this->tableQuoteItem = $this->helperDb->getSqlTableName('quote_item');
     }
 
-    public function getQuote($quoteId)
+    public function getQuote($quoteId = 0)
     {
         return $this->getQuoteById($quoteId);
     }
 
-    public function quoteExists($quoteId)
+    public function quoteExists($quoteId = 0)
     {
         $exists = false;
         try {
@@ -39,7 +39,7 @@ class QuoteHelper extends BaseHelper
         }
     }
 
-    private function getQuoteById($quoteId)
+    private function getQuoteById($quoteId = 0)
     {
         $quote = null;
         try {
