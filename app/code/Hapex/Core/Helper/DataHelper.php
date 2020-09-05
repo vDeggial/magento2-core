@@ -2,16 +2,10 @@
 
 namespace Hapex\Core\Helper;
 
-use Magento\Framework\App\Helper\Context;
-use Magento\Framework\ObjectManagerInterface;
 use Magento\Store\Model\ScopeInterface;
 
 class DataHelper extends BaseHelper
 {
-    public function __construct(Context $context, ObjectManagerInterface $objectManager)
-    {
-        parent::__construct($context, $objectManager);
-    }
 
     public function getConfigFlag($path = null, $scopeCode = null)
     {

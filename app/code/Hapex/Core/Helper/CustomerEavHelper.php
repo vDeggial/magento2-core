@@ -2,16 +2,9 @@
 
 namespace Hapex\Core\Helper;
 
-use Magento\Framework\App\Helper\Context;
-use Magento\Framework\App\ResourceConnection;
-use Magento\Framework\ObjectManagerInterface;
 
 class CustomerEavHelper extends EavHelper
 {
-    public function __construct(Context $context, ObjectManagerInterface $objectManager, ResourceConnection $resource, LogHelper $helperLog)
-    {
-        parent::__construct($context, $objectManager, $resource, $helperLog);
-    }
 
     public function getCustomerAttributeValue($customerId = 0, $attributeCode)
     {
