@@ -60,7 +60,7 @@ class CsvHelper extends BaseHelper
 
     private function getCsv($fileName = null)
     {
-        return $this->helperFile->fileExists($fileName) ? $this->csvProcessor->getData($fileName) : [];
+        return $this->helperFile->fileExists($fileName) ? array_filter($this->csvProcessor->getData($fileName)) : [];
     }
 
     protected function writeCsv($path = null, $fileName = null, $data = [])
