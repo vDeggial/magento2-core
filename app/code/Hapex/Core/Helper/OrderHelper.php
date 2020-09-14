@@ -325,15 +325,12 @@ class OrderHelper extends BaseHelper
     public function isGuestOrder($order = null)
     {
         $isGuestOrder = false;
-        try{
+        try {
             $isGuestOrder = $order->getCustomerIsGuest();
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $isGuestOrder = false;
-        }
-        finally{
+        } finally {
             return $isGuestOrder;
         }
     }
@@ -342,11 +339,12 @@ class OrderHelper extends BaseHelper
     {
         $items = [];
         try {
-            foreach ($order->getItems() as $item) {
+            $orderItems = $order->getItems();
+            array_walk($orderItems, function ($item) use (&$items) {
                 if (!$item->isDeleted() && !$item->getParentItem()) {
                     $items[] = $item;
                 }
-            }
+            });
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $items = [];
@@ -355,7 +353,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    private function getOrderById($orderId = 0)
+    protected function getOrderById($orderId = 0)
     {
         $order = null;
         try {
@@ -368,7 +366,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    private function getOrderFieldValue($orderId = 0, $fieldName = null)
+    protected function getOrderFieldValue($orderId = 0, $fieldName = null)
     {
         try {
             $sql = "SELECT $fieldName FROM " . $this->tableOrder . " where entity_id = $orderId";

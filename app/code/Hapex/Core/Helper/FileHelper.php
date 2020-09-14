@@ -50,13 +50,14 @@ class FileHelper extends AbstractHelper
     {
         $files = [];
         $fullPath = $this->getRootPath() . $path;
-        foreach ($this->fileDriver->readDirectory($fullPath) as $file) {
+        $directoryFiles = $this->fileDriver->readDirectory($fullPath);
+        array_walk($directoryFiles, function ($file) use (&$files, &$extension) {
             $this->processFile($files, $file, $extension);
-        }
+        });
         return $files;
     }
 
-    private function processFile(&$files = [], $file = null, $extension = null)
+    protected function processFile(&$files = [], $file = null, $extension = null)
     {
         if ($this->getFileExtension($file) === $extension) {
             $files[] = $file;
@@ -65,7 +66,7 @@ class FileHelper extends AbstractHelper
 
     public function getFileExtension($filename = null)
     {
-        return substr(strrchr($filename,'.'),1);
+        return substr(strrchr($filename, '.'), 1);
     }
 
     public function getFileSize($filename = null)

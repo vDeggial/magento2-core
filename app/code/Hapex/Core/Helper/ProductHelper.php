@@ -140,9 +140,9 @@ class ProductHelper extends BaseHelper
         $imageList = [];
         try {
             $images = $this->getProductImagesFilenames($productId);
-            foreach ($images as $imageFilename) {
+            array_walk($images, function ($imageFilename) use (&$imageList, &$productId, &$width) {
                 array_push($imageList, $this->getProductImageUrl($productId, $imageFilename, $width));
-            }
+            });
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $imageList = [];
@@ -260,7 +260,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    private function getProductById($productId = 0)
+    protected function getProductById($productId = 0)
     {
         $product = null;
         try {
@@ -273,7 +273,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    private function getProductImageFilename($productId = 0)
+    protected function getProductImageFilename($productId = 0)
     {
         $image = null;
         try {
@@ -286,15 +286,15 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    private function getProductImagesFilenames($productId = 0)
+    protected function getProductImagesFilenames($productId = 0)
     {
         $images = [];
         try {
             $sql = "SELECT gal.value AS fileName FROM " . $this->tableGalleryToEntity . " ent LEFT JOIN " . $this->tableGalleryValue . " val ON ent.entity_id= val.entity_id LEFT JOIN " . $this->tableGallery . " gal ON val.value_id = gal.value_id WHERE ent.entity_id = $productId GROUP BY gal.value";
             $result = $this->helperDb->sqlQueryFetchAll($sql);
-            foreach ($result as $entry) {
+            array_walk($result, function ($entry) use (&$images) {
                 array_push($images, $entry["fileName"]);
-            }
+            });
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $images = [];
@@ -303,7 +303,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    private function getProductImageUrl($productId = 0, $imageFilename = null, $width = 500)
+    protected function getProductImageUrl($productId = 0, $imageFilename = null, $width = 500)
     {
         $imageUrl = null;
         try {
