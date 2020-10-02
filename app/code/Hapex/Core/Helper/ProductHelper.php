@@ -151,6 +151,32 @@ class ProductHelper extends BaseHelper
         }
     }
 
+    public function getProductCost($productId = 0)
+    {
+        $cost = 0;
+        try {
+            $cost = (float) $this->helperEav->getProductAttributeValue($productId, "cost");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $cost = 0;
+        } finally {
+            return $cost;
+        }
+    }
+
+    public function getProductPrice($productId = 0)
+    {
+        $price = 0;
+        try {
+            $price = (float) $this->helperEav->getProductAttributeValue($productId, "price");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $price = 0;
+        } finally {
+            return $price;
+        }
+    }
+
     public function getProductName($productId = 0)
     {
         $name = null;

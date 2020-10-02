@@ -32,7 +32,7 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
-    public function getQtyCanceled($orderId = 0, $productSku = null)
+    public function getOrderItemQtyCanceled($orderId = 0, $productSku = null)
     {
         $qty = 0;
         try {
@@ -45,7 +45,7 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
-    public function getQtyOrdered($orderId = 0, $productSku = null)
+    public function getOrderItemQtyOrdered($orderId = 0, $productSku = null)
     {
         $qty = 0;
         try {
@@ -58,7 +58,7 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
-    public function getQtyRefunded($orderId = 0, $productSku = null)
+    public function getOrderItemQtyRefunded($orderId = 0, $productSku = null)
     {
         $qty = 0;
         try {
@@ -71,7 +71,7 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
-    public function getQtyShipped($orderId = 0, $productSku = null)
+    public function getOrderItemQtyShipped($orderId = 0, $productSku = null)
     {
         $qty = 0;
         try {
@@ -84,7 +84,7 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
-    public function getOrderedItemData($order = null, $item = null)
+    public function getOrderItemData($order = null, $item = null)
     {
         $info = [];
         try {
@@ -99,7 +99,7 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
-    public function getProductId($orderId = 0, $productSku = null)
+    public function getOrderItemProductId($orderId = 0, $productSku = null)
     {
         $productid = 0;
         try {
@@ -112,7 +112,7 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
-    public function getProductName($orderId = 0, $productSku = null)
+    public function getOrderItemProductName($orderId = 0, $productSku = null)
     {
         $name = 0;
         try {
