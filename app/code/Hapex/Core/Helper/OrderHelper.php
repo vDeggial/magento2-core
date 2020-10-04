@@ -353,6 +353,32 @@ class OrderHelper extends BaseHelper
         }
     }
 
+    protected function getOrderItemsMergeSku($order = null)
+    {
+        $orderItems  = $this->getOrderItems($order);
+        $items = [];
+        try {
+            array_walk($orderItems, function ($item) use (&$items) {
+                switch (isset($items[$item->getSku()])) {
+                    case true:
+                        $existingItem = $items[$item->getSku()];
+                        $existingItem->setQtyOrdered($existingItem->getQtyOrdered() + $item->getQtyOrdered());
+                        $items[$item->getSku()] = $existingItem;
+                        break;
+
+                    default:
+                        $items[$item->getSku()] = $item;
+                        break;
+                }
+            });
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $items = [];
+        } finally {
+            return $items;
+        }
+    }
+
     protected function getOrderById($orderId = 0)
     {
         $order = null;
