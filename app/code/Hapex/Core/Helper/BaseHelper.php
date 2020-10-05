@@ -68,6 +68,30 @@ class BaseHelper extends AbstractHelper
         }
     }
 
+    public function displayBlock($blockId = null)
+    {
+        try {
+            $this->sendOutput($this->getBlockHtml($blockId));
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+        }
+    }
+
+    public function getBlockHtml($blockId = null)
+    {
+        $html  = null;
+        try {
+            $block = $this->generateClassObject("Magento\Cms\Block\Block");
+            $block->setBlockId($blockId);
+            $html = $block->toHtml();
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $html = null;
+        } finally {
+            return $html;
+        }
+    }
+
     public function generateClassObject($class = null)
     {
         $object = $this->objectManager->create(DataObject::class);
