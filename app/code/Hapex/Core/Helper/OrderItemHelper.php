@@ -18,7 +18,7 @@ class OrderItemHelper extends BaseHelper
     }
 
 
-    public function getOrderIdsByProductSku($productSku = null)
+    public function getOrderIdsWithSku($productSku = null)
     {
         $result = null;
         try {
@@ -32,11 +32,25 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
-    public function getOrderItemQtyCanceled($orderId = 0, $productSku = null)
+    public function getItemIds($orderId = 0)
+    {
+        $ids = [];
+        try {
+            $sql = "SELECT item_id FROM" . $this->tableOrderItem . " WHERE order_id = $orderId";
+            $ids = array_column($this->helperDb->sqlQueryFetchAll($sql), "item_id");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $ids = [];
+        } finally {
+            return $ids;
+        }
+    }
+
+    public function getItemTotalQtyCanceled($orderId = 0, $productSku = null)
     {
         $qty = 0;
         try {
-            $qty = (int) $this->getOrderItemFieldValue($orderId, $productSku, "sum(qty_canceled)");
+            $qty = (int) $this->getItemFieldValueBySku($orderId, $productSku, "sum(qty_canceled)");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $qty = 0;
@@ -45,11 +59,11 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
-    public function getOrderItemQtyOrdered($orderId = 0, $productSku = null)
+    public function getItemTotalQtyOrdered($orderId = 0, $productSku = null)
     {
         $qty = 0;
         try {
-            $qty = (int) $this->getOrderItemFieldValue($orderId, $productSku, "sum(qty_ordered)");
+            $qty = (int) $this->getItemFieldValueBySku($orderId, $productSku, "sum(qty_ordered)");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $qty = 0;
@@ -58,11 +72,11 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
-    public function getOrderItemQtyRefunded($orderId = 0, $productSku = null)
+    public function getItemTotalQtyRefunded($orderId = 0, $productSku = null)
     {
         $qty = 0;
         try {
-            $qty = (int) $this->getOrderItemFieldValue($orderId, $productSku, "sum(qty_refunded)");
+            $qty = (int) $this->getItemFieldValueBySku($orderId, $productSku, "sum(qty_refunded)");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $qty = 0;
@@ -71,11 +85,11 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
-    public function getOrderItemQtyShipped($orderId = 0, $productSku = null)
+    public function getItemTotalQtyShipped($orderId = 0, $productSku = null)
     {
         $qty = 0;
         try {
-            $qty = (int) $this->getOrderItemFieldValue($orderId, $productSku, "sum(qty_shipped)");
+            $qty = (int) $this->getItemFieldValueBySku($orderId, $productSku, "sum(qty_shipped)");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $qty = 0;
@@ -99,37 +113,89 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
-    public function getOrderItemProductId($orderId = 0, $productSku = null)
+    public function getItemId($orderId = 0, $productSku = null)
     {
-        $productid = 0;
+        $itemId = 0;
         try {
-            $productid = (int) $this->getOrderItemFieldValue($orderId, $productSku, "product_id");
+            $itemId = (int) $this->getItemFieldValueBySku($orderId, $productSku, "item_id");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $productid = 0;
+            $itemId = 0;
         } finally {
-            return $productid;
+            return $itemId;
         }
     }
 
-    public function getOrderItemProductName($orderId = 0, $productSku = null)
+    public function getItemProductId($itemId = 0)
     {
-        $name = 0;
+        $productId = 0;
         try {
-            $name = $this->getOrderItemFieldValue($orderId, $productSku, "name");
+            $productId = (int) $this->getItemFieldValueById($itemId, "product_id");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $name = 0;
+            $productId = 0;
+        } finally {
+            return $productId;
+        }
+    }
+
+    public function getItemSku($itemId = 0)
+    {
+        $sku = null;
+        try {
+            $sku = $this->getItemFieldValueById($itemId, "sku");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $sku = null;
+        } finally {
+            return $sku;
+        }
+    }
+
+    public function getItemProductName($itemId = 0)
+    {
+        $name = null;
+        try {
+            $name = $this->getItemFieldValueByid($itemId, "name");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $name = null;
         } finally {
             return $name;
         }
     }
 
+    public function getItemProductType($itemId = 0)
+    {
+        $type = null;
+        try {
+            $type = $this->getItemFieldValueById($itemId, "product_type");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $type = null;
+        } finally {
+            return $type;
+        }
+    }
 
-    private function getOrderItemFieldValue($orderId = 0, $productSku = null, $fieldName = null)
+
+    private function getItemFieldValueBySku($orderId = 0, $productSku = null, $fieldName = null)
     {
         try {
             $sql = "SELECT $fieldName FROM " . $this->tableOrderItem . " where order_id = $orderId AND sku LIKE '$productSku'";
+            $result = $this->helperDb->sqlQueryFetchOne($sql);
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $result = null;
+        } finally {
+            return $result;
+        }
+    }
+
+    private function getItemFieldValueById($itemId = 0, $fieldName = null)
+    {
+        try {
+            $sql = "SELECT $fieldName FROM " . $this->tableOrderItem . " where item_id = $itemId";
             $result = $this->helperDb->sqlQueryFetchOne($sql);
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
