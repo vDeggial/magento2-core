@@ -105,7 +105,7 @@ class BaseHelper extends AbstractHelper
         }
     }
 
-    protected function sortDataByColumn(&$data = [], $sortColumn = "qty", $sortDirection = SORT_DESC)
+    public function sortDataByColumn(&$data = [], $sortColumn = "qty", $sortDirection = SORT_DESC)
     {
         array_multisort(array_column($data, $sortColumn), $sortDirection, $data);
     }

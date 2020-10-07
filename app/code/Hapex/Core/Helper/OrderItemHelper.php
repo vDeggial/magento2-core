@@ -36,7 +36,7 @@ class OrderItemHelper extends BaseHelper
     {
         $ids = [];
         try {
-            $sql = "SELECT item_id FROM" . $this->tableOrderItem . " WHERE order_id = $orderId";
+            $sql = "SELECT item_id FROM " . $this->tableOrderItem . " WHERE order_id = $orderId";
             $ids = array_column($this->helperDb->sqlQueryFetchAll($sql), "item_id");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
@@ -46,6 +46,57 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
+    public function getItemQtyCanceled($itemId = 0)
+    {
+        $qty = 0;
+        try {
+            $qty = (int) $this->getItemFieldValueById($itemId, "qty_canceled");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $qty = 0;
+        } finally {
+            return $qty;
+        }
+    }
+
+    public function getItemQtyOrdered($itemId = 0)
+    {
+        $qty = 0;
+        try {
+            $qty = (int) $this->getItemFieldValueById($itemId, "qty_ordered");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $qty = 0;
+        } finally {
+            return $qty;
+        }
+    }
+
+    public function getItemQtyRefunded($itemId = 0)
+    {
+        $qty = 0;
+        try {
+            $qty = (int) $this->getItemFieldValueById($itemId, "qty_refunded");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $qty = 0;
+        } finally {
+            return $qty;
+        }
+    }
+    
+    public function getItemQtyShipped($itemId = 0)
+    {
+        $qty = 0;
+        try {
+            $qty = (int) $this->getItemFieldValueById($itemId, "qty_shipped");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $qty = 0;
+        } finally {
+            return $qty;
+        }
+    }
     public function getItemTotalQtyCanceled($orderId = 0, $productSku = null)
     {
         $qty = 0;
