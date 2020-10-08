@@ -36,7 +36,7 @@ class OrderItemHelper extends BaseHelper
     {
         $ids = [];
         try {
-            $sql = "SELECT item_id FROM " . $this->tableOrderItem . " WHERE order_id = $orderId";
+            $sql = "SELECT item_id FROM " . $this->tableOrderItem . " WHERE order_id = $orderId group by item_id";
             $ids = array_column($this->helperDb->sqlQueryFetchAll($sql), "item_id");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
@@ -226,6 +226,19 @@ class OrderItemHelper extends BaseHelper
             $type = null;
         } finally {
             return $type;
+        }
+    }
+
+    public function getItemOptions($itemId = 0)
+    {
+        $options = [];
+        try {
+            $options = $this->getArrayValue(json_decode($this->getItemFieldValueById($itemId, "product_options"), true), "options", []);
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $options = [];
+        } finally {
+            return $options;
         }
     }
 
