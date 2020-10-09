@@ -26,6 +26,16 @@ class DateHelper extends AbstractHelper
         return $this->timezone->date();
     }
 
+    public function getDate($date = null)
+    {
+        return $this->timezone->date(new \DateTime($date));
+    }
+
+    public function getDateFormatted($date = null, $format = "M j, Y")
+    {
+        return $this->getDate($date)->format($format);
+    }
+
     public function isCurrentDateWithinRange($fromDate = null, $toDate = null)
     {
         $isWithinRange = false;
