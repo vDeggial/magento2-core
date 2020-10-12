@@ -218,6 +218,19 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
+    public function getItemIsVirtual($itemId = 0)
+    {
+        $isVirtual = 0;
+        try {
+            $isVirtual = (int) $this->getItemFieldValueById($itemId, "is_virtual");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $isVirtual = 0;
+        } finally {
+            return $isVirtual;
+        }
+    }
+
     public function getItemSku($itemId = 0)
     {
         $sku = null;
