@@ -49,6 +49,20 @@ class OrderHelper extends BaseHelper
         }
     }
 
+    public function getOrderIdByIncrementId($incrementId = null)
+    {
+        $result = 0;
+        try {
+            $sql = "SELECT entity_id FROM " . $this->tableOrder . " WHERE increment_id like '$incrementId'";
+            $result = (int) $this->helperDb->sqlQueryFetchOne($sql);
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $result = 0;
+        } finally {
+            return $result;
+        }
+    }
+
     public function getOrderAppliedRuleIds($orderId = 0)
     {
         $ruleIds = null;

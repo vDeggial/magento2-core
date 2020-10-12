@@ -46,6 +46,21 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
+    public function getItemIdsFromOrders($orderIds = [])
+    {
+        $ids = [];
+        try {
+            $orderIdString = implode(",", $orderIds);
+            $sql = "SELECT item_id FROM " . $this->tableOrderItem . " WHERE order_id in ($orderIdString) group by item_id";
+            $ids = array_column($this->helperDb->sqlQueryFetchAll($sql), "item_id");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $ids = [];
+        } finally {
+            return $ids;
+        }
+    }
+
     public function getItemQtyCanceled($itemId = 0)
     {
         $qty = 0;
@@ -84,7 +99,7 @@ class OrderItemHelper extends BaseHelper
             return $qty;
         }
     }
-    
+
     public function getItemQtyShipped($itemId = 0)
     {
         $qty = 0;
@@ -187,6 +202,19 @@ class OrderItemHelper extends BaseHelper
             $productId = 0;
         } finally {
             return $productId;
+        }
+    }
+
+    public function getItemOrderId($itemId = 0)
+    {
+        $orderId = 0;
+        try {
+            $orderId = (int) $this->getItemFieldValueById($itemId, "order_id");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $orderId = 0;
+        } finally {
+            return $orderId;
         }
     }
 
