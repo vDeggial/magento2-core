@@ -5,9 +5,7 @@ namespace Hapex\Core\Helper;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\ObjectManagerInterface;
-use Zend\Log\Formatter;
-use Zend\Log\Logger;
-use Zend\Log\Writer\Stream;
+use Hapex\Core\Helper\DateHelper;
 
 class LogHelper extends AbstractHelper
 {
@@ -32,14 +30,9 @@ class LogHelper extends AbstractHelper
     private function writeLogEntry($filename = null, $message = null)
     {
         try {
-            $rootPath = $this->objectManager->get(FileHelper::class)->getRootPath();
-            $writer = new Stream($rootPath . "/var/log/$filename.log");
-            $logger = new Logger();
-            $formatter = new Formatter\Simple();
-            $formatter->setDateTimeFormat("Y-m-d H:i:s T");
-            $writer->setFormatter($formatter);
-            $logger->addWriter($writer);
-            $logger->info($message);
+            $currentDate = $this->objectManager->get(DateHelper::class)->getCurrentDate()->format("d.m.Y H:i:s");
+            $filePath = $this->objectManager->get(FileHelper::class)->getRootPath() . "/var/log/$filename.log";
+            error_log("[$currentDate] " . $message . "\n", 3, $filePath);
             return true;
         } catch (\Exception $e) {
             return false;
