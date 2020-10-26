@@ -67,7 +67,7 @@ class FileHelper extends AbstractHelper
 
     public function getFileSize($filename = null)
     {
-        return $this->fileExists($filename) ? filesize($filename) : 0;
+        return $this->fileExists($filename) ? $this->fileDriver->stat($filename)['size'] : 0;
     }
 
     public function getRootFilePath($path = null, $filename = null)
