@@ -87,6 +87,19 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
+    public function getItemQtyInvoiced($itemId = 0)
+    {
+        $qty = 0;
+        try {
+            $qty = (int) $this->getItemFieldValueById($itemId, "qty_invoiced");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $qty = 0;
+        } finally {
+            return $qty;
+        }
+    }
+
     public function getItemQtyRefunded($itemId = 0)
     {
         $qty = 0;
@@ -138,6 +151,19 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
+    public function getItemTotalQtyInvoiced($orderId = 0, $productSku = null)
+    {
+        $qty = 0;
+        try {
+            $qty = (int) $this->getItemFieldValueBySku($orderId, $productSku, "sum(qty_invoiced)");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $qty = 0;
+        } finally {
+            return $qty;
+        }
+    }
+
     public function getItemTotalQtyRefunded($orderId = 0, $productSku = null)
     {
         $qty = 0;
@@ -171,6 +197,7 @@ class OrderItemHelper extends BaseHelper
             $info["fullName"] = $this->helperAddress->getOrderCustomerName($order);
             $info["email"] = $this->helperAddress->getOrderCustomerEmail($order);
             $info["qtyOrdered"] = (int) $item->getQtyOrdered();
+            $info["qtyInvoiced"] = (int) $item->getQtyInvoiced();
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $info = [];
