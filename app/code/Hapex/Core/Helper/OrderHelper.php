@@ -197,7 +197,7 @@ class OrderHelper extends BaseHelper
     {
         $isVirtual = 0;
         try {
-            $isVirtual = (int) $this->getOrderFieldValue($orderId, "total_item_count");
+            $isVirtual = (int) $this->getOrderFieldValue($orderId, "is_virtual");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $isVirtual = 0;
@@ -354,10 +354,8 @@ class OrderHelper extends BaseHelper
         $items = [];
         try {
             $orderItems = $order->getItems();
-            array_walk($orderItems, function ($item) use (&$items) {
-                if (!$item->isDeleted() && !$item->getParentItem()) {
-                    $items[] = $item;
-                }
+            $items = array_filter($orderItems, function ($item) {
+                return !$item->isDeleted() && !$item->getParentItem();
             });
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
@@ -373,10 +371,10 @@ class OrderHelper extends BaseHelper
         $items = [];
         try {
             array_walk($orderItems, function ($item) use (&$items) {
-                switch (isset($items[$item->getSku()])) {
+                $existingItem = $this->getArrayValue($items, $item->getSku());
+                switch (isset($existingItem)) {
                     case true:
-                        $existingItem = $items[$item->getSku()];
-                        $existingItem->setQtyOrdered($existingItem->getQtyOrdered() + $item->getQtyOrdered());
+                        $existingItem->setQtyInvoiced($existingItem->getQtyInvoiced() + $item->getQtyInvoiced());
                         $items[$item->getSku()] = $existingItem;
                         break;
 
