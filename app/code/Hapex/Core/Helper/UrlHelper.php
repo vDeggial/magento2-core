@@ -5,7 +5,6 @@ namespace Hapex\Core\Helper;
 use Magento\Framework\HTTP\Client\Curl;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\ObjectManagerInterface;
-use Magento\Framework\App\Helper\AbstractHelper;
 
 class UrlHelper extends AbstractHelper
 {
@@ -15,8 +14,7 @@ class UrlHelper extends AbstractHelper
 
     public function __construct(Context $context, ObjectManagerInterface $objectManager, Curl $curl, LogHelper $helperLog)
     {
-        parent::__construct($context);
-        $this->objectManager = $objectManager;
+        parent::__construct($context, $objectManager);
         $this->curl = $curl;
         $this->helperLog = $helperLog;
     }

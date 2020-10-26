@@ -5,18 +5,15 @@ namespace Hapex\Core\Helper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\ObjectManagerInterface;
-use Magento\Framework\App\Helper\AbstractHelper;
 
 class DbHelper extends AbstractHelper
 {
-    protected $objectManager;
     protected $resource;
     protected $helperLog;
 
     public function __construct(Context $context, ObjectManagerInterface $objectManager, ResourceConnection $resource, LogHelper $helperLog)
     {
-        parent::__construct($context);
-        $this->objectManager = $objectManager;
+        parent::__construct($context, $objectManager);
         $this->resource = $resource;
         $this->helperLog = $helperLog;
     }

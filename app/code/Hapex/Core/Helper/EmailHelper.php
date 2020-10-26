@@ -18,8 +18,13 @@ class EmailHelper extends BaseHelper
 
     protected $storeManager;
 
-    public function __construct(Context $context, ObjectManagerInterface $objectManager, StateInterface $inlineTranslation, TransportBuilder $transportBuilder, StoreManagerInterface $storeManager)
-    {
+    public function __construct(
+        Context $context,
+        ObjectManagerInterface $objectManager,
+        StateInterface $inlineTranslation,
+        TransportBuilder $transportBuilder,
+        StoreManagerInterface $storeManager
+    ) {
         parent::__construct($context, $objectManager);
         $this->inlineTranslation = $inlineTranslation;
         $this->transportBuilder = $transportBuilder;

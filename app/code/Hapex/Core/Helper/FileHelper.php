@@ -3,16 +3,13 @@
 namespace Hapex\Core\Helper;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
-use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Filesystem\Driver\File;
-use Magento\Framework\File\Csv;
 use Magento\Framework\ObjectManagerInterface;
 
 class FileHelper extends AbstractHelper
 {
     protected $objectManager;
-    protected $csvDirectory;
     protected $helperLog;
     protected $directoryList;
     protected $fileDriver;
@@ -24,8 +21,7 @@ class FileHelper extends AbstractHelper
         DirectoryList $directoryList,
         File $fileDriver
     ) {
-        parent::__construct($context);
-        $this->objectManager = $objectManager;
+        parent::__construct($context, $objectManager);
         $this->helperLog = $helperLog;
         $this->directoryList = $directoryList;
         $this->fileDriver = $fileDriver;

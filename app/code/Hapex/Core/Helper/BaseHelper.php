@@ -2,7 +2,6 @@
 
 namespace Hapex\Core\Helper;
 
-use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\DataObject;
@@ -18,13 +17,12 @@ class BaseHelper extends AbstractHelper
 
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
-        $this->objectManager = $objectManager;
+        parent::__construct($context, $objectManager);
         $this->helperDb = $this->generateClassObject(DbHelper::class);
         $this->helperLog = $this->generateClassObject(LogHelper::class);
         $this->helperFile = $this->generateClassObject(FileHelper::class);
         $this->helperDate = $this->generateClassObject(DateHelper::class);
         $this->helperUrl = $this->generateClassObject(UrlHelper::class);
-        parent::__construct($context);
     }
 
     public function getLogHelper()

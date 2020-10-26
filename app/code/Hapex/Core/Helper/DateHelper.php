@@ -2,7 +2,6 @@
 
 namespace Hapex\Core\Helper;
 
-use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
@@ -15,8 +14,7 @@ class DateHelper extends AbstractHelper
 
     public function __construct(Context $context, ObjectManagerInterface $objectManager, LogHelper $helperLog, TimezoneInterface $timezone)
     {
-        parent::__construct($context);
-        $this->objectManager = $objectManager;
+        parent::__construct($context, $objectManager);
         $this->helperLog = $helperLog;
         $this->timezone = $timezone;
     }
