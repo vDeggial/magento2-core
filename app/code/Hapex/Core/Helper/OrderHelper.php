@@ -371,13 +371,14 @@ class OrderHelper extends BaseHelper
         $items = [];
         try {
             array_walk($orderItems, function ($item) use (&$items) {
-                switch ($this->getArrayValue($items, $item->getSku()) !== null) {
+                $itemSku = $item->getSku();
+                switch ($this->getArrayValue($items, $itemSku) !== null) {
                     case true:
-                        $items[$item->getSku()]->setQtyInvoiced($items[$item->getSku()]->getQtyInvoiced() + $item->getQtyInvoiced());
+                        $items[$itemSku]->setQtyInvoiced($items[$itemSku]->getQtyInvoiced() + $item->getQtyInvoiced());
                         break;
 
                     default:
-                        $items[$item->getSku()] = $item;
+                        $items[$itemSku] = $item;
                         break;
                 }
             });

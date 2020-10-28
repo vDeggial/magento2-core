@@ -314,7 +314,7 @@ class OrderItemHelper extends BaseHelper
     private function getItemFieldValueBySku($orderId = 0, $productSku = null, $fieldName = null)
     {
         try {
-            $sql = "SELECT $fieldName FROM " . $this->tableOrderItem . " where order_id = $orderId AND sku LIKE '$productSku'";
+            $sql = "SELECT $fieldName FROM " . $this->tableOrderItem . " where order_id in($orderId) AND sku in('$productSku')";
             $result = $this->helperDb->sqlQueryFetchOne($sql);
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
@@ -327,7 +327,7 @@ class OrderItemHelper extends BaseHelper
     private function getItemFieldValueById($itemId = 0, $fieldName = null)
     {
         try {
-            $sql = "SELECT $fieldName FROM " . $this->tableOrderItem . " where item_id = $itemId";
+            $sql = "SELECT $fieldName FROM " . $this->tableOrderItem . " where item_id in($itemId)";
             $result = $this->helperDb->sqlQueryFetchOne($sql);
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
