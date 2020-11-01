@@ -46,10 +46,10 @@ class ProductHelper extends BaseHelper
 
     public function getProduct($productId)
     {
-        return $this->getProductById($productId);
+        return $this->getById($productId);
     }
 
-    public function getProductAttributeSet($productId = 0)
+    public function getAttributeSet($productId = 0)
     {
         $productAttributeSet = 0;
         try {
@@ -62,12 +62,12 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    public function getProductBySku($productSku = null)
+    public function getBySku($productSku = null)
     {
-        return $this->getProductById($this->getProductId($productSku));
+        return $this->getById($this->getId($productSku));
     }
 
-    public function getProductCreatedDate($productId = 0)
+    public function getCreatedDate($productId = 0)
     {
         $productDate = null;
         try {
@@ -80,7 +80,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    public function getProductUpdatedDate($productId = 0)
+    public function getUpdatedDate($productId = 0)
     {
         $productDate = null;
         try {
@@ -93,7 +93,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    public function getProductDescription($productId = 0)
+    public function getDescription($productId = 0)
     {
         $description = null;
         try {
@@ -106,7 +106,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    public function getProductId($productSku = null)
+    public function getId($productSku = null)
     {
         $productId = 0;
         try {
@@ -121,12 +121,12 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    public function getProductImage($productId = 0, $width = 500)
+    public function getImage($productId = 0, $width = 500)
     {
         $image = null;
         try {
-            $imageFilename = $this->getProductImageFilename($productId);
-            $image = $this->getProductImageUrl($productId, $imageFilename, $width);
+            $imageFilename = $this->getImageFilename($productId);
+            $image = $this->getImageUrl($productId, $imageFilename, $width);
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $image = null;
@@ -135,13 +135,13 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    public function getProductImages($productId = 0, $width = 500)
+    public function getImages($productId = 0, $width = 500)
     {
         $imageList = [];
         try {
-            $images = $this->getProductImagesFilenames($productId);
+            $images = $this->getImagesFilenames($productId);
             array_walk($images, function ($imageFilename) use (&$imageList, &$productId, &$width) {
-                array_push($imageList, $this->getProductImageUrl($productId, $imageFilename, $width));
+                array_push($imageList, $this->getImageUrl($productId, $imageFilename, $width));
             });
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
@@ -151,7 +151,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    public function getProductCost($productId = 0)
+    public function getCost($productId = 0)
     {
         $cost = 0;
         try {
@@ -164,7 +164,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    public function getProductPrice($productId = 0)
+    public function getPrice($productId = 0)
     {
         $price = 0;
         try {
@@ -177,7 +177,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    public function getProductName($productId = 0)
+    public function getName($productId = 0)
     {
         $name = null;
         try {
@@ -190,7 +190,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    public function getProductSku($productId = 0)
+    public function getSku($productId = 0)
     {
         $productSku = null;
         try {
@@ -203,7 +203,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    public function getProductStatus($productId = 0)
+    public function getStatus($productId = 0)
     {
         $status = 0;
         try {
@@ -216,7 +216,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    public function getProductStockQty($productId = 0)
+    public function getStockQty($productId = 0)
     {
         $qty = 0;
         try {
@@ -231,7 +231,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    public function getProductType($productId = 0)
+    public function getType($productId = 0)
     {
         $productType = null;
         try {
@@ -244,11 +244,11 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    public function getProductUrl($productId = 0)
+    public function getUrl($productId = 0)
     {
         $productUrl = null;
         try {
-            $urlKey = $this->getProductUrlKey($productId);
+            $urlKey = $this->getUrlKey($productId);
             $productUrl = $this->urlFramework->getUrl($urlKey);
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
@@ -258,7 +258,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    public function getProductUrlKey($productId = 0)
+    public function getUrlKey($productId = 0)
     {
         $urlKey = null;
         try {
@@ -273,7 +273,7 @@ class ProductHelper extends BaseHelper
 
     public function isProductAttributeSetName($productId = 0, $name = null)
     {
-        return $this->getProductAttributeSet($productId) == $this->helperEav->getAttributeSetId($name, "catalog_product");
+        return $this->getAttributeSet($productId) == $this->helperEav->getAttributeSetId($name, "catalog_product");
     }
 
     public function productExists($productId = 0)
@@ -291,7 +291,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    protected function getProductById($productId = 0)
+    protected function getById($productId = 0)
     {
         $product = null;
         try {
@@ -304,7 +304,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    protected function getProductImageFilename($productId = 0)
+    protected function getImageFilename($productId = 0)
     {
         $image = null;
         try {
@@ -317,7 +317,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    protected function getProductImagesFilenames($productId = 0)
+    protected function getImagesFilenames($productId = 0)
     {
         $images = [];
         try {
@@ -334,11 +334,11 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    protected function getProductImageUrl($productId = 0, $imageFilename = null, $width = 500)
+    protected function getImageUrl($productId = 0, $imageFilename = null, $width = 500)
     {
         $imageUrl = null;
         try {
-            $product = $this->getProductById($productId);
+            $product = $this->getById($productId);
             $imageUrl = $this->imageHelper->init($product, 'product_page_image_large')->keepAspectRatio(true)->setImageFile($imageFilename)->resize($width, null)->getUrl();
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
