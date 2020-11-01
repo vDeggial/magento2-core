@@ -12,20 +12,23 @@ class CreditMemoHelper extends BaseHelper
     protected $helperItem;
     protected $helperGrid;
     protected $helperComment;
-    protected $creditMemoRepository;
+    protected $helperOrder;
+    protected $repository;
     public function __construct(
         Context $context,
         ObjectManagerInterface $objectManager,
         CreditMemoItemHelper $helperItem,
         CreditMemoGridHelper $helperGrid,
         CreditMemoCommentHelper $helperComment,
-        CreditmemoRepository $creditMemoRepository
+        OrderHelper $helperOrder,
+        CreditmemoRepository $repository
     ) {
         parent::__construct($context, $objectManager);
         $this->tableCreditMemo = $this->helperDb->getSqlTableName("sales_creditmemo");
         $this->helperItem = $helperItem;
         $this->helperGrid = $helperGrid;
         $this->helperComment = $helperComment;
-        $this->creditMemoRepository = $creditMemoRepository;
+        $this->helperOrder = $helperOrder;
+        $this->repository = $repository;
     }
 }

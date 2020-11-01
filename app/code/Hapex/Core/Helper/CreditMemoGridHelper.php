@@ -7,10 +7,10 @@ use Magento\Framework\ObjectManagerInterface;
 
 class CreditMemoGridHelper extends BaseHelper
 {
-    protected $tableCreditMemoGrid;
+    protected $tableGrid;
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
         parent::__construct($context, $objectManager);
-        $this->tableCreditMemoGrid = $this->helperDb->getSqlTableName("sales_creditmemo_grid");
+        $this->tableGrid = $this->helperDb->getSqlTableName("sales_creditmemo_grid");
     }
 }

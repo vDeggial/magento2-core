@@ -7,10 +7,10 @@ use Magento\Framework\ObjectManagerInterface;
 
 class CreditMemoCommentHelper extends BaseHelper
 {
-    protected $tableCreditMemoComment;
+    protected $tableComment;
     public function __construct(Context $context, ObjectManagerInterface $objectManager)
     {
         parent::__construct($context, $objectManager);
-        $this->tableCreditMemoComment = $this->helperDb->getSqlTableName("sales_creditmemo_comment");
+        $this->tableComment = $this->helperDb->getSqlTableName("sales_creditmemo_comment");
     }
 }

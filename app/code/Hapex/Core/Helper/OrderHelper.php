@@ -32,7 +32,7 @@ class OrderHelper extends BaseHelper
 
     public function getOrder($orderId)
     {
-        return $this->getOrderById($orderId);
+        return $this->getById($orderId);
     }
 
     public function getOrderIdsByCustomerId($customerId = 0)
@@ -63,7 +63,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getOrderAppliedRuleIds($orderId = 0)
+    public function getAppliedRuleIds($orderId = 0)
     {
         $ruleIds = null;
         try {
@@ -76,7 +76,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getOrderCreatedDate($orderId = 0)
+    public function getCreatedDate($orderId = 0)
     {
         $date = null;
         try {
@@ -89,7 +89,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getOrderUpdatedDate($orderId = 0)
+    public function getUpdatedDate($orderId = 0)
     {
         $date = null;
         try {
@@ -102,7 +102,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getOrderCouponCode($orderId = 0)
+    public function getCouponCode($orderId = 0)
     {
         $code = null;
         try {
@@ -115,7 +115,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getOrderCustomerId($orderId = 0)
+    public function getCustomerId($orderId = 0)
     {
         $customerId = 0;
         try {
@@ -128,7 +128,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getOrderCustomerGroupId($orderId = 0)
+    public function getCustomerGroupId($orderId = 0)
     {
         $groupId = 0;
         try {
@@ -141,7 +141,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getOrderDiscountAmount($orderId = 0)
+    public function getDiscountAmount($orderId = 0)
     {
         $amount = 0;
         try {
@@ -154,7 +154,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getOrderGrandTotal($orderId = 0)
+    public function getGrandTotal($orderId = 0)
     {
         $total = 0;
         try {
@@ -167,7 +167,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getOrderIncrementId($orderId = 0)
+    public function getIncrementId($orderId = 0)
     {
         $incrementId = null;
         try {
@@ -180,7 +180,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getCustomerId($order = null)
+    public function getOrderCustomerId($order = null)
     {
         $customerId = 0;
         try {
@@ -193,7 +193,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getOrderIsVirtual($orderId = 0)
+    public function getIsVirtual($orderId = 0)
     {
         $isVirtual = 0;
         try {
@@ -206,7 +206,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getOrderShippingAmount($orderId = 0)
+    public function getShippingAmount($orderId = 0)
     {
         $amount = 0;
         try {
@@ -219,7 +219,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getOrderShippingMethod($orderId = 0)
+    public function getShippingMethod($orderId = 0)
     {
         $method = null;
         try {
@@ -232,7 +232,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getOrderState($orderId = 0)
+    public function getState($orderId = 0)
     {
         $state = null;
         try {
@@ -245,7 +245,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getOrderStatus($orderId = 0)
+    public function getStatus($orderId = 0)
     {
         $status = null;
         try {
@@ -258,7 +258,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getOrderSubtotal($orderId = 0)
+    public function getSubtotal($orderId = 0)
     {
         $total = 0;
         try {
@@ -271,7 +271,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getOrderTaxAmount($orderId = 0)
+    public function getTaxAmount($orderId = 0)
     {
         $amount = 0;
         try {
@@ -284,7 +284,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getOrderTotalPaid($orderId = 0)
+    public function getTotalPaid($orderId = 0)
     {
         $amount = 0;
         try {
@@ -297,7 +297,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getOrderTotalItemCount($orderId = 0)
+    public function getTotalItemCount($orderId = 0)
     {
         $count = 0;
         try {
@@ -310,7 +310,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getOrderTotalQtyOrdered($orderId = 0)
+    public function getTotalQtyOrdered($orderId = 0)
     {
         $count = 0;
         try {
@@ -323,7 +323,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getOrderCustomerIsGuest($orderId = 0)
+    public function getCustomerIsGuest($orderId = 0)
     {
         $isGuest = 0;
         try {
@@ -390,7 +390,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    protected function getOrderById($orderId = 0)
+    protected function getById($orderId = 0)
     {
         $order = null;
         try {
