@@ -30,6 +30,11 @@ class BaseObserver implements ObserverInterface
 
     public function execute(Observer $observer)
     {
-        $this->event = $observer->getEvent();
+        $this->event = $this->getEvent($observer);
+    }
+
+    protected function getEvent($observer = null)
+    {
+        return $observer ? $observer->getEvent() : null;
     }
 }
