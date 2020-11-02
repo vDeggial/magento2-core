@@ -240,6 +240,86 @@ class CreditMemoHelper extends BaseHelper
         }
     }
 
+    public function getMemoCustomerName($memo = null)
+    {
+        $name = null;
+        try {
+            $name = $memo->getOrder()->getBillingAddress()->getName();
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $name = null;
+        } finally {
+            return $name;
+        }
+    }
+
+    public function getMemoCustomerEmail($memo = null)
+    {
+        $email = null;
+        try {
+            $email = $memo->getOrder()->getBillingAddress()->getEmail();
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $email = null;
+        } finally {
+            return $email;
+        }
+    }
+
+    public function getMemoGrandTotal($memo = null)
+    {
+        $total = 0;
+        try {
+            $total = $memo->getGrandTotal();
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $total = 0;
+        } finally {
+            return $total;
+        }
+    }
+
+    public function getMemoOrder($memo = null)
+    {
+        $order = null;
+        try {
+            $order = $memo->getOrder();
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $order = null;
+        } finally {
+            return $order;
+        }
+    }
+
+    public function getMemoOrderIncrementId($memo = null)
+    {
+        $incrementId = 0;
+        try {
+            $order = $this->getMemoOrder($memo);
+            $incrementId = isset($order) ? $order->getIncrementId() : 0;
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $incrementId = 0;
+        } finally {
+            return $incrementId;
+        }
+    }
+
+    public function getMemoSubtotal($memo = null)
+    {
+        $total = 0;
+        try {
+            $total = $memo->getSubtotal();
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $total = 0;
+        } finally {
+            return $total;
+        }
+    }
+
+
     protected function getById($memoId = 0)
     {
         $memo = null;
