@@ -4,7 +4,6 @@ namespace Hapex\Core\Helper;
 
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\ObjectManagerInterface;
-use Magento\Framework\DataObject;
 
 class BaseHelper extends AbstractHelper
 {
@@ -50,16 +49,10 @@ class BaseHelper extends AbstractHelper
         return $this->helperUrl;
     }
 
-    protected function getArrayValue($array = [], $index = 0, $defaultValue = null)
-    {
-        return $array[$index] ?? $defaultValue;
-    }
-
     public function sendOutput($output = null)
     {
         try {
-            print_r($output);
-            return true;
+            return parent::sendOutput($output);
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             return false;
@@ -92,24 +85,13 @@ class BaseHelper extends AbstractHelper
 
     public function generateClassObject($class = null)
     {
-        $object = $this->objectManager->create(DataObject::class);
+        $object = null;
         try {
-            $object = $this->objectManager->get($class);
+            $object = parent::generateClassObject($class);
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $object = $this->objectManager->create(DataObject::class);
         } finally {
             return $object;
         }
-    }
-
-    public function sortDataByColumn(&$data = [], $sortColumn = "qty", $sortDirection = SORT_DESC)
-    {
-        array_multisort(array_column($data, $sortColumn), $sortDirection, $data);
-    }
-
-    public function sortDataBy2Columns(&$data = [], $sortColumn = "qty", $sortDirection = SORT_DESC, $sortColumn2 = "qty", $sortDirection2 = SORT_DESC)
-    {
-        array_multisort(array_column($data, $sortColumn), $sortDirection, array_column($data, $sortColumn2), $sortDirection2, $data);
     }
 }
