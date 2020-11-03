@@ -266,6 +266,19 @@ class CreditMemoHelper extends BaseHelper
         }
     }
 
+    public function getMemoDiscountAmount($memo = null)
+    {
+        $amount = 0;
+        try {
+            $amount = $memo->getDiscountAmount();
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $amount = 0;
+        } finally {
+            return $amount;
+        }
+    }
+
     public function getMemoGrandTotal($memo = null)
     {
         $total = 0;
@@ -316,6 +329,19 @@ class CreditMemoHelper extends BaseHelper
             $total = 0;
         } finally {
             return $total;
+        }
+    }
+
+    public function getMemoTaxAmount($memo = null)
+    {
+        $amount = 0;
+        try {
+            $amount = $memo->getTaxAmount();
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $amount = 0;
+        } finally {
+            return $amount;
         }
     }
 
