@@ -61,6 +61,32 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
+    public function getItemCreatedDate($itemId = 0)
+    {
+        $date = null;
+        try {
+            $date =  $this->getItemFieldValueById($itemId, "created_at");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $date = null;
+        } finally {
+            return $date;
+        }
+    }
+
+    public function getItemUpdatedDate($itemId = 0)
+    {
+        $date = null;
+        try {
+            $date =  $this->getItemFieldValueById($itemId, "updated_at");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $date = null;
+        } finally {
+            return $date;
+        }
+    }
+
     public function getItemQtyCanceled($itemId = 0)
     {
         $qty = 0;
@@ -198,6 +224,8 @@ class OrderItemHelper extends BaseHelper
             $info["email"] = $this->helperAddress->getOrderCustomerEmail($order);
             $info["qtyOrdered"] = (int) $item->getQtyOrdered();
             $info["qtyInvoiced"] = (int) $item->getQtyInvoiced();
+            $info["dateCreated"] = $item->getCreatedAt();
+            $info["dateUpdated"] = $item->getUpdatedAt();
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $info = [];
