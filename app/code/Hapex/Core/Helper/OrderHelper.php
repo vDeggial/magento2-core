@@ -349,6 +349,32 @@ class OrderHelper extends BaseHelper
         }
     }
 
+    public function getOrderCustomerName($order = null)
+    {
+        $name = null;
+        try {
+            $name = $this->helperData->getNameCase($this->helperAddress->getOrderCustomerName($order));
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $name = null;
+        } finally {
+            return $name;
+        }
+    }
+
+    public function getOrderCustomerEmail($order = null)
+    {
+        $email = null;
+        try {
+            $email = strtolower($this->helperAddress->getOrderCustomerEmail($order));
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $email = null;
+        } finally {
+            return $email;
+        }
+    }
+
     protected function getOrderItems($order = null)
     {
         $items = [];
