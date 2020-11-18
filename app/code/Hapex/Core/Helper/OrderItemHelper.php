@@ -65,7 +65,7 @@ class OrderItemHelper extends BaseHelper
     {
         $date = null;
         try {
-            $date =  $this->getItemFieldValueById($itemId, "created_at");
+            $date =  (string) $this->getItemFieldValueById($itemId, "created_at");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $date = null;
@@ -78,7 +78,7 @@ class OrderItemHelper extends BaseHelper
     {
         $date = null;
         try {
-            $date =  $this->getItemFieldValueById($itemId, "updated_at");
+            $date =  (string) $this->getItemFieldValueById($itemId, "updated_at");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $date = null;
@@ -224,7 +224,7 @@ class OrderItemHelper extends BaseHelper
             $info["email"] = $this->helperAddress->getOrderCustomerEmail($order);
             $info["qtyOrdered"] = (int) $item->getQtyOrdered();
             $info["qtyInvoiced"] = (int) $item->getQtyInvoiced();
-            $info["dateCreated"] = $order->getCreatedAtFormatted("Y-m-d H:i:s");
+            $info["dateCreated"] = $this->helperDate->getCurrentDate()->format("Y-m-d H:i:s");
             $info["dateUpdated"] = $order->getUpdatedAt();
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
