@@ -50,9 +50,11 @@ class OrderItemHelper extends BaseHelper
     {
         $ids = [];
         try {
-            $orderIdString = implode(",", $orderIds);
-            $sql = "SELECT item_id FROM " . $this->tableOrderItem . " WHERE order_id in ($orderIdString) group by item_id";
-            $ids = array_column($this->helperDb->sqlQueryFetchAll($sql), "item_id");
+            if (!empty($orderIds)) {
+                $orderIdString = implode(",", $orderIds);
+                $sql = "SELECT item_id FROM " . $this->tableOrderItem . " WHERE order_id in ($orderIdString) group by item_id";
+                $ids = array_column($this->helperDb->sqlQueryFetchAll($sql), "item_id");
+            }
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $ids = [];
@@ -65,7 +67,7 @@ class OrderItemHelper extends BaseHelper
     {
         $date = null;
         try {
-            $date =  (string) $this->getItemFieldValueById($itemId, "created_at");
+            $date =  $this->getItemFieldValueById($itemId, "created_at");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $date = null;
@@ -78,7 +80,7 @@ class OrderItemHelper extends BaseHelper
     {
         $date = null;
         try {
-            $date =  (string) $this->getItemFieldValueById($itemId, "updated_at");
+            $date =  $this->getItemFieldValueById($itemId, "updated_at");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $date = null;
