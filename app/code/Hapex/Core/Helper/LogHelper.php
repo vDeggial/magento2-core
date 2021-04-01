@@ -1,17 +1,10 @@
 <?php
 
 namespace Hapex\Core\Helper;
-
-use Magento\Framework\App\Helper\Context;
-use Magento\Framework\ObjectManagerInterface;
 use Hapex\Core\Helper\DateHelper;
 
 class LogHelper extends AbstractHelper
 {
-    public function __construct(Context $context, ObjectManagerInterface $objectManager)
-    {
-        parent::__construct($context, $objectManager);
-    }
 
     public function printLog($filename = null, $message = null)
     {
