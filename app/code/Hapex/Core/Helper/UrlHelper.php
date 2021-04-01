@@ -44,7 +44,7 @@ class UrlHelper extends AbstractHelper
         $exists = false;
         try {
             if (filter_var($remoteUrl, FILTER_VALIDATE_URL) === FALSE) {
-                $host = isset($_SERVER["HTTP_HOST"]) ? $_SERVER["HTTP_HOST"] : "justripit.com";
+                $host = isset($_SERVER["HTTP_HOST"]) ? stripslashes($_SERVER["HTTP_HOST"]) : "justripit.com";
                 $remoteUrl = "https://$host$remoteUrl";
             }
             $exists = $this->get($remoteUrl)->getStatus() === 200;
