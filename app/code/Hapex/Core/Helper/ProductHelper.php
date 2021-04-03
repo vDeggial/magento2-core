@@ -67,6 +67,23 @@ class ProductHelper extends BaseHelper
         return $this->getById($this->getId($productSku));
     }
 
+    public function getSkusByStatus($status = 0)
+    {
+        $products = [];
+        $tableStatus = $this->helperDb->getSqlTableName('catalog_product_entity_int');
+        $tableAttribute = $this->helperDb->getSqlTableName("eav_attribute");
+        $sql = "SELECT entity_id FROM $tableStatus WHERE attribute_id = (SELECT attribute_id FROM $tableAttribute WHERE attribute_code LIKE 'status') AND $tableStatus.value = $status";
+        $result = $this->helperDb->sqlQueryFetchAll($sql);
+        if ($result) {
+            foreach (array_column($result, "entity_id") as $entry) {
+                $sku = $this->getSku($entry);
+                $products[] = $sku;
+            }
+        }
+
+        return $products;
+    }
+
     public function getCreatedDate($productId = 0)
     {
         $productDate = null;
