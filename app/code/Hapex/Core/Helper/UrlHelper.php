@@ -74,6 +74,7 @@ class UrlHelper extends AbstractHelper
 
     private function post($url = null, $data = null, $contentType = "application/json")
     {
+        $sent = false;
         try {
             $options = [
                 CURLOPT_CONNECTTIMEOUT => 2,
@@ -83,10 +84,12 @@ class UrlHelper extends AbstractHelper
             $this->curl->setOptions($options);
             $this->curl->setHeaders($headers);
             $this->curl->post($url, $data);
+            $sent = true;
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $sent = false;
         } finally {
-            return $this->curl;
+            return $sent;
         }
     }
 }
