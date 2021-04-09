@@ -31,7 +31,7 @@ class UrlHelper extends AbstractHelper
 
     public function sendWebhook($webhookUrl = null, $message = null, $contentType = "text/plain")
     {
-        return $this->sendRemoteContent($webhookUrl, $message, $contentType);
+        return $this->sendRemoteContent($webhookUrl, $message, $contentType)->getBody();
     }
 
     public function sendRemoteContent($url = null, $data = null, $contentType = null)
@@ -74,7 +74,6 @@ class UrlHelper extends AbstractHelper
 
     private function post($url = null, $data = null, $contentType = "application/json")
     {
-        $sent = false;
         try {
             $options = [
                 CURLOPT_CONNECTTIMEOUT => 2,
@@ -84,12 +83,10 @@ class UrlHelper extends AbstractHelper
             $this->curl->setOptions($options);
             $this->curl->setHeaders($headers);
             $this->curl->post($url, $data);
-            $sent = true;
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $sent = false;
         } finally {
-            return $sent;
+            return $this->curl;
         }
     }
 }
