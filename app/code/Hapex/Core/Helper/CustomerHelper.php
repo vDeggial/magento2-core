@@ -32,6 +32,34 @@ class CustomerHelper extends BaseHelper
         return $this->getCustomerById($customerId);
     }
 
+    public function getCustomerOrderedQuantity($customerId = 0, $productSku = null)
+    {
+        $quantity = 0;
+        try {
+            switch ($this->customerExists($customerId)) {
+                case true:
+                    $tableOrders = $this->helperDb->getSqlTableName('mg2e_sales_order');
+                    $tableItems = $this->helperDb->getSqlTableName('mg2e_sales_order_item');
+                    $sql = "SELECT * FROM `$tableOrders` orders join `$tableItems` items on orders.entity_id = items.order_id where orders.customer_id = $customerId and items.sku = '$productSku'";
+                    $result = $this->helperDb->sqlQueryFetchAll($sql);
+                    if ($result) {
+                        $qty_ordered = array_sum(array_column($result, "qty_ordered"));
+                        $qty_refunded = array_sum(array_column($result, "qty_refunded"));
+                        $qty_canceled = array_sum(array_column($result, "qty_canceled"));
+
+                        $qty = $qty_ordered - $qty_refunded - $qty_canceled;
+                        $quantity = $qty;
+                    }
+                    break;
+            }
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $quantity = 0;
+        } finally {
+            return $quantity;
+        }
+    }
+
     public function customerExists($customerId = 0)
     {
         $exists = false;
