@@ -240,6 +240,19 @@ class CreditMemoHelper extends BaseHelper
         }
     }
 
+    public function getMemoAdjustment($memo = null)
+    {
+        $adjustment = 0;
+        try {
+            $adjustment = $memo->getAdjustment();
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $adjustment = 0;
+        } finally {
+            return $adjustment;
+        }
+    }
+
     public function getMemoCustomerName($memo = null)
     {
         $name = null;
