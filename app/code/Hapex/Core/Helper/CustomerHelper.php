@@ -32,6 +32,19 @@ class CustomerHelper extends BaseHelper
         return $this->getCustomerById($customerId);
     }
 
+    public function getActiveCustomers($limit = 0, $offset = 0)
+    {
+        $sql = "SELECT * FROM " . $this->tableCustomer . " WHERE is_active = 1";
+        $result = $this->helperDb->sqlQueryFetchAll($sql);
+        $customers = [];
+        if ($result) {
+            foreach ($result as $entry) {
+                array_push($customers, $this->getCustomer($entry["entity_id"]));
+            }
+        }
+        return $customers;
+    }
+
     public function getCustomerOrderedQuantity($customerId = 0, $productSku = null)
     {
         $quantity = 0;
