@@ -301,6 +301,19 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
+    public function getItemPrice($itemId = 0)
+    {
+        $price = 0;
+        try {
+            $price = (int) $this->getItemFieldValueById($itemId, "price");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $price = 0;
+        } finally {
+            return $price;
+        }
+    }
+
     public function getItemProductName($itemId = 0)
     {
         $name = null;
