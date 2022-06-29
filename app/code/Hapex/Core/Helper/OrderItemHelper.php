@@ -305,7 +305,7 @@ class OrderItemHelper extends BaseHelper
     {
         $price = 0;
         try {
-            $price = (int) $this->getItemFieldValueById($itemId, "price");
+            $price = (float) $this->getItemFieldValueById($itemId, "price");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $price = 0;
