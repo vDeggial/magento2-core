@@ -28,6 +28,20 @@ class OrderGridHelper extends BaseHelper
         }
     }
 
+    public function getOrderName($orderId = 0)
+    {
+        $fullName = null;
+        try {
+            $fullName = $this->getShippingName($orderId);
+            if (empty($fullName)) $fullName = $this->getBillingName($orderId);
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $fullName = null;
+        } finally {
+            return $fullName;
+        }
+    }
+
     public function getCustomerEmail($orderId = 0)
     {
         $email = null;
