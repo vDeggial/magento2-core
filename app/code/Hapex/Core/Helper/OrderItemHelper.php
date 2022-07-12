@@ -89,6 +89,19 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
+    public function getItemDiscountAmount($itemId = 0)
+    {
+        $discount = 0;
+        try {
+            $discount = (float) $this->getItemFieldValueById($itemId, "discount_amount");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $discount = 0;
+        } finally {
+            return $discount;
+        }
+    }
+
     public function getItemQtyCanceled($itemId = 0)
     {
         $qty = 0;
