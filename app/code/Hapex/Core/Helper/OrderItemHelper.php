@@ -102,6 +102,19 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
+    public function getItemRowTotal($itemId = 0)
+    {
+        $total = 0;
+        try {
+            $total = (float) $this->getItemFieldValueById($itemId, "row_total");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $total = 0;
+        } finally {
+            return $total;
+        }
+    }
+
     public function getItemQtyCanceled($itemId = 0)
     {
         $qty = 0;
