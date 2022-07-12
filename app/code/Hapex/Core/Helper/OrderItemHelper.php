@@ -102,11 +102,37 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
+    public function getItemDiscountRefunded($itemId = 0)
+    {
+        $discount = 0;
+        try {
+            $discount = (float) $this->getItemFieldValueById($itemId, "discount_refunded");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $discount = 0;
+        } finally {
+            return $discount;
+        }
+    }
+
     public function getItemRowTotal($itemId = 0)
     {
         $total = 0;
         try {
             $total = (float) $this->getItemFieldValueById($itemId, "row_total");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $total = 0;
+        } finally {
+            return $total;
+        }
+    }
+
+    public function getItemAmountRefunded($itemId = 0)
+    {
+        $total = 0;
+        try {
+            $total = (float) $this->getItemFieldValueById($itemId, "amount_refunded");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $total = 0;
