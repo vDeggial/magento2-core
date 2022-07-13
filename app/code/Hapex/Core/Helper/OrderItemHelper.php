@@ -135,6 +135,19 @@ class OrderItemHelper extends BaseHelper
             return $discount;
         }
     }
+    
+    public function getItemRewardDiscount($itemId = 0)
+    {
+        $discount = 0;
+        try {
+            $discount = (float) $this->getItemFieldValueById($itemId, "mp_reward_discount");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $discount = 0;
+        } finally {
+            return $discount;
+        }
+    }
 
     public function getItemDiscountRefunded($itemId = 0)
     {
