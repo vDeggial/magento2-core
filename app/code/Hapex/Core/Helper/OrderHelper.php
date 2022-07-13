@@ -48,6 +48,20 @@ class OrderHelper extends BaseHelper
             return $result;
         }
     }
+    
+    public function getOrderIdsAfterDate($date = "2022-07-01")
+    {
+        $result = [];
+        try {
+            $sql = "SELECT entity_id FROM " . $this->tableOrder . " WHERE created_at >= '$date' ORDER BY created_at ASC";
+            $result = array_column($this->helperDb->sqlQueryFetchAll($sql), "entity_id");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $result = [];
+        } finally {
+            return $result;
+        }
+    }
 
     public function getOrderIdByIncrementId($incrementId = null)
     {

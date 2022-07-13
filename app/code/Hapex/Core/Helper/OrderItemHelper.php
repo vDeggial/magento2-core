@@ -62,6 +62,42 @@ class OrderItemHelper extends BaseHelper
             return $ids;
         }
     }
+    
+    public function getItemSkusFromOrders($orderIds = [])
+    {
+        $ids = [];
+        try {
+            if (!empty($orderIds)) {
+                $orderIdString = implode(",", $orderIds);
+                $sql = "SELECT distinct sku FROM " . $this->tableOrderItem . " WHERE order_id in ($orderIdString) order by sku asc";
+                $this->helperLog->errorLog($sql);
+                $ids = array_column($this->helperDb->sqlQueryFetchAll($sql), "sku");
+            }
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $ids = [];
+        } finally {
+            return $ids;
+        }
+    }
+    
+    public function getItemProductIdsFromOrders($orderIds = [])
+    {
+        $ids = [];
+        try {
+            if (!empty($orderIds)) {
+                $orderIdString = implode(",", $orderIds);
+                $sql = "SELECT distinct product_id FROM " . $this->tableOrderItem . " WHERE order_id in ($orderIdString) order by product_id asc";
+                $this->helperLog->errorLog($sql);
+                $ids = array_column($this->helperDb->sqlQueryFetchAll($sql), "sku");
+            }
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $ids = [];
+        } finally {
+            return $ids;
+        }
+    }
 
     public function getItemCreatedDate($itemId = 0)
     {
