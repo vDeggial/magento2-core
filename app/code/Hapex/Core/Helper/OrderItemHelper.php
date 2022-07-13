@@ -70,7 +70,6 @@ class OrderItemHelper extends BaseHelper
             if (!empty($orderIds)) {
                 $orderIdString = implode(",", $orderIds);
                 $sql = "SELECT distinct sku FROM " . $this->tableOrderItem . " WHERE order_id in ($orderIdString) order by sku asc";
-                $this->helperLog->errorLog($sql);
                 $ids = array_column($this->helperDb->sqlQueryFetchAll($sql), "sku");
             }
         } catch (\Exception $e) {
@@ -88,7 +87,6 @@ class OrderItemHelper extends BaseHelper
             if (!empty($orderIds)) {
                 $orderIdString = implode(",", $orderIds);
                 $sql = "SELECT distinct product_id FROM " . $this->tableOrderItem . " WHERE order_id in ($orderIdString) order by product_id asc";
-                $this->helperLog->errorLog($sql);
                 $ids = array_column($this->helperDb->sqlQueryFetchAll($sql), "sku");
             }
         } catch (\Exception $e) {
