@@ -62,7 +62,7 @@ class OrderItemHelper extends BaseHelper
             return $ids;
         }
     }
-    
+
     public function getItemSkusFromOrders($orderIds = [])
     {
         $ids = [];
@@ -79,7 +79,7 @@ class OrderItemHelper extends BaseHelper
             return $ids;
         }
     }
-    
+
     public function getItemProductIdsFromOrders($orderIds = [])
     {
         $ids = [];
@@ -135,7 +135,7 @@ class OrderItemHelper extends BaseHelper
             return $discount;
         }
     }
-    
+
     public function getItemRewardDiscount($itemId = 0)
     {
         $discount = 0;
@@ -154,6 +154,32 @@ class OrderItemHelper extends BaseHelper
         $discount = 0;
         try {
             $discount = (float) $this->getItemFieldValueById($itemId, "discount_refunded");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $discount = 0;
+        } finally {
+            return $discount;
+        }
+    }
+
+    public function getItemTax($itemId = 0)
+    {
+        $discount = 0;
+        try {
+            $discount = (float) $this->getItemFieldValueById($itemId, "tax_amount");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $discount = 0;
+        } finally {
+            return $discount;
+        }
+    }
+
+    public function getItemTaxRefunded($itemId = 0)
+    {
+        $discount = 0;
+        try {
+            $discount = (float) $this->getItemFieldValueById($itemId, "tax_refunded");
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $discount = 0;
