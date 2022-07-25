@@ -33,7 +33,7 @@ class OrderGridHelper extends BaseHelper
         $fullName = null;
         try {
             $fullName = trim($this->getShippingName($orderId));
-            if (empty($fullName) || strpos($fullName, ' ') === false) $fullName = $this->getBillingName($orderId);
+            if (empty($fullName) || strpos($fullName, ' ') === false) $fullName = trim($this->getBillingName($orderId));
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $fullName = null;
