@@ -312,7 +312,7 @@ class ProductHelper extends BaseHelper
     {
         $product = null;
         try {
-            $product = $this->productExists($productId) ? $this->productFactory->load($productId) : null;
+            $product = $this->productExists($productId) ? $this->objectManager->create('Magento\Catalog\Model\Product')->load($productId) : null;
         } catch (\Exception $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $product = null;
