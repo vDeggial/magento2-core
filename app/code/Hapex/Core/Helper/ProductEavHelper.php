@@ -5,7 +5,7 @@ namespace Hapex\Core\Helper;
 class ProductEavHelper extends EavHelper
 {
 
-    public function getProductAttributeValue($productId = 0, $attributeCode)
+    public function getProductAttributeValue($productId = 0, $attributeCode = null)
     {
         return $this->getAttributeValue("catalog_product", $attributeCode, $productId);
     }

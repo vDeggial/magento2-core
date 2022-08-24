@@ -6,7 +6,7 @@ namespace Hapex\Core\Helper;
 class CustomerEavHelper extends EavHelper
 {
 
-    public function getCustomerAttributeValue($customerId = 0, $attributeCode)
+    public function getCustomerAttributeValue($customerId = 0, $attributeCode = null)
     {
         return $this->getAttributeValue("customer", $attributeCode, $customerId);
     }
