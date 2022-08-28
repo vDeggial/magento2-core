@@ -123,6 +123,19 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
+    public function getItemAppliedRules($itemId = 0)
+    {
+        $rules = null;
+        try {
+            $rules =  $this->getItemFieldValueById($itemId, "applied_rule_ids");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $rules = null;
+        } finally {
+            return $rules;
+        }
+    }
+
     public function getItemDiscountAmount($itemId = 0)
     {
         $discount = 0;
