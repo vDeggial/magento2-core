@@ -123,6 +123,19 @@ class ProductHelper extends BaseHelper
         }
     }
 
+    public function getShortDescription($productId = 0)
+    {
+        $description = null;
+        try {
+            $description = $this->helperEav->getProductAttributeValue($productId, "short_description");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $description = null;
+        } finally {
+            return $description;
+        }
+    }
+
     public function getId($productSku = null)
     {
         $productId = 0;
