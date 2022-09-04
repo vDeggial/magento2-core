@@ -101,6 +101,32 @@ class CustomerHelper extends BaseHelper
         }
     }
 
+    public function getCustomerCreatedDate($customerId = 0)
+    {
+        $date = null;
+        try {
+            $date = $this->helperEav->getCustomerEntityFieldValue($customerId, "created_at");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $date = null;
+        } finally {
+            return $date;
+        }
+    }
+
+    public function getCustomerUpdatedDate($customerId = 0)
+    {
+        $date = null;
+        try {
+            $date = $this->helperEav->getCustomerEntityFieldValue($customerId, "updated_at");
+        } catch (\Exception $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $date = null;
+        } finally {
+            return $date;
+        }
+    }
+
     public function getCustomerEmail($customerId = 0)
     {
         $customerEmail = null;
