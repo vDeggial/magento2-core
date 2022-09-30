@@ -59,23 +59,32 @@ abstract class AbstractHelper extends \Magento\Framework\App\Helper\AbstractHelp
         $is_empty = false;
 
         foreach ($args as $arg) {
-            if (is_string($arg)) {
-                $col = array_column($data, $arg);
-                if (count($col) > 0) {
-                    $params[] = array_column($data, $arg);
-                    $is_empty = false;
-                } else {
-                    $is_empty = true;
-                }
-            } else {
-                if (!$is_empty) $params[] = $arg;
+            switch (true) {
+                case is_string($arg):
+                    $col = array_column($data, $arg);
+                    switch (count($col) > 0) {
+                        case true:
+                            $params[] = array_column($data, $arg);
+                            $is_empty = false;
+                            break;
+
+                        case false:
+                            $is_empty = true;
+                            break;
+                    }
+                    break;
+                case is_numeric($arg):
+                    if (!$is_empty) $params[] = $arg;
+                    break;
             }
         }
 
-        if (!empty($params)) {
-            $params[] = &$data;
-            call_user_func_array('array_multisort', $params);
-            $data = array_pop($params);
+        switch (!empty($params)) {
+            case true:
+                $params[] = &$data;
+                call_user_func_array('array_multisort', $params);
+                $data = array_pop($params);
+                break;
         }
     }
 }
