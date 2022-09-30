@@ -45,11 +45,37 @@ abstract class AbstractHelper extends \Magento\Framework\App\Helper\AbstractHelp
 
     public function sortDataByColumn(&$data = [], $sortColumn = "qty", $sortDirection = SORT_DESC)
     {
-        array_multisort(array_column($data, $sortColumn), $sortDirection, $data);
+        $this->sortDataByColumns($data, $sortColumn, $sortDirection);
     }
 
     public function sortDataBy2Columns(&$data = [], $sortColumn = "qty", $sortDirection = SORT_DESC, $sortColumn2 = "qty", $sortDirection2 = SORT_DESC)
     {
-        array_multisort(array_column($data, $sortColumn), $sortDirection, array_column($data, $sortColumn2), $sortDirection2, $data);
+        $this->sortDataByColumns($data, $sortColumn, $sortDirection, $sortColumn2, $sortDirection2);
+    }
+
+    public function sortDataByColumns(&$data = [], ...$args)
+    {
+        $params = [];
+        $is_empty = false;
+
+        foreach ($args as $arg) {
+            if (is_string($arg)) {
+                $col = array_column($data, $arg);
+                if (count($col) > 0) {
+                    $params[] = array_column($data, $arg);
+                    $is_empty = false;
+                } else {
+                    $is_empty = true;
+                }
+            } else {
+                if (!$is_empty) $params[] = $arg;
+            }
+        }
+
+        if (!empty($params)) {
+            $params[] = &$data;
+            call_user_func_array('array_multisort', $params);
+            $data = array_pop($params);
+        }
     }
 }
