@@ -64,7 +64,7 @@ abstract class AbstractHelper extends \Magento\Framework\App\Helper\AbstractHelp
                     $col = array_column($data, $arg);
                     switch (count($col) > 0) {
                         case true:
-                            $params[] = array_column($data, $arg);
+                            $params[] = $col;
                             $is_empty = false;
                             break;
 
