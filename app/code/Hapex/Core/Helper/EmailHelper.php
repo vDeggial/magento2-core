@@ -44,7 +44,7 @@ class EmailHelper extends BaseHelper
             $this->inlineTranslation->resume();
 
             return true;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             return false;
         }

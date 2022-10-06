@@ -20,7 +20,7 @@ class OrderGridHelper extends BaseHelper
         $fullName = null;
         try {
             $fullName = $this->getOrderGridFieldValue($orderId, "billing_name");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $fullName = null;
         } finally {
@@ -34,7 +34,7 @@ class OrderGridHelper extends BaseHelper
         try {
             $fullName = trim($this->getShippingName($orderId));
             if (empty($fullName) || strpos($fullName, ' ') === false) $fullName = trim($this->getBillingName($orderId));
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $fullName = null;
         } finally {
@@ -47,7 +47,7 @@ class OrderGridHelper extends BaseHelper
         $email = null;
         try {
             $email = $this->getOrderGridFieldValue($orderId, "customer_email");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $email = null;
         } finally {
@@ -60,7 +60,7 @@ class OrderGridHelper extends BaseHelper
         $fullName = null;
         try {
             $fullName = $this->getOrderGridFieldValue($orderId, "shipping_name");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $fullName = null;
         } finally {
@@ -73,7 +73,7 @@ class OrderGridHelper extends BaseHelper
         try {
             $sql = "SELECT $fieldName FROM " . $this->tableOrderGrid . " where entity_id = $orderId";
             $result = $this->helperDb->sqlQueryFetchOne($sql);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $result = null;
         } finally {

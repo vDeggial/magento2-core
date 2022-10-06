@@ -48,7 +48,7 @@ class UrlHelper extends AbstractHelper
                 $remoteUrl = "https://$host$remoteUrl";
             }
             $exists = $this->get($remoteUrl)->getStatus() === 200;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $exists = false;
         } finally {
@@ -67,7 +67,7 @@ class UrlHelper extends AbstractHelper
             ];
             $this->curl->setOptions($options);
             $this->curl->get($url);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
         } finally {
             return $this->curl;
@@ -85,7 +85,7 @@ class UrlHelper extends AbstractHelper
             $this->curl->setOptions($options);
             $this->curl->setHeaders($headers);
             $this->curl->post($url, $data);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
         } finally {
             return $this->curl;

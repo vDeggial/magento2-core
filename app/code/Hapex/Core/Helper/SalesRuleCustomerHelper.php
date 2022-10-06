@@ -20,7 +20,7 @@ class SalesRuleCustomerHelper extends BaseHelper
         $uses = 0;
         try {
             $uses = (int) $this->getRuleCustomerFieldValue($ruleId, $customerId, "times_used");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $uses = 0;
         } finally {
@@ -33,7 +33,7 @@ class SalesRuleCustomerHelper extends BaseHelper
         try {
             $sql = "SELECT $fieldName FROM " . $this->tableRuleCustomer . " WHERE rule_id = $ruleId and customer_id = $customerId";
             $result = $this->helperDb->sqlQueryFetchOne($sql);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $result = null;
         } finally {

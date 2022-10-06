@@ -29,7 +29,7 @@ class EavHelper extends DbHelper
             $sql = "SELECT attribute_id from " . $this->tableAttribute . " WHERE entity_type_id = $attributeTypeId AND attribute_code LIKE '$attributeCode'";
             $result = (int) $this->sqlQueryFetchOne($sql);
             $attributeId = $result;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $attributeId = 0;
         } finally {
@@ -45,7 +45,7 @@ class EavHelper extends DbHelper
             $sql = "SELECT attribute_set_id from " . $this->tableAttributeSet . " WHERE entity_type_id = $attributeTypeId AND attribute_set_name LIKE '$setName'";
             $result = (int) $this->sqlQueryFetchOne($sql);
             $attributeSetId = $result;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $attributeSetId = 0;
         } finally {
@@ -59,7 +59,7 @@ class EavHelper extends DbHelper
         try {
             $tableName = $this->getSqlTableName($this->getEntityTable($attributeType));
             $this->setTableName($tableName, $backendType);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $tableName = null;
         } finally {
@@ -83,7 +83,7 @@ class EavHelper extends DbHelper
             $sql = "SELECT backend_type from " . $this->tableAttribute . " WHERE entity_type_id = $attributeTypeId AND attribute_id = $attributeId";
             $result =  $this->sqlQueryFetchOne($sql);
             $backendType = $result;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $backendType = null;
         } finally {
@@ -106,7 +106,7 @@ class EavHelper extends DbHelper
                     $value = $this->getEntityFieldValue($attributeType, $attributeCode, $entityId);
                     break;
             }
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $value = null;
         } finally {
@@ -127,7 +127,7 @@ class EavHelper extends DbHelper
             $sql = "SELECT $fieldName FROM $tableName WHERE entity_id = $entityId";
             $result = $this->sqlQueryFetchOne($sql);
             $value = $result;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $value = null;
         } finally {
@@ -142,7 +142,7 @@ class EavHelper extends DbHelper
             $sql = "SELECT value from " . $this->tableAttributeOption . " WHERE option_id = $optionId";
             $result = $this->sqlQueryFetchOne($sql);
             $optionValue = $result;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $optionValue = null;
         } finally {
@@ -157,7 +157,7 @@ class EavHelper extends DbHelper
             $sql = "SELECT entity_type_id FROM " . $this->tableEntityType . " WHERE entity_type_code LIKE '$typeCode'";
             $result = (int) $this->sqlQueryFetchOne($sql);
             $typeId = $result;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $typeId = 0;
         } finally {
@@ -172,7 +172,7 @@ class EavHelper extends DbHelper
             $sql = "SELECT entity_type_code FROM " . $this->tableEntityType . " WHERE entity_type_id = $typeId";
             $result = $this->sqlQueryFetchOne($sql);
             $typeCode = $result;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $typeCode = null;
         } finally {
@@ -188,7 +188,7 @@ class EavHelper extends DbHelper
             $sql = "SELECT entity_table FROM " . $this->tableEntityType . " WHERE entity_type_id = $typeId";
             $result =  $this->sqlQueryFetchOne($sql);
             $entityTable = $result;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $entityTable = null;
         } finally {
@@ -204,7 +204,7 @@ class EavHelper extends DbHelper
             $sql = "SELECT value FROM $tableName WHERE attribute_id = $attributeId AND entity_id = $entityId";
             $result = $this->sqlQueryFetchOne($sql);
             $value = $result;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $value = null;
         } finally {

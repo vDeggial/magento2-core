@@ -53,7 +53,7 @@ class BaseHelper extends AbstractHelper
     {
         try {
             return parent::sendOutput($output);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             return false;
         }
@@ -63,7 +63,7 @@ class BaseHelper extends AbstractHelper
     {
         try {
             $this->sendOutput($this->getBlockHtml($blockId));
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
         }
     }
@@ -75,7 +75,7 @@ class BaseHelper extends AbstractHelper
             $block = $this->generateClassObject("Magento\Cms\Block\Block");
             $block->setBlockId($blockId);
             $html = $block->toHtml();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $html = null;
         } finally {
@@ -88,7 +88,7 @@ class BaseHelper extends AbstractHelper
         $object = null;
         try {
             $object = parent::generateClassObject($class);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
         } finally {
             return $object;

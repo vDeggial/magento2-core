@@ -20,7 +20,7 @@ class SalesRuleCouponHelper extends BaseHelper
         $code = null;
         try {
             $code = $this->getRuleCouponFieldValue($ruleId, "code");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $code = null;
         } finally {
@@ -33,7 +33,7 @@ class SalesRuleCouponHelper extends BaseHelper
         $date = null;
         try {
             $date = $this->getRuleCouponFieldValue($ruleId, "expiration_date");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $date = null;
         } finally {
@@ -46,7 +46,7 @@ class SalesRuleCouponHelper extends BaseHelper
         $isPrimary = 0;
         try {
             $isPrimary = (int) $this->getRuleCouponFieldValue($ruleId, "is_primary");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $isPrimary = 0;
         } finally {
@@ -59,7 +59,7 @@ class SalesRuleCouponHelper extends BaseHelper
         $uses = 0;
         try {
             $uses = (int) $this->getRuleCouponFieldValue($ruleId, "times_used");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $uses = 0;
         } finally {
@@ -72,7 +72,7 @@ class SalesRuleCouponHelper extends BaseHelper
         $type = 0;
         try {
             $type = (int) $this->getRuleCouponFieldValue($ruleId, "type");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $type = 0;
         } finally {
@@ -85,7 +85,7 @@ class SalesRuleCouponHelper extends BaseHelper
         $uses = 0;
         try {
             $uses = (int) $this->getRuleCouponFieldValue($ruleId, "usage_limit");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $uses = 0;
         } finally {
@@ -98,7 +98,7 @@ class SalesRuleCouponHelper extends BaseHelper
         $uses = 0;
         try {
             $uses = (int) $this->getRuleCouponFieldValue($ruleId, "usage_per_customer");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $uses = 0;
         } finally {
@@ -111,7 +111,7 @@ class SalesRuleCouponHelper extends BaseHelper
         try {
             $sql = "SELECT $fieldName FROM " . $this->tableRuleCoupon . " WHERE rule_id = $ruleId";
             $result = $this->helperDb->sqlQueryFetchOne($sql);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $result = null;
         } finally {

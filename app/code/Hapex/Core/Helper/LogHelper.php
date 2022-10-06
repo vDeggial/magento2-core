@@ -22,7 +22,7 @@ class LogHelper extends AbstractHelper
             $currentDate = $this->objectManager->get(DateHelper::class)->getCurrentDate()->format("Y-m-d h:i:s A T");
             $filePath = $this->objectManager->get(FileHelper::class)->getRootPath() . "/var/log/$filename.log";
             return error_log("[$currentDate] " . $message . "\n", 3, $filePath);;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return false;
         }
     }

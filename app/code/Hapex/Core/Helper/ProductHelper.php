@@ -54,7 +54,7 @@ class ProductHelper extends BaseHelper
         $productAttributeSet = 0;
         try {
             $productAttributeSet = (int) $this->helperEav->getProductEntityFieldValue($productId, "attribute_set_id");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $productAttributeSet = 0;
         } finally {
@@ -89,7 +89,7 @@ class ProductHelper extends BaseHelper
         $productDate = null;
         try {
             $productDate =  $this->helperEav->getProductEntityFieldValue($productId, "created_at");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $productDate = null;
         } finally {
@@ -102,7 +102,7 @@ class ProductHelper extends BaseHelper
         $productDate = null;
         try {
             $productDate =  $this->helperEav->getProductEntityFieldValue($productId, "updated_at");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $productDate = null;
         } finally {
@@ -115,7 +115,7 @@ class ProductHelper extends BaseHelper
         $description = null;
         try {
             $description = $this->helperEav->getProductAttributeValue($productId, "description");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $description = null;
         } finally {
@@ -128,7 +128,7 @@ class ProductHelper extends BaseHelper
         $description = null;
         try {
             $description = $this->helperEav->getProductAttributeValue($productId, "short_description");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $description = null;
         } finally {
@@ -143,7 +143,7 @@ class ProductHelper extends BaseHelper
             $sql = "SELECT entity_id FROM " . $this->tableProduct . " WHERE sku LIKE '$productSku'";
             $result = $this->helperDb->sqlQueryFetchOne($sql);
             $productId = (int) $result;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $productId = 0;
         } finally {
@@ -157,7 +157,7 @@ class ProductHelper extends BaseHelper
         try {
             $imageFilename = $this->getImageFilename($productId);
             $image = $this->getImageUrl($productId, $imageFilename, $width);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $image = null;
         } finally {
@@ -173,7 +173,7 @@ class ProductHelper extends BaseHelper
             array_walk($images, function ($imageFilename) use (&$imageList, &$productId, &$width) {
                 array_push($imageList, $this->getImageUrl($productId, $imageFilename, $width));
             });
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $imageList = [];
         } finally {
@@ -186,7 +186,7 @@ class ProductHelper extends BaseHelper
         $cost = 0;
         try {
             $cost = (float) $this->helperEav->getProductAttributeValue($productId, "cost");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $cost = 0;
         } finally {
@@ -199,7 +199,7 @@ class ProductHelper extends BaseHelper
         $price = 0;
         try {
             $price = (float) $this->helperEav->getProductAttributeValue($productId, "price");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $price = 0;
         } finally {
@@ -212,7 +212,7 @@ class ProductHelper extends BaseHelper
         $name = null;
         try {
             $name = $this->helperEav->getProductAttributeValue($productId, "name");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $name = null;
         } finally {
@@ -225,7 +225,7 @@ class ProductHelper extends BaseHelper
         $productSku = null;
         try {
             $productSku =  $this->helperEav->getProductEntityFieldValue($productId, "sku");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $productSku = null;
         } finally {
@@ -238,7 +238,7 @@ class ProductHelper extends BaseHelper
         $status = 0;
         try {
             $status = (int) $this->helperEav->getProductAttributeValue($productId, "status");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $status = 0;
         } finally {
@@ -253,7 +253,7 @@ class ProductHelper extends BaseHelper
             $sql = "SELECT stock.qty as qty FROM " . $this->tableProductStock . " stock join " . $this->tableProduct . " product on stock.product_id = product.entity_id where product.entity_id = $productId";
             $result = $this->helperDb->sqlQueryFetchOne($sql);
             $qty = (int) $result;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $qty = -1;
         } finally {
@@ -266,7 +266,7 @@ class ProductHelper extends BaseHelper
         $productType = null;
         try {
             $productType =  $this->helperEav->getProductEntityFieldValue($productId, "type_id");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $productType = null;
         } finally {
@@ -280,7 +280,7 @@ class ProductHelper extends BaseHelper
         try {
             $urlKey = $this->getUrlKey($productId);
             $productUrl = $this->urlFramework->getUrl($urlKey);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $productUrl = null;
         } finally {
@@ -293,7 +293,7 @@ class ProductHelper extends BaseHelper
         $urlKey = null;
         try {
             $urlKey = $this->helperEav->getProductAttributeValue($productId, "url_key");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $urlKey = null;
         } finally {
@@ -313,7 +313,7 @@ class ProductHelper extends BaseHelper
             $sql = "SELECT * FROM " . $this->tableProduct . " product where product.entity_id = $productId";
             $result = $this->helperDb->sqlQueryFetchOne($sql);
             $exists = $result && !empty($result);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $exists = false;
         } finally {
@@ -326,7 +326,7 @@ class ProductHelper extends BaseHelper
         $product = null;
         try {
             $product = $this->productExists($productId) ? $this->objectManager->create('Magento\Catalog\Model\Product')->load($productId) : null;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $product = null;
         } finally {
@@ -339,7 +339,7 @@ class ProductHelper extends BaseHelper
         $image = null;
         try {
             $image = $this->helperEav->getProductAttributeValue($productId, "image");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $image = null;
         } finally {
@@ -356,7 +356,7 @@ class ProductHelper extends BaseHelper
             array_walk($result, function ($entry) use (&$images) {
                 array_push($images, $entry["fileName"]);
             });
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $images = [];
         } finally {
@@ -370,7 +370,7 @@ class ProductHelper extends BaseHelper
         try {
             $product = $this->getById($productId);
             $imageUrl = $this->imageHelper->init($product, 'product_page_image_large')->keepAspectRatio(true)->setImageFile($imageFilename)->resize($width, null)->getUrl();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $imageUrl = null;
         } finally {

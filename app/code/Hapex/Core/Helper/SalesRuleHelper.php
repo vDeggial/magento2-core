@@ -29,7 +29,7 @@ class SalesRuleHelper extends BaseHelper
         try {
             $result = $this->getRuleFieldValue($ruleId, "rule_id");
             $exists = $result && !empty($result);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $exists = false;
         } finally {
@@ -42,7 +42,7 @@ class SalesRuleHelper extends BaseHelper
         $action = null;
         try {
             $action = $this->getRuleFieldValue($ruleId, "simple_action");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $action = null;
         } finally {
@@ -55,7 +55,7 @@ class SalesRuleHelper extends BaseHelper
         $applyToShipping = 0;
         try {
             $applyToShipping = (int) $this->getRuleFieldValue($ruleId, "apply_to_shipping");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $applyToShipping = 0;
         } finally {
@@ -68,7 +68,7 @@ class SalesRuleHelper extends BaseHelper
         $type = 0;
         try {
             $type = (int) $this->getRuleFieldValue($ruleId, "coupon_type");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $type = 0;
         } finally {
@@ -81,7 +81,7 @@ class SalesRuleHelper extends BaseHelper
         $description = null;
         try {
             $description = $this->getRuleFieldValue($ruleId, "description");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $description = null;
         } finally {
@@ -94,7 +94,7 @@ class SalesRuleHelper extends BaseHelper
         $amount = 0;
         try {
             $amount = (int) $this->getRuleFieldValue($ruleId, "discount_amount");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $amount = 0;
         } finally {
@@ -107,7 +107,7 @@ class SalesRuleHelper extends BaseHelper
         $quantity = 0;
         try {
             $quantity = (int) $this->getRuleFieldValue($ruleId, "discount_qty");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $quantity = 0;
         } finally {
@@ -120,7 +120,7 @@ class SalesRuleHelper extends BaseHelper
         $step = 0;
         try {
             $step = (int) $this->getRuleFieldValue($ruleId, "discount_step");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $step = 0;
         } finally {
@@ -133,7 +133,7 @@ class SalesRuleHelper extends BaseHelper
         $name = null;
         try {
             $name = $this->getRuleFieldValue($ruleId, "name");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $name = null;
         } finally {
@@ -146,7 +146,7 @@ class SalesRuleHelper extends BaseHelper
         $date = null;
         try {
             $date = $this->getRuleFieldValue($ruleId, "from_date");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $date = null;
         } finally {
@@ -159,7 +159,7 @@ class SalesRuleHelper extends BaseHelper
         $date = null;
         try {
             $date = $this->getRuleFieldValue($ruleId, "to_date");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $date = null;
         } finally {
@@ -172,7 +172,7 @@ class SalesRuleHelper extends BaseHelper
         $isAdvanced = 0;
         try {
             $isAdvanced = (int) $this->getRuleFieldValue($ruleId, "is_advanced");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $isAdvanced = 0;
         } finally {
@@ -185,7 +185,7 @@ class SalesRuleHelper extends BaseHelper
         $isRss = 0;
         try {
             $isRss = (int) $this->getRuleFieldValue($ruleId, "is_rss");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $isRss = 0;
         } finally {
@@ -198,7 +198,7 @@ class SalesRuleHelper extends BaseHelper
         $order = 0;
         try {
             $order = (int) $this->getRuleFieldValue($ruleId, "sort_order");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $order = 0;
         } finally {
@@ -211,7 +211,7 @@ class SalesRuleHelper extends BaseHelper
         $status = 0;
         try {
             $status = (int) $this->getRuleFieldValue($ruleId, "is_active");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $status = 0;
         } finally {
@@ -224,7 +224,7 @@ class SalesRuleHelper extends BaseHelper
         $stopProcessing = 0;
         try {
             $stopProcessing = (int) $this->getRuleFieldValue($ruleId, "stop_rules_processing");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $stopProcessing = 0;
         } finally {
@@ -237,7 +237,7 @@ class SalesRuleHelper extends BaseHelper
         $uses = 0;
         try {
             $uses = (int) $this->getRuleFieldValue($ruleId, "times_used");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $uses = 0;
         } finally {
@@ -250,7 +250,7 @@ class SalesRuleHelper extends BaseHelper
         $uses = 0;
         try {
             $uses = (int) $this->getRuleFieldValue($ruleId, "uses_per_coupon");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $uses = 0;
         } finally {
@@ -263,7 +263,7 @@ class SalesRuleHelper extends BaseHelper
         $uses = 0;
         try {
             $uses = (int) $this->getRuleFieldValue($ruleId, "uses_per_customer");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $uses = 0;
         } finally {
@@ -276,7 +276,7 @@ class SalesRuleHelper extends BaseHelper
         $isValid = false;
         try {
             $isValid = $this->helperDate->isCurrentDateWithinRange($this->getRuleFromDate($ruleId), $this->getRuleToDate($ruleId));
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog($e->getMessage());
             $isValid = false;
         } finally {
@@ -294,7 +294,7 @@ class SalesRuleHelper extends BaseHelper
         try {
             $sql = "SELECT $fieldName FROM " . $this->tableRule . " WHERE rule_id = $ruleId";
             $result = $this->helperDb->sqlQueryFetchOne($sql);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $result = null;
         } finally {
@@ -309,7 +309,7 @@ class SalesRuleHelper extends BaseHelper
             $sql = "UPDATE " . $this->tableRule . " SET $fieldName = $value where rule_id = $ruleId";
             $result = $this->helperDb->sqlQuery($sql);
             $isSet = isset($result);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog($e->getMessage());
             $isSet = false;
         } finally {

@@ -45,7 +45,7 @@ class CreditMemoHelper extends BaseHelper
         $date = null;
         try {
             $date =  $this->getMemoFieldValue($memoId, "created_at");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $date = null;
         } finally {
@@ -58,7 +58,7 @@ class CreditMemoHelper extends BaseHelper
         $date = null;
         try {
             $date =  $this->getMemoFieldValue($memoId, "updated_at");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $date = null;
         } finally {
@@ -72,7 +72,7 @@ class CreditMemoHelper extends BaseHelper
         try {
             $orderId = $this->getOrderId($memoId);
             $name = $this->helperOrderGrid->getBillingName($orderId);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $name = null;
         } finally {
@@ -86,7 +86,7 @@ class CreditMemoHelper extends BaseHelper
         try {
             $orderId = $this->getOrderId($memoId);
             $email = $this->helperOrderGrid->getCustomerEmail($orderId);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $email = null;
         } finally {
@@ -99,7 +99,7 @@ class CreditMemoHelper extends BaseHelper
         $note = null;
         try {
             $note = $this->getMemoFieldValue($memoId, "customer_note");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $note = null;
         } finally {
@@ -112,7 +112,7 @@ class CreditMemoHelper extends BaseHelper
         $amount = 0;
         try {
             $amount = $this->getMemoFieldValue($memoId, "discount_amount");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $amount = 0;
         } finally {
@@ -125,7 +125,7 @@ class CreditMemoHelper extends BaseHelper
         $description = null;
         try {
             $description = $this->getMemoFieldValue($memoId, "discount_description");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $description = null;
         } finally {
@@ -138,7 +138,7 @@ class CreditMemoHelper extends BaseHelper
         $total = 0;
         try {
             $total = $this->getMemoFieldValue($memoId, "grand_total");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $total = 0;
         } finally {
@@ -151,7 +151,7 @@ class CreditMemoHelper extends BaseHelper
         $incrementId = null;
         try {
             $incrementId = $this->getMemoFieldValue($memoId, "increment_id");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $incrementId = null;
         } finally {
@@ -164,7 +164,7 @@ class CreditMemoHelper extends BaseHelper
         $orderId = 0;
         try {
             $orderId = $this->getMemoFieldValue($memoId, "order_id");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $orderId = 0;
         } finally {
@@ -178,7 +178,7 @@ class CreditMemoHelper extends BaseHelper
         try {
             $orderid = $this->getOrderId($memoId);
             $incrementId = $this->helperOrder->getIncrementId($orderid);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $incrementId = 0;
         } finally {
@@ -191,7 +191,7 @@ class CreditMemoHelper extends BaseHelper
         $state = 0;
         try {
             $state = $this->getMemoFieldValue($memoId, "state");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $state = 0;
         } finally {
@@ -204,7 +204,7 @@ class CreditMemoHelper extends BaseHelper
         $status = 0;
         try {
             $status = $this->getMemoFieldValue($memoId, "creditmemo_status");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $status = 0;
         } finally {
@@ -217,7 +217,7 @@ class CreditMemoHelper extends BaseHelper
         $total = 0;
         try {
             $total = $this->getMemoFieldValue($memoId, "subtotal");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $total = 0;
         } finally {
@@ -232,7 +232,7 @@ class CreditMemoHelper extends BaseHelper
             $sql = "SELECT * FROM " . $this->tableCreditMemo . " memo where memo.entity_id = $memoId";
             $result = $this->helperDb->sqlQueryFetchOne($sql);
             $exists = $result && !empty($result);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $exists = false;
         } finally {
@@ -245,7 +245,7 @@ class CreditMemoHelper extends BaseHelper
         $adjustment = 0;
         try {
             $adjustment = $memo->getAdjustment();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $adjustment = 0;
         } finally {
@@ -258,7 +258,7 @@ class CreditMemoHelper extends BaseHelper
         $name = null;
         try {
             $name = $memo->getOrder()->getBillingAddress()->getName();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $name = null;
         } finally {
@@ -271,7 +271,7 @@ class CreditMemoHelper extends BaseHelper
         $email = null;
         try {
             $email = $memo->getOrder()->getBillingAddress()->getEmail();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $email = null;
         } finally {
@@ -284,7 +284,7 @@ class CreditMemoHelper extends BaseHelper
         $amount = 0;
         try {
             $amount = $memo->getDiscountAmount();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $amount = 0;
         } finally {
@@ -297,7 +297,7 @@ class CreditMemoHelper extends BaseHelper
         $total = 0;
         try {
             $total = $memo->getGrandTotal();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $total = 0;
         } finally {
@@ -310,7 +310,7 @@ class CreditMemoHelper extends BaseHelper
         $order = null;
         try {
             $order = $memo->getOrder();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $order = null;
         } finally {
@@ -324,7 +324,7 @@ class CreditMemoHelper extends BaseHelper
         try {
             $order = $this->getMemoOrder($memo);
             $incrementId = isset($order) ? $order->getIncrementId() : 0;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $incrementId = 0;
         } finally {
@@ -337,7 +337,7 @@ class CreditMemoHelper extends BaseHelper
         $total = 0;
         try {
             $total = $memo->getSubtotal();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $total = 0;
         } finally {
@@ -350,7 +350,7 @@ class CreditMemoHelper extends BaseHelper
         $amount = 0;
         try {
             $amount = $memo->getTaxAmount();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $amount = 0;
         } finally {
@@ -364,7 +364,7 @@ class CreditMemoHelper extends BaseHelper
         $memo = null;
         try {
             $memo = $this->memoExists($memoId) ? $this->repository->get($memoId) : null;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $memo = null;
         } finally {
@@ -377,7 +377,7 @@ class CreditMemoHelper extends BaseHelper
         try {
             $sql = "SELECT $fieldName FROM " . $this->tableCreditMemo . " where entity_id = $memoId";
             $result = $this->helperDb->sqlQueryFetchOne($sql);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $result = null;
         } finally {

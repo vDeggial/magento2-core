@@ -25,7 +25,7 @@ class DbHelper extends AbstractHelper
         try {
             $tableName = $this->resource->getTableName($name);
             $tableExists = $this->resource->getConnection()->isTableExists($tableName);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $tableName = null;
             $tableExists = false;
@@ -39,7 +39,7 @@ class DbHelper extends AbstractHelper
         $result = null;
         try {
             $result = $this->resource->getConnection()->query($sql);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $result = null;
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
         } finally {
@@ -53,7 +53,7 @@ class DbHelper extends AbstractHelper
         $result = null;
         try {
             $result = $this->resource->getConnection()->fetchAll($sql);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $result = null;
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
         } finally {
@@ -66,7 +66,7 @@ class DbHelper extends AbstractHelper
         $result = null;
         try {
             $result = $this->resource->getConnection()->fetchOne($sql);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $result = null;
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
         } finally {
@@ -79,7 +79,7 @@ class DbHelper extends AbstractHelper
         $result = null;
         try {
             $result = $this->resource->getConnection()->fetchRow($sql);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $result = null;
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
         } finally {

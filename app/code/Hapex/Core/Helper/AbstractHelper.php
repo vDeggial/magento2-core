@@ -26,7 +26,7 @@ abstract class AbstractHelper extends \Magento\Framework\App\Helper\AbstractHelp
         try {
             print_r($output);
             return true;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return false;
         }
     }
@@ -36,7 +36,7 @@ abstract class AbstractHelper extends \Magento\Framework\App\Helper\AbstractHelp
         $object = $this->objectManager->create(DataObject::class);
         try {
             $object = $this->objectManager->get($class);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $object = $this->objectManager->create(DataObject::class);
         } finally {
             return $object;

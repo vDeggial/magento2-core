@@ -26,7 +26,7 @@ class OrderAddressHelper extends BaseHelper
         $address = $this->address;
         try {
             $address = $order->getBillingAddress();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $address = $this->address;
         } finally {
@@ -39,7 +39,7 @@ class OrderAddressHelper extends BaseHelper
         $address = $this->address;
         try {
             $address = $order->getShippingAddress();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $address = $this->address;
         } finally {
@@ -53,7 +53,7 @@ class OrderAddressHelper extends BaseHelper
         try {
             $address = $this->getOrderShippingAddress($order);
             $customerName = isset($address) && !empty(trim($address->getName())) && strpos(trim($address->getName()), ' ') !== false ? trim($address->getName()) : trim($this->getOrderBillingAddress($order)->getName());
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $customerName = null;
         } finally {
@@ -66,7 +66,7 @@ class OrderAddressHelper extends BaseHelper
         $customerEmail = null;
         try {
             $customerEmail = $this->getOrderBillingAddress($order)->getEmail();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $customerEmail = null;
         } finally {
@@ -87,7 +87,7 @@ class OrderAddressHelper extends BaseHelper
                 $info["postCode"] = $address->getPostcode();
                 $info["country"] = $this->getCountry($address->getCountryId());
             }
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $info = null;
         } finally {
@@ -103,7 +103,7 @@ class OrderAddressHelper extends BaseHelper
                 $country = $this->countryFactory->loadByCode($countryId);
                 $name = $country->getName();
             }
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $name = null;
         } finally {

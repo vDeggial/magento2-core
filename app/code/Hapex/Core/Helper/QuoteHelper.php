@@ -31,7 +31,7 @@ class QuoteHelper extends BaseHelper
             $sql = "SELECT * FROM " . $this->tableQuote . " quote where quote.entity_id = $quoteId";
             $result = $this->helperDb->sqlQueryFetchOne($sql);
             $exists = $result && !empty($result);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $exists = false;
         } finally {
@@ -44,7 +44,7 @@ class QuoteHelper extends BaseHelper
         $quote = null;
         try {
             $quote = $this->quoteExists($quoteId) ? $this->quoteFactory->load($quoteId) : null;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $quote = null;
         } finally {
