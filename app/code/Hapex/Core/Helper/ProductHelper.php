@@ -305,6 +305,11 @@ class ProductHelper extends BaseHelper
     {
         return $this->getAttributeSet($productId) == $this->helperEav->getAttributeSetId($name, "catalog_product");
     }
+    
+    public function isProductAttributeSetNameLIke($productId = 0, $name = null)
+    {
+        return $this->getAttributeSet($productId) == $this->helperEav->getAttributeSetIdLike($name, "catalog_product");
+    }
 
     public function productExists($productId = 0)
     {

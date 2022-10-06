@@ -52,6 +52,22 @@ class EavHelper extends DbHelper
             return $attributeSetId;
         }
     }
+    
+    public function getAttributeSetIdLike($setName = null, $attributeType = null)
+    {
+        $attributeSetId = 0;
+        try {
+            $attributeTypeId = $this->getEntityTypeId($attributeType);
+            $sql = "SELECT attribute_set_id from " . $this->tableAttributeSet . " WHERE entity_type_id = $attributeTypeId AND attribute_set_name LIKE '%$setName%'";
+            $result = (int) $this->sqlQueryFetchOne($sql);
+            $attributeSetId = $result;
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $attributeSetId = 0;
+        } finally {
+            return $attributeSetId;
+        }
+    }
 
     public function getAttributeTable($attributeType = null, $backendType = null)
     {
