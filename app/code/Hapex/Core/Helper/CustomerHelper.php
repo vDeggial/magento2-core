@@ -51,8 +51,8 @@ class CustomerHelper extends BaseHelper
         try {
             switch ($this->customerExists($customerId)) {
                 case true:
-                    $tableOrders = $this->helperDb->getSqlTableName('mg2e_sales_order');
-                    $tableItems = $this->helperDb->getSqlTableName('mg2e_sales_order_item');
+                    $tableOrders = $this->helperDb->getSqlTableName('sales_order');
+                    $tableItems = $this->helperDb->getSqlTableName('sales_order_item');
                     $sql = "SELECT * FROM `$tableOrders` orders join `$tableItems` items on orders.entity_id = items.order_id where orders.customer_id = $customerId and items.sku = '$productSku'";
                     $result = $this->helperDb->sqlQueryFetchAll($sql);
                     if ($result) {
