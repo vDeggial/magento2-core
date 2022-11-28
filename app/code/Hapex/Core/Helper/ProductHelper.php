@@ -12,6 +12,7 @@ class ProductHelper extends BaseHelper
 {
     protected $tableProduct;
     protected $tableProductStock;
+    protected $tableProductCategory;
     protected $tableGallery;
     protected $tableGalleryValue;
     protected $tableGalleryToEntity;
@@ -34,6 +35,7 @@ class ProductHelper extends BaseHelper
         $this->urlFramework = $urlFramework;
         $this->tableProduct = $this->helperDb->getSqlTableName('catalog_product_entity');
         $this->tableProductStock = $this->helperDb->getSqlTableName('cataloginventory_stock_item');
+        $this->tableProductCategory = $this->helperDb->getSqlTableName('catalog_category_product');
         $this->tableGallery = $this->helperDb->getSqlTableName("catalog_product_entity_media_gallery");
         $this->tableGalleryValue = $this->helperDb->getSqlTableName("catalog_product_entity_media_gallery_value");
         $this->tableGalleryToEntity = $this->helperDb->getSqlTableName("catalog_product_entity_media_gallery_value_to_entity");
@@ -82,6 +84,27 @@ class ProductHelper extends BaseHelper
         }
 
         return $products;
+    }
+
+    public function getProductCategories($productId = 0)
+    {
+        $categories = [];
+        try {
+            if ($productId > 0 && $this->productExists($productId)) {
+                $sql = "SELECT category_id from " . $this->tableProductCategory . " WHERE product_id = $productId";
+                $result = $this->helperDb->sqlQueryFetchAll($sql);
+                if ($result) {
+                    foreach (array_column($result, "category_id") as $entry) {
+                        array_push($categories, $entry);
+                    }
+                }
+            }
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $categories = [];
+        } finally {
+            return $categories;
+        }
     }
 
     public function getCreatedDate($productId = 0)
@@ -305,8 +328,8 @@ class ProductHelper extends BaseHelper
     {
         return $this->getAttributeSet($productId) == $this->helperEav->getAttributeSetId($name, "catalog_product");
     }
-    
-    public function isProductAttributeSetNameLIke($productId = 0, $name = null)
+
+    public function isProductAttributeSetNameLike($productId = 0, $name = null)
     {
         return $this->getAttributeSet($productId) == $this->helperEav->getAttributeSetIdLike($name, "catalog_product");
     }
