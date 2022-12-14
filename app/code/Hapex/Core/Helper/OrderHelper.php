@@ -48,7 +48,7 @@ class OrderHelper extends BaseHelper
             return $result;
         }
     }
-    
+
     public function getOrderIdsBetweenDates($dateFrom = "2022-07-01", $dateTo = null)
     {
         $dateFrom = isset($dateFrom) ? "'$dateFrom'" : "2022-07-01";
@@ -162,6 +162,32 @@ class OrderHelper extends BaseHelper
         $amount = 0;
         try {
             $amount = $this->getOrderFieldValue($orderId, "discount_amount");
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $amount = 0;
+        } finally {
+            return $amount;
+        }
+    }
+
+    public function getGiftCardAmount($orderId = 0)
+    {
+        $amount = 0;
+        try {
+            $amount = (int) $this->getOrderFieldValue($orderId, "gift_card_amount");
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $amount = 0;
+        } finally {
+            return $amount;
+        }
+    }
+
+    public function getGiftCreditAmount($orderId = 0)
+    {
+        $amount = 0;
+        try {
+            $amount = (int) $this->getOrderFieldValue($orderId, "gift_credit_amount");
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $amount = 0;
