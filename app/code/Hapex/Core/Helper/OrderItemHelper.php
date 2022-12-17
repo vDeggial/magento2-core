@@ -63,6 +63,22 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
+    public function getItemsFromOrder($orderId = 0)
+    {
+        $items = [];
+        try {
+            if ($orderId > 0) {
+                $sql = "SELECT * FROM " . $this->tableOrderItem . " WHERE order_id in ($orderId)";
+                $items = $this->helperDb->sqlQueryFetchAll($sql);
+            }
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $items = [];
+        } finally {
+            return $items;
+        }
+    }
+
     public function getItemSkusFromOrders($orderIds = [])
     {
         $ids = [];
