@@ -52,7 +52,7 @@ class EavHelper extends DbHelper
             return $attributeSetId;
         }
     }
-    
+
     public function getAttributeSetIdLike($setName = null, $attributeType = null)
     {
         $attributeSetId = 0;
@@ -66,6 +66,22 @@ class EavHelper extends DbHelper
             $attributeSetId = 0;
         } finally {
             return $attributeSetId;
+        }
+    }
+
+    public function getAttributeSetName($id = 0, $attributeType = null)
+    {
+        $attributeSetName = null;
+        try {
+            $attributeTypeId = $this->getEntityTypeId($attributeType);
+            $sql = "SELECT attribute_set_name from " . $this->tableAttributeSet . " WHERE entity_type_id = $attributeTypeId AND attribute_set_id = $id";
+            $result = $this->sqlQueryFetchOne($sql);
+            $attributeSetName = $result;
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $attributeSetName = null;
+        } finally {
+            return $attributeSetName;
         }
     }
 
