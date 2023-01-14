@@ -403,6 +403,22 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
+    public function getItemIdsWithSku($orderId = 0, $productSku = null)
+    {
+        $itemId = [];
+        try {
+            $itemId = $this->getItemFieldValuesBySku($orderId, $productSku, "item_id");
+            if (!empty($itemId) && is_array($itemId)) {
+                $itemId = array_column($itemId, "item_id");
+            }
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $itemId = [];
+        } finally {
+            return $itemId;
+        }
+    }
+
     public function getItemProductId($itemId = 0)
     {
         $productId = 0;
@@ -516,6 +532,19 @@ class OrderItemHelper extends BaseHelper
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $result = null;
+        } finally {
+            return $result;
+        }
+    }
+
+    private function getItemFieldValuesBySku($orderId = 0, $productSku = null, $fieldName = null)
+    {
+        try {
+            $sql = "SELECT $fieldName FROM " . $this->tableOrderItem . " where order_id in($orderId) AND sku in('$productSku')";
+            $result = $this->helperDb->sqlQueryFetchAll($sql);
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $result = [];
         } finally {
             return $result;
         }
