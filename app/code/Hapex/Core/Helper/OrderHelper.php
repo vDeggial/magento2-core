@@ -170,11 +170,24 @@ class OrderHelper extends BaseHelper
         }
     }
 
+    public function getRefundAmount($orderId = 0)
+    {
+        $amount = 0;
+        try {
+            $amount = (float) $this->getOrderFieldValue($orderId, "total_refunded");
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $amount = 0;
+        } finally {
+            return $amount;
+        }
+    }
+
     public function getGiftCardAmount($orderId = 0)
     {
         $amount = 0;
         try {
-            $amount = (int) $this->getOrderFieldValue($orderId, "gift_card_amount");
+            $amount = (float) $this->getOrderFieldValue($orderId, "gift_card_amount");
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $amount = 0;
@@ -187,7 +200,7 @@ class OrderHelper extends BaseHelper
     {
         $amount = 0;
         try {
-            $amount = (int) $this->getOrderFieldValue($orderId, "gift_credit_amount");
+            $amount = (float) $this->getOrderFieldValue($orderId, "gift_credit_amount");
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $amount = 0;
