@@ -12,6 +12,7 @@ class ProductHelper extends BaseHelper
 {
     protected $tableProduct;
     protected $tableProductStock;
+    protected $tableProductStockStatus;
     protected $tableProductCategory;
     protected $tableGallery;
     protected $tableGalleryValue;
@@ -35,6 +36,7 @@ class ProductHelper extends BaseHelper
         $this->urlFramework = $urlFramework;
         $this->tableProduct = $this->helperDb->getSqlTableName('catalog_product_entity');
         $this->tableProductStock = $this->helperDb->getSqlTableName('cataloginventory_stock_item');
+        $this->tableProductStockStatus = $this->helperDb->getSqlTableName('cataloginventory_stock_status');
         $this->tableProductCategory = $this->helperDb->getSqlTableName('catalog_category_product');
         $this->tableGallery = $this->helperDb->getSqlTableName("catalog_product_entity_media_gallery");
         $this->tableGalleryValue = $this->helperDb->getSqlTableName("catalog_product_entity_media_gallery_value");
@@ -274,6 +276,21 @@ class ProductHelper extends BaseHelper
         $qty = 0;
         try {
             $sql = "SELECT stock.qty as qty FROM " . $this->tableProductStock . " stock join " . $this->tableProduct . " product on stock.product_id = product.entity_id where product.entity_id = $productId";
+            $result = $this->helperDb->sqlQueryFetchOne($sql);
+            $qty = (int) $result;
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $qty = -1;
+        } finally {
+            return $qty;
+        }
+    }
+
+    public function getStockQtyStatus($productId = 0)
+    {
+        $qty = 0;
+        try {
+            $sql = "SELECT stock.qty as qty FROM " . $this->tableProductStockStatus . " stock join " . $this->tableProduct . " product on stock.product_id = product.entity_id where product.entity_id = $productId";
             $result = $this->helperDb->sqlQueryFetchOne($sql);
             $qty = (int) $result;
         } catch (\Throwable $e) {
