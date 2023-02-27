@@ -82,7 +82,23 @@ class ProductHelper extends BaseHelper
         if ($result) {
             foreach (array_column($result, "product_id") as $entry) {
                 $sku = $this->getSku($entry);
-                $products[] = $sku;
+                if ($sku) $products[] = $sku;
+            }
+        }
+
+        return $products;
+    }
+
+    public function getSkusListed()
+    {
+        $products = [];
+        $tableStockStatus = $this->helperDb->getSqlTableName('cataloginventory_stock_status');
+        $sql = "SELECT product_id FROM $tableStockStatus";
+        $result = $this->helperDb->sqlQueryFetchAll($sql);
+        if ($result) {
+            foreach (array_column($result, "product_id") as $entry) {
+                $sku = $this->getSku($entry);
+                if ($sku) $products[] = $sku;
             }
         }
 
