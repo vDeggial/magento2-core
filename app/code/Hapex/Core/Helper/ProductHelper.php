@@ -322,6 +322,22 @@ class ProductHelper extends BaseHelper
     {
         $in_stock = 0;
         try {
+            $sql = "SELECT stock.is_in_stock as is_in_stock FROM " . $this->tableProductStock . " stock join " . $this->tableProduct . " product on stock.product_id = product.entity_id where product.entity_id = $productId";
+            $result = $this->helperDb->sqlQueryFetchOne($sql);
+            $in_stock = (int) $result;
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $in_stock = 0;
+        } finally {
+            return $in_stock;
+        }
+    }
+
+
+    public function getStockListedStatus($productId = 0)
+    {
+        $in_stock = 0;
+        try {
             $sql = "SELECT stock.stock_status as stock_status FROM " . $this->tableProductStockStatus . " stock join " . $this->tableProduct . " product on stock.product_id = product.entity_id where product.entity_id = $productId";
             $result = $this->helperDb->sqlQueryFetchOne($sql);
             $in_stock = (int) $result;
