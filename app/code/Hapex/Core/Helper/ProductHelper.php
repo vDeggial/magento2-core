@@ -77,10 +77,10 @@ class ProductHelper extends BaseHelper
         $tableStatus = $this->helperDb->getSqlTableName('catalog_product_entity_int');
         $tableStockStatus = $this->helperDb->getSqlTableName('cataloginventory_stock_status');
         $tableAttribute = $this->helperDb->getSqlTableName("eav_attribute");
-        $sql = "SELECT product_id FROM $tableStockStatus where product_id in (SELECT entity_id FROM $tableStatus WHERE attribute_id = (SELECT attribute_id FROM $tableAttribute WHERE attribute_code LIKE 'status') AND $tableStatus.value = $status)";
+        $sql = "SELECT entity_id FROM $tableStatus WHERE attribute_id = (SELECT attribute_id FROM $tableAttribute WHERE attribute_code LIKE 'status') AND $tableStatus.value = $status";
         $result = $this->helperDb->sqlQueryFetchAll($sql);
         if ($result) {
-            foreach (array_column($result, "product_id") as $entry) {
+            foreach (array_column($result, "entity_id") as $entry) {
                 $sku = $this->getSku($entry);
                 if ($sku) $products[] = $sku;
             }
@@ -303,7 +303,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    public function getStockQtyStatus($productId = 0)
+    public function getStockListedQty($productId = 0)
     {
         $qty = 0;
         try {
@@ -322,7 +322,7 @@ class ProductHelper extends BaseHelper
     {
         $in_stock = 0;
         try {
-            $sql = "SELECT stock.is_in_stock as is_in_stock FROM " . $this->tableProductStock . " stock join " . $this->tableProduct . " product on stock.product_id = product.entity_id where product.entity_id = $productId";
+            $sql = "SELECT stock.stock_status as stock_status FROM " . $this->tableProductStockStatus . " stock join " . $this->tableProduct . " product on stock.product_id = product.entity_id where product.entity_id = $productId";
             $result = $this->helperDb->sqlQueryFetchOne($sql);
             $in_stock = (int) $result;
         } catch (\Throwable $e) {
