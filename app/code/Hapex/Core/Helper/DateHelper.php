@@ -24,14 +24,30 @@ class DateHelper extends AbstractHelper
         return $this->timezone->date();
     }
 
-    public function getDate($date = null)
+    public function getDate($date = null, $adjust = true)
     {
-        return $this->timezone->date(new \DateTime($date));
+        return $adjust ? $this->timezone->date(new \DateTime($date)) : new \DateTime($date);
     }
 
     public function getDateFormatted($date = null, $format = "M j, Y")
     {
         return $this->getDate($date)->format($format);
+    }
+
+    public function adjustDate($date = null, $adjust = "+0 minutes", $format = "Y-m-d H:i:s")
+    {
+        try {
+            $dateAdjusted = is_string($date) ? $this->getDate($date, false) : $date;
+            if (isset($dateAdjusted)) {
+                $dateAdjusted = $dateAdjusted->modify($adjust);
+                $dateAdjusted = $dateAdjusted->format($format);
+            }
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $dateAdjusted = null;
+        } finally {
+            return $dateAdjusted;
+        }
     }
 
     public function isCurrentDateWithinRange($fromDate = null, $toDate = null)
