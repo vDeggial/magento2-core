@@ -29,9 +29,9 @@ class DateHelper extends AbstractHelper
         return $adjust ? $this->timezone->date(new \DateTime($date)) : new \DateTime($date);
     }
 
-    public function getDateFormatted($date = null, $format = "M j, Y")
+    public function getDateFormatted($date = null, $format = "M j, Y", $adjust = true)
     {
-        return $this->getDate($date)->format($format);
+        return $this->getDate($date, $adjust)->format($format);
     }
 
     public function adjustDate($date = null, $adjust = "+0 minutes", $format = "Y-m-d H:i:s")
