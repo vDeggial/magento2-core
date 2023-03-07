@@ -421,6 +421,21 @@ class ProductHelper extends BaseHelper
         }
     }
 
+    public function productSkuExists($sku = null)
+    {
+        $exists = false;
+        try {
+            $sql = "SELECT * FROM " . $this->tableProduct . " product where product.sku = '$sku'";
+            $result = $this->helperDb->sqlQueryFetchOne($sql);
+            $exists = $result && !empty($result);
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $exists = false;
+        } finally {
+            return $exists;
+        }
+    }
+
     protected function getById($productId = 0)
     {
         $product = null;
