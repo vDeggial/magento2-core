@@ -49,13 +49,29 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getOrderIdsBetweenDates($dateFrom = "2022-07-01", $dateTo = null)
+    public function getOrderIdsCreatedBetweenDates($dateFrom = "2022-07-01", $dateTo = null)
     {
         $dateFrom = isset($dateFrom) ? "'$dateFrom'" : "2022-07-01";
         $dateTo = isset($dateTo) ? "'$dateTo'" : "NOW()";
         $result = [];
         try {
             $sql = "SELECT entity_id FROM " . $this->tableOrder . " WHERE created_at >= $dateFrom and created_at <= $dateTo ORDER BY created_at ASC";
+            $result = array_column($this->helperDb->sqlQueryFetchAll($sql), "entity_id");
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $result = [];
+        } finally {
+            return $result;
+        }
+    }
+    
+    public function getOrderIdsUpdatedBetweenDates($dateFrom = "2022-07-01", $dateTo = null)
+    {
+        $dateFrom = isset($dateFrom) ? "'$dateFrom'" : "2022-07-01";
+        $dateTo = isset($dateTo) ? "'$dateTo'" : "NOW()";
+        $result = [];
+        try {
+            $sql = "SELECT entity_id FROM " . $this->tableOrder . " WHERE updated_at >= $dateFrom and updated_at <= $dateTo ORDER BY updated_at ASC";
             $result = array_column($this->helperDb->sqlQueryFetchAll($sql), "entity_id");
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
