@@ -249,6 +249,45 @@ class ProductHelper extends BaseHelper
         }
     }
 
+    public function getSpecialPrice($productId = 0)
+    {
+        $price = 0;
+        try {
+            $price = (float) $this->helperEav->getProductAttributeValue($productId, "special_price");
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $price = 0;
+        } finally {
+            return $price;
+        }
+    }
+
+    public function getSpecialDateFrom($productId = 0)
+    {
+        $productDate = null;
+        try {
+            $productDate =  $this->helperEav->getProductAttributeValue($productId, "special_from_date");
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $productDate = null;
+        } finally {
+            return $productDate;
+        }
+    }
+
+    public function getSpecialDateTo($productId = 0)
+    {
+        $productDate = null;
+        try {
+            $productDate =  $this->helperEav->getProductAttributeValue($productId, "special_to_date");
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $productDate = null;
+        } finally {
+            return $productDate;
+        }
+    }
+
     public function getName($productId = 0)
     {
         $name = null;
