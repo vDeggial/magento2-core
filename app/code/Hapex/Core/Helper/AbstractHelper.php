@@ -87,4 +87,9 @@ abstract class AbstractHelper extends \Magento\Framework\App\Helper\AbstractHelp
                 break;
         }
     }
+
+    public function formatNumber($number = 0.00, $decimals = 2, $decimal_separator = ".", $thousands_separator = ",")
+    {
+        return number_format($number, $decimals, $decimal_separator, $thousands_separator);
+    }
 }
