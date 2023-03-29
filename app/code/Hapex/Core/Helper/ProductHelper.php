@@ -253,7 +253,8 @@ class ProductHelper extends BaseHelper
     {
         $price = null;
         try {
-            $price = (float) $this->helperEav->getProductAttributeValue($productId, "special_price");
+            $price = $this->helperEav->getProductAttributeValue($productId, "special_price");
+            if (is_bool($price)) $price = null;
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $price = null;
