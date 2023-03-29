@@ -267,6 +267,7 @@ class ProductHelper extends BaseHelper
         $productDate = null;
         try {
             $productDate =  $this->helperEav->getProductAttributeValue($productId, "special_from_date");
+            if (is_bool($productDate)) $productDate = null;
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $productDate = null;
@@ -280,6 +281,7 @@ class ProductHelper extends BaseHelper
         $productDate = null;
         try {
             $productDate =  $this->helperEav->getProductAttributeValue($productId, "special_to_date");
+            if (is_bool($productDate)) $productDate = null;
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $productDate = null;
