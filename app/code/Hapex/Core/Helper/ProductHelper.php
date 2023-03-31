@@ -57,7 +57,7 @@ class ProductHelper extends BaseHelper
     {
         $productAttributeSet = 0;
         try {
-            $productAttributeSet = (int) $this->helperEav->getProductEntityFieldValue($productId, "attribute_set_id");
+            $productAttributeSet = (int)$this->helperEav->getProductEntityFieldValue($productId, "attribute_set_id");
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $productAttributeSet = 0;
@@ -184,7 +184,7 @@ class ProductHelper extends BaseHelper
         try {
             $sql = "SELECT entity_id FROM " . $this->tableProduct . " WHERE sku LIKE '$productSku'";
             $result = $this->helperDb->sqlQueryFetchOne($sql);
-            $productId = (int) $result;
+            $productId = (int)$result;
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $productId = 0;
@@ -227,7 +227,7 @@ class ProductHelper extends BaseHelper
     {
         $cost = 0;
         try {
-            $cost = (float) $this->helperEav->getProductAttributeValue($productId, "cost");
+            $cost = (float)$this->helperEav->getProductAttributeValue($productId, "cost");
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $cost = 0;
@@ -240,7 +240,7 @@ class ProductHelper extends BaseHelper
     {
         $price = 0;
         try {
-            $price = (float) $this->helperEav->getProductAttributeValue($productId, "price");
+            $price = (float)$this->helperEav->getProductAttributeValue($productId, "price");
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $price = 0;
@@ -321,7 +321,7 @@ class ProductHelper extends BaseHelper
     {
         $status = 0;
         try {
-            $status = (int) $this->helperEav->getProductAttributeValue($productId, "status");
+            $status = (int)$this->helperEav->getProductAttributeValue($productId, "status");
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $status = 0;
@@ -351,7 +351,7 @@ class ProductHelper extends BaseHelper
         try {
             $sql = "SELECT stock.qty as qty FROM " . $this->tableProductStockStatus . " stock join " . $this->tableProduct . " product on stock.product_id = product.entity_id where product.entity_id = $productId";
             $result = $this->helperDb->sqlQueryFetchOne($sql);
-            $qty = (int) $result;
+            $qty = (int)$result;
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $qty = -1;
@@ -366,7 +366,7 @@ class ProductHelper extends BaseHelper
         try {
             $sql = "SELECT stock.is_in_stock as is_in_stock FROM " . $this->tableProductStock . " stock join " . $this->tableProduct . " product on stock.product_id = product.entity_id where product.entity_id = $productId";
             $result = $this->helperDb->sqlQueryFetchOne($sql);
-            $in_stock = (int) $result;
+            $in_stock = (int)$result;
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $in_stock = 0;
@@ -382,7 +382,7 @@ class ProductHelper extends BaseHelper
         try {
             $sql = "SELECT stock.stock_status as stock_status FROM " . $this->tableProductStockStatus . " stock join " . $this->tableProduct . " product on stock.product_id = product.entity_id where product.entity_id = $productId";
             $result = $this->helperDb->sqlQueryFetchOne($sql);
-            $in_stock = (int) $result;
+            $in_stock = (int)$result;
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $in_stock = 0;
