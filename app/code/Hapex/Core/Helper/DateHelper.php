@@ -29,10 +29,12 @@ class DateHelper extends AbstractHelper
         return $adjust ? $this->timezone->date(new \DateTime($date)) : new \DateTime($date);
     }
 
-    public function convertToUTC($date = null, $format = "Y-m-d H:i:s")
+    public function convertToUTC($date = null, $utc_offset = null, $format = "Y-m-d H:i:s")
     {
-        $utc_offset =  $this->getCurrentDate()->format("Z") / 3600;
-        $utc_offset = $utc_offset < 0 ? "+" . abs($utc_offset) : "-" . abs($utc_offset);
+        if (!isset($utc_offset)) {
+            $utc_offset =  $this->getCurrentDate()->format("Z") / 3600;
+            $utc_offset = $utc_offset < 0 ? "+" . abs($utc_offset) : "-" . abs($utc_offset);
+        }
         return $this->adjustDate($date, "$utc_offset hours", $format);
     }
 
