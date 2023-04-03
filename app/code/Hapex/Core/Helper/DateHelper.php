@@ -29,6 +29,13 @@ class DateHelper extends AbstractHelper
         return $adjust ? $this->timezone->date(new \DateTime($date)) : new \DateTime($date);
     }
 
+    public function convertToUTC($date = null, $format = "Y-m-d H:i:s")
+    {
+        $utc_offset =  $this->getCurrentDate()->format("Z") / 3600;
+        $utc_offset = $utc_offset < 0 ? "+" . abs($utc_offset) : "-" . abs($utc_offset);
+        return $this->adjustDate($date, "$utc_offset hours", $format);
+    }
+
     public function getDateFormatted($date = null, $format = "M j, Y", $adjust = true)
     {
         return $this->getDate($date, $adjust)->format($format);
@@ -36,6 +43,7 @@ class DateHelper extends AbstractHelper
 
     public function adjustDate($date = null, $adjust = "+0 minutes", $format = "Y-m-d H:i:s")
     {
+        $this->helperLog->printLog("test2", $adjust);
         try {
             $dateAdjusted = is_string($date) ? $this->getDate($date, false) : $date;
             if (isset($dateAdjusted)) {
