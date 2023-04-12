@@ -45,7 +45,6 @@ class DateHelper extends AbstractHelper
 
     public function adjustDate($date = null, $adjust = "+0 minutes", $format = "Y-m-d H:i:s")
     {
-        $this->helperLog->printLog("test2", $adjust);
         try {
             $dateAdjusted = is_string($date) ? $this->getDate($date, false) : $date;
             if (isset($dateAdjusted)) {
