@@ -66,6 +66,20 @@ class ProductHelper extends BaseHelper
         }
     }
 
+    public function getProductAttributeValue($productId = 0, $code = null)
+    {
+        $value = null;
+        try {
+            $price = $this->helperEav->getProductAttributeValue($productId, $code);
+            if (is_bool($value)) $value = null;
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $value = null;
+        } finally {
+            return $value;
+        }
+    }
+
     public function getBySku($productSku = null)
     {
         return $this->getById($this->getId($productSku));
