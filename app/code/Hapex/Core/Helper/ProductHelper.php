@@ -70,7 +70,7 @@ class ProductHelper extends BaseHelper
     {
         $value = null;
         try {
-            $price = $this->helperEav->getProductAttributeValue($productId, $code);
+            $value = $this->helperEav->getProductAttributeValue($productId, $code);
             if (is_bool($value)) $value = null;
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
