@@ -3,6 +3,7 @@
 namespace Hapex\Core\Helper;
 
 use Magento\Customer\Model\CustomerFactory;
+use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\SessionFactory;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\ObjectManagerInterface;
@@ -11,6 +12,7 @@ class CustomerHelper extends BaseHelper
 {
     protected $session;
     protected $customerFactory;
+    protected $customerRepository;
     protected $helperEav;
     protected $tableCustomer;
     public function __construct(
@@ -18,12 +20,14 @@ class CustomerHelper extends BaseHelper
         ObjectManagerInterface $objectManager,
         CustomerEavHelper $helperEav,
         SessionFactory $sessionFactory,
-        CustomerFactory $customerFactory
+        CustomerFactory $customerFactory,
+        CustomerRepositoryInterface $customerRepository
     ) {
         parent::__construct($context, $objectManager);
         $this->helperEav = $helperEav;
         $this->session = $sessionFactory->create();
         $this->customerFactory = $customerFactory->create();
+        $this->customerRepository = $customerRepository;
         $this->tableCustomer = $this->helperDb->getSqlTableName('customer_entity');
     }
 
@@ -246,6 +250,6 @@ class CustomerHelper extends BaseHelper
 
     private function getCustomerById($customerId = 0)
     {
-        return $this->customerFactory->load($customerId);
+        return $this->customerRepository->getById($customerId);
     }
 }
