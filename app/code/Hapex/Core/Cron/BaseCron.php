@@ -16,7 +16,7 @@ class BaseCron
     {
         $this->helperData = $helperData;
         $this->helperLog = $helperLog;
-        $this->maintenanceMode = $this->helperData->generateClassObject(\Magento\Framework\App\MaintenanceMode::class);
+        $this->maintenanceMode = isset($this->helperData) ? $this->helperData->generateClassObject(\Magento\Framework\App\MaintenanceMode::class) : null;
         $this->isMaintenance = isset($this->maintenanceMode) ? $this->maintenanceMode->isOn() : true;
     }
 }
