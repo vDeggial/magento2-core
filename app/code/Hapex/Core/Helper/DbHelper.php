@@ -23,14 +23,14 @@ class DbHelper extends AbstractHelper
         $tableName = null;
         $tableExists = false;
         try {
-            $tableName = $this->resource->getTableName($name);
-            $tableExists = $this->resource->getConnection()->isTableExists($tableName);
+            $tableName = isset($name) ? $this->resource->getTableName($name) : $name;
+            $tableExists = isset($tableName) ? $this->resource->getConnection()->isTableExists($tableName) : isset($name);
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $tableName = null;
+            $tableName = $name;
             $tableExists = false;
         } finally {
-            return $tableExists ? $tableName : null;
+            return $tableExists ? $tableName : $name;
         }
     }
 
