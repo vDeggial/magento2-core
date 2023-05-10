@@ -243,6 +243,34 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
+    public function getItemParentItemId($itemId = 0)
+    {
+        $id = 0;
+        try {
+            $id = (int) $this->getItemFieldValueById($itemId, "parent_item_id");
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $id = 0;
+        } finally {
+            return $id;
+        }
+    }
+
+    public function isParentItem($itemId = 0)
+    {
+        $is_parent = false;
+        try {
+            $is_parent = (bool) $this->getItemParentItemId($itemId) > 0;
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $is_parent = false;
+        } finally {
+            return $is_parent;
+        }
+    }
+
+
+
     public function getItemQtyCanceled($itemId = 0)
     {
         $qty = 0;
