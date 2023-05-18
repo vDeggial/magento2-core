@@ -26,7 +26,7 @@ class DateHelper extends AbstractHelper
 
     public function getDate($date = null, $adjust = true)
     {
-        return $adjust ? $this->timezone->date(new \DateTime($date)) : new \DateTime($date);
+        return isset($date) ? ($adjust ? $this->timezone->date(new \DateTime($date)) : new \DateTime($date)) : new \DateTime();
     }
 
     public function convertToUTC($date = null, $utc_offset = null, $format = "Y-m-d H:i:s")
