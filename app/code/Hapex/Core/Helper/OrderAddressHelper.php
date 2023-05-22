@@ -34,6 +34,50 @@ class OrderAddressHelper extends BaseHelper
         }
     }
 
+    public function getOrderIdCustomerName($orderId = 0)
+    {
+        $customerName = null;
+        try {
+            $customerName = $this->getOrderIdShippingName($orderId);
+            $customerName = isset($customerName) && !empty(trim($customerName)) && strpos(trim($customerName), ' ') !== false ? trim($customerName) : trim($this->getOrderIdBillingName($orderId));
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $customerName = null;
+        } finally {
+            return $customerName;
+        }
+    }
+
+    public function getOrderIdShippingName($orderId = 0)
+    {
+        $name = null;
+        try {
+            $firstName = $this->getOrderAddressFieldValue($orderId, "firstname", "shipping");
+            $lastName = $this->getOrderAddressFieldValue($orderId, "lastname", "shipping");
+            if (!empty($firstName) && !empty($lastName)) $name = "$firstName $lastName";
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $name = null;
+        } finally {
+            return $name;
+        }
+    }
+
+    public function getOrderIdBillingName($orderId = 0)
+    {
+        $name = null;
+        try {
+            $firstName = $this->getOrderAddressFieldValue($orderId, "firstname", "billing");
+            $lastName = $this->getOrderAddressFieldValue($orderId, "lastname", "billing");
+            if (!empty($firstName) && !empty($lastName)) $name = "$firstName $lastName";
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $name = null;
+        } finally {
+            return $name;
+        }
+    }
+
     public function getOrderShippingAddress($order = null)
     {
         $address = $this->address;
@@ -114,5 +158,19 @@ class OrderAddressHelper extends BaseHelper
     private function getStreet($data = [])
     {
         return $this->getArrayValue($data, 0);
+    }
+
+    private function getOrderAddressFieldValue($orderId = 0, $fieldName = null, $type = null)
+    {
+        try {
+            $sql = "SELECT $fieldName FROM " . $this->tableOrderAddress . " where parent_id = $orderId";
+            if (isset($type)) $sql .= " AND address_type = '$type'";
+            $result = $this->helperDb->sqlQueryFetchOne($sql);
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $result = null;
+        } finally {
+            return $result;
+        }
     }
 }
