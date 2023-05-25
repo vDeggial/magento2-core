@@ -44,7 +44,7 @@ class UrlHelper extends AbstractHelper
         $exists = false;
         try {
             if (filter_var($remoteUrl, FILTER_VALIDATE_URL) === FALSE) {
-                $host = isset($_SERVER["HTTP_HOST"]) ? stripslashes($_SERVER["HTTP_HOST"]) : "justripit.com";
+                $host = isset($_SERVER["HTTP_HOST"]) ? stripslashes($_SERVER["HTTP_HOST"]) : "jricards.com";
                 $remoteUrl = "https://$host$remoteUrl";
             }
             $exists = $this->get($remoteUrl)->getStatus() === 200;
@@ -62,13 +62,14 @@ class UrlHelper extends AbstractHelper
             $options = [
                 CURLOPT_RETURNTRANSFER => 1,
                 CURLOPT_USERAGENT => "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7) Gecko/20040803 Firefox/0.9.3",
-                CURLOPT_TIMEOUT => 300,
-                CURLOPT_CONNECTTIMEOUT => 300,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_CONNECTTIMEOUT => 30,
             ];
             $this->curl->setOptions($options);
             $this->curl->get($url);
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            return $this->get($url);
         } finally {
             return $this->curl;
         }
@@ -78,8 +79,8 @@ class UrlHelper extends AbstractHelper
     {
         try {
             $options = [
-                CURLOPT_CONNECTTIMEOUT => 300,
-                CURLOPT_TIMEOUT => 300,
+                CURLOPT_CONNECTTIMEOUT => 30,
+                CURLOPT_TIMEOUT => 30,
             ];
             $headers = ["Content-Type" => $contentType];
             $this->curl->setOptions($options);
@@ -87,6 +88,7 @@ class UrlHelper extends AbstractHelper
             $this->curl->post($url, $data);
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            return $this->post($url, $data, $contentType);
         } finally {
             return $this->curl;
         }
