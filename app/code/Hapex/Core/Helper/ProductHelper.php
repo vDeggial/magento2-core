@@ -89,7 +89,6 @@ class ProductHelper extends BaseHelper
     {
         $products = [];
         $tableStatus = $this->helperDb->getSqlTableName('catalog_product_entity_int');
-        $tableStockStatus = $this->helperDb->getSqlTableName('cataloginventory_stock_status');
         $tableAttribute = $this->helperDb->getSqlTableName("eav_attribute");
         $sql = "SELECT entity_id FROM $tableStatus WHERE attribute_id = (SELECT attribute_id FROM $tableAttribute WHERE attribute_code LIKE 'status') AND $tableStatus.value = $status";
         $result = $this->helperDb->sqlQueryFetchAll($sql);
