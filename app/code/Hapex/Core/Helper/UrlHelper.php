@@ -61,9 +61,10 @@ class UrlHelper extends AbstractHelper
         try {
             $options = [
                 CURLOPT_RETURNTRANSFER => 1,
+                CURLOPT_FOLLOWLOCATION => 1,
                 CURLOPT_USERAGENT => "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7) Gecko/20040803 Firefox/0.9.3",
+                CURLOPT_CONNECTTIMEOUT => 5,
                 CURLOPT_TIMEOUT => 30,
-                CURLOPT_CONNECTTIMEOUT => 30,
             ];
             $this->curl->setOptions($options);
             $this->curl->get($url);
@@ -79,7 +80,8 @@ class UrlHelper extends AbstractHelper
     {
         try {
             $options = [
-                CURLOPT_CONNECTTIMEOUT => 30,
+                CURLOPT_FOLLOWLOCATION => 1,
+                CURLOPT_CONNECTTIMEOUT => 5,
                 CURLOPT_TIMEOUT => 30,
             ];
             $headers = ["Content-Type" => $contentType];
