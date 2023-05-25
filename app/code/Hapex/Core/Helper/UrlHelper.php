@@ -49,7 +49,7 @@ class UrlHelper extends AbstractHelper
             }
             $exists = $this->get($remoteUrl)->getStatus() === 200;
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->getExceptionTrace($e));
             $exists = false;
         } finally {
             return $exists;
@@ -64,12 +64,12 @@ class UrlHelper extends AbstractHelper
                 CURLOPT_FOLLOWLOCATION => 1,
                 CURLOPT_USERAGENT => "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7) Gecko/20040803 Firefox/0.9.3",
                 CURLOPT_CONNECTTIMEOUT => 5,
-                CURLOPT_TIMEOUT => 30,
+                CURLOPT_TIMEOUT => 10,
             ];
             $this->curl->setOptions($options);
             $this->curl->get($url);
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->getExceptionTrace($e));
             return $this->get($url);
         } finally {
             return $this->curl;
@@ -82,14 +82,14 @@ class UrlHelper extends AbstractHelper
             $options = [
                 CURLOPT_FOLLOWLOCATION => 1,
                 CURLOPT_CONNECTTIMEOUT => 5,
-                CURLOPT_TIMEOUT => 30,
+                CURLOPT_TIMEOUT => 10,
             ];
             $headers = ["Content-Type" => $contentType];
             $this->curl->setOptions($options);
             $this->curl->setHeaders($headers);
             $this->curl->post($url, $data);
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->getExceptionTrace($e));
             return $this->post($url, $data, $contentType);
         } finally {
             return $this->curl;
