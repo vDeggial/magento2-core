@@ -105,7 +105,8 @@ class UrlHelper extends AbstractHelper
                 CURLOPT_HEADER => 0,
                 CURLOPT_FOLLOWLOCATION => 1,
                 CURLOPT_CONNECTTIMEOUT => 10,
-                CURLOPT_TIMEOUT => 15
+                CURLOPT_TIMEOUT => 15,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1
             ];
             $headers = ["Content-Type" => $contentType];
             $this->curl->setOptions($options);
