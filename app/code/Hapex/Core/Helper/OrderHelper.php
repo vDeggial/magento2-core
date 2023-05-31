@@ -55,7 +55,7 @@ class OrderHelper extends BaseHelper
     {
         $result = [];
         try {
-            $sql = "SELECT orders.* FROM " . $this->tableOrder . " orders JOIN " . $this->tableOrderItem . " items ON orders.entity_id = items.order_id WHERE items.sku LIKE '$sku' GROUP BY items.order_id";
+            $sql = "SELECT * FROM " . $this->tableOrder . " WHERE entity_id IN(SELECT order_id FROM " . $this->tableOrderItem . " WHERE sku LIKE '$sku' GROUP BY order_id)";
             $result = $this->helperDb->sqlQueryFetchAll($sql);
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
