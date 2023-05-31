@@ -17,6 +17,20 @@ class OrderItemHelper extends BaseHelper
         $this->helperAddress = $helperAddress;
     }
 
+    public function getOrderItemRow($itemId = 0)
+    {
+        $result = null;
+        try {
+            $sql = "SELECT * FROM " . $this->tableOrderItem . " WHERE item_id = $itemId";
+            $result = $this->helperDb->sqlQueryFetchRow($sql);
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $result = null;
+        } finally {
+            return $result;
+        }
+    }
+
 
     public function getOrderIdsWithSku($productSku = null)
     {
@@ -256,16 +270,16 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
-    public function isParentItem($itemId = 0)
+    public function hasParentItem($itemId = 0)
     {
-        $is_parent = false;
+        $has_parent = false;
         try {
-            $is_parent = (bool) $this->getItemParentItemId($itemId) > 0;
+            $has_parent = (bool)$this->getItemParentItemId($itemId) > 0;
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $is_parent = false;
+            $has_parent = false;
         } finally {
-            return $is_parent;
+            return $has_parent;
         }
     }
 

@@ -35,6 +35,20 @@ class OrderHelper extends BaseHelper
         return $this->getById($orderId);
     }
 
+    public function getOrderRow($orderId = 0)
+    {
+        $result = null;
+        try {
+            $sql = "SELECT * FROM " . $this->tableOrder . " WHERE entity_id = $orderId";
+            $result = $this->helperDb->sqlQueryFetchRow($sql);
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $result = null;
+        } finally {
+            return $result;
+        }
+    }
+
     public function getOrderIdsByCustomerId($customerId = 0)
     {
         $result = [];
@@ -64,7 +78,7 @@ class OrderHelper extends BaseHelper
             return $result;
         }
     }
-    
+
     public function getOrderIdsUpdatedBetweenDates($dateFrom = "2022-07-01", $dateTo = null)
     {
         $dateFrom = isset($dateFrom) ? "'$dateFrom'" : "2022-07-01";
