@@ -461,6 +461,20 @@ class OrderItemHelper extends BaseHelper
         }
     }
 
+    public function getItemsWithSku($orderId = 0, $sku = null)
+    {
+        $result = [];
+        try {
+            $sql = "SELECT * FROM " . $this->tableOrderItem . " WHERE order_id = $orderId AND sku LIKE '$sku'";
+            $result = $this->helperDb->sqlQueryFetchAll($sql);
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $result = [];
+        } finally {
+            return $result;
+        }
+    }
+
     public function getItemProductId($itemId = 0)
     {
         $productId = 0;

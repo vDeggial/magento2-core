@@ -9,6 +9,7 @@ use Magento\Framework\ObjectManagerInterface;
 class OrderHelper extends BaseHelper
 {
     protected $tableOrder;
+    protected $tableOrderItem;
     protected $orderRepository;
     protected $helperItem;
     protected $helperGrid;
@@ -28,6 +29,7 @@ class OrderHelper extends BaseHelper
         $this->helperAddress = $helperAddress;
         $this->orderRepository = $orderRepository;
         $this->tableOrder = $this->helperDb->getSqlTableName('sales_order');
+        $this->tableOrderItem = $this->helperDb->getSqlTableName('sales_order_item');
     }
 
     public function getOrder($orderId)
@@ -44,6 +46,20 @@ class OrderHelper extends BaseHelper
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $e->getMessage());
             $result = null;
+        } finally {
+            return $result;
+        }
+    }
+
+    public function getOrderRowsWithSku($sku = null)
+    {
+        $result = [];
+        try {
+            $sql = "SELECT orders.* FROM " . $this->tableOrder . " orders JOIN " . $this->tableOrderItem . " items ON orders.entity_id = items.order_id WHERE items.sku LIKE '$sku' GROUP BY items.order_id";
+            $result = $this->helperDb->sqlQueryFetchAll($sql);
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $result = [];
         } finally {
             return $result;
         }
