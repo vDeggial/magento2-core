@@ -1,545 +1,468 @@
 <?php
 
-namespace Hapex\Core\Helper;
+namespace Hapex\JRIHelper\Helper;
 
-use Magento\Sales\Model\OrderRepository;
+use Hapex\Core\Helper\CsvHelper;
+use Hapex\Core\Helper\ProductHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\ObjectManagerInterface;
 
-class OrderHelper extends BaseHelper
+class Inventory extends Data
 {
-    protected $tableOrder;
-    protected $tableOrderItem;
-    protected $orderRepository;
-    protected $helperItem;
-    protected $helperGrid;
-    protected $helperAddress;
-
+    protected const XML_PATH_CONFIG_INVENTORY_ENABLED = "hapex_jrihelper/inventory_sync/enable";
+    protected const XML_PATH_CONFIG_INVENTORY_RELIST_ENABLED = "hapex_jrihelper/inventory_sync/enable-relist-check";
+    protected const XML_PATH_CONFIG_INVENTORY_SYNC_TYPE = "hapex_jrihelper/inventory_sync/sync-type";
+    protected const XML_PATH_CONFIG_INVENTORY_ORDER_SYNC_TYPE = "hapex_jrihelper/inventory_sync/order-sync-type";
+    protected const XML_PATH_CONFIG_INVENTORY_ORDER_SYNC_TIME = "hapex_jrihelper/inventory_sync/order-sync-time";
+    protected const XML_PATH_CONFIG_INVENTORY_ORDER_SYNC_START = "hapex_jrihelper/inventory_sync/order-sync-start";
+    protected const XML_PATH_CONFIG_INVENTORY_ORDER_SYNC_END = "hapex_jrihelper/inventory_sync/order-sync-end";
+    protected const XML_PATH_CONFIG_INVENTORY_WEBHOOK_URL = "hapex_jrihelper/inventory_sync/webhook_url";
+    protected $helperProduct;
     public function __construct(
         Context $context,
         ObjectManagerInterface $objectManager,
-        OrderItemHelper $helperItem,
-        OrderGridHelper $helperGrid,
-        OrderAddressHelper $helperAddress,
-        OrderRepository $orderRepository
+        CsvHelper $helperCsv,
+        ProductHelper $helperProduct
     ) {
-        parent::__construct($context, $objectManager);
-        $this->helperItem = $helperItem;
-        $this->helperGrid = $helperGrid;
-        $this->helperAddress = $helperAddress;
-        $this->orderRepository = $orderRepository;
-        $this->tableOrder = $this->helperDb->getSqlTableName('sales_order');
-        $this->tableOrderItem = $this->helperDb->getSqlTableName('sales_order_item');
+        parent::__construct($context, $objectManager, $helperCsv);
+        $this->helperProduct = $helperProduct;
     }
 
-    public function getOrder($orderId)
+    public function isInventorySyncEnabled()
     {
-        return $this->getById($orderId);
+        return $this->getConfigFlag(self::XML_PATH_CONFIG_INVENTORY_ENABLED);
     }
 
-    public function getOrderRow($orderId = 0)
+    public function isInventoryRelistCheckEnabled()
     {
-        $result = null;
-        try {
-            $sql = "SELECT * FROM " . $this->tableOrder . " WHERE entity_id = $orderId";
-            $result = $this->helperDb->sqlQueryFetchRow($sql);
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $result = null;
-        } finally {
-            return $result;
-        }
+        return $this->getConfigFlag(self::XML_PATH_CONFIG_INVENTORY_RELIST_ENABLED);
     }
 
-    public function getOrderRowsWithSku($sku = null)
+    public function getSyncType()
     {
-        $result = [];
-        try {
-            $sql = "SELECT * FROM " . $this->tableOrder . " WHERE entity_id IN(SELECT order_id FROM " . $this->tableOrderItem . " WHERE sku LIKE '$sku' GROUP BY order_id)";
-            $result = $this->helperDb->sqlQueryFetchAll($sql);
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $result = [];
-        } finally {
-            return $result;
-        }
+        return $this->getConfigValue(self::XML_PATH_CONFIG_INVENTORY_SYNC_TYPE);
     }
 
-    public function getOrderIdsByCustomerId($customerId = 0)
+    public function getOrderSyncType()
     {
-        $result = [];
-        try {
-            $sql = "SELECT entity_id FROM " . $this->tableOrder . " WHERE customer_id = $customerId GROUP BY entity_id ORDER BY created_at DESC";
-            $result = array_column($this->helperDb->sqlQueryFetchAll($sql), "entity_id");
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $result = [];
-        } finally {
-            return $result;
-        }
+        return $this->getConfigValue(self::XML_PATH_CONFIG_INVENTORY_ORDER_SYNC_TYPE);
     }
 
-    public function getOrderIdsCreatedBetweenDates($dateFrom = "2022-07-01", $dateTo = null)
+
+    public function getOrderSyncTime()
     {
-        $dateFrom = isset($dateFrom) ? "'$dateFrom'" : "2022-07-01";
-        $dateTo = isset($dateTo) ? "'$dateTo'" : "NOW()";
-        $result = [];
-        try {
-            $sql = "SELECT entity_id FROM " . $this->tableOrder . " WHERE created_at >= $dateFrom and created_at <= $dateTo ORDER BY created_at ASC";
-            $result = array_column($this->helperDb->sqlQueryFetchAll($sql), "entity_id");
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $result = [];
-        } finally {
-            return $result;
-        }
+        return $this->getConfigValue(self::XML_PATH_CONFIG_INVENTORY_ORDER_SYNC_TIME);
     }
 
-    public function getOrderIdsUpdatedBetweenDates($dateFrom = "2022-07-01", $dateTo = null)
+    public function getOrderSyncStart()
     {
-        $dateFrom = isset($dateFrom) ? "'$dateFrom'" : "2022-07-01";
-        $dateTo = isset($dateTo) ? "'$dateTo'" : "NOW()";
-        $result = [];
-        try {
-            $sql = "SELECT entity_id FROM " . $this->tableOrder . " WHERE updated_at >= $dateFrom and updated_at <= $dateTo ORDER BY updated_at ASC";
-            $result = array_column($this->helperDb->sqlQueryFetchAll($sql), "entity_id");
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $result = [];
-        } finally {
-            return $result;
-        }
+        return $this->getConfigValue(self::XML_PATH_CONFIG_INVENTORY_ORDER_SYNC_START);
     }
 
-    public function getOrderIdByIncrementId($incrementId = null)
+    public function getOrderSyncEnd()
     {
-        $result = 0;
-        try {
-            $sql = "SELECT entity_id FROM " . $this->tableOrder . " WHERE increment_id like '$incrementId'";
-            $result = (int) $this->helperDb->sqlQueryFetchOne($sql);
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $result = 0;
-        } finally {
-            return $result;
-        }
+        return $this->getConfigValue(self::XML_PATH_CONFIG_INVENTORY_ORDER_SYNC_END);
     }
 
-    public function getAppliedRuleIds($orderId = 0)
+    public function getWebhookUrl()
     {
-        $ruleIds = null;
-        try {
-            $ruleIds = $this->getOrderFieldValue($orderId, "applied_rule_ids");
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $ruleIds = null;
-        } finally {
-            return $ruleIds;
-        }
+        return $this->getConfigValue(self::XML_PATH_CONFIG_INVENTORY_WEBHOOK_URL);
     }
 
-    public function getCreatedDate($orderId = 0)
+    public function isPackProduct($sku = null)
     {
-        $date = null;
-        try {
-            $date =  (string) $this->getOrderFieldValue($orderId, "created_at");
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $date = null;
-        } finally {
-            return $date;
-        }
+        $productId = $this->helperProduct->getId($sku);
+        return $this->helperProduct->isProductAttributeSetName($productId, "Packs");
     }
 
-    public function getUpdatedDate($orderId = 0)
+    public function isGiveawayProduct($sku = null)
     {
-        $date = null;
-        try {
-            $date =  (string) $this->getOrderFieldValue($orderId, "updated_at");
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $date = null;
-        } finally {
-            return $date;
-        }
+        $productId = $this->helperProduct->getId($sku);
+        return $this->helperProduct->isProductAttributeSetName($productId, "Giveaways");
     }
 
-    public function getCouponCode($orderId = 0)
+    public function sendToWebhook($data = [])
     {
-        $code = null;
-        try {
-            $code = $this->getOrderFieldValue($orderId, "coupon_code");
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $code = null;
-        } finally {
-            return $code;
-        }
+        $url = $this->getWebhookUrl();
+        $json = json_encode($data);
+        $type = "text/plain";
+        $this->log("hapex_inventory_sync", "- Webhook URL: $url");
+        return $this->getUrlHelper()->sendWebhook($url, $json, $type);
     }
 
-    public function getCustomerId($orderId = 0)
+    public function getListedSkus()
     {
-        $customerId = 0;
-        try {
-            $customerId = $this->getOrderFieldValue($orderId, "customer_id");
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $customerId = 0;
-        } finally {
-            return $customerId;
-        }
+        //return $this->helperProduct->getSkusByStatus(1);
+        return $this->helperProduct->getSkusListed();
     }
 
-    public function getCustomerGroupId($orderId = 0)
+    public function getSkuDescription($sku = null)
     {
-        $groupId = 0;
-        try {
-            $groupId = $this->getOrderFieldValue($orderId, "customer_group_id");
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $groupId = 0;
-        } finally {
-            return $groupId;
-        }
+        $productId = $this->helperProduct->getId($sku);
+        $description = $this->helperProduct->getDescription($productId);
+        return $description;
     }
 
-    public function getDiscountAmount($orderId = 0)
+    public function getSkuShortDescription($sku = null)
     {
-        $amount = 0;
-        try {
-            $amount = $this->getOrderFieldValue($orderId, "discount_amount");
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $amount = 0;
-        } finally {
-            return $amount;
-        }
+        $productId = $this->helperProduct->getId($sku);
+        $description = $this->helperProduct->getShortDescription($productId);
+        return $description;
     }
 
-    public function getRefundAmount($orderId = 0)
+    public function getSkuB1G1F($sku = null)
     {
-        $amount = 0;
-        try {
-            $amount = (float) $this->getOrderFieldValue($orderId, "total_refunded");
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $amount = 0;
-        } finally {
-            return $amount;
-        }
+        $productId = $this->helperProduct->getId($sku);
+        $value = isset($productId) ? $this->helperProduct->getProductAttributeValue($productId, "b1g1f") : 0;
+        return $value;
     }
 
-    public function getGiftCardAmount($orderId = 0)
+    public function getSkuB1G2F($sku = null)
     {
-        $amount = 0;
-        try {
-            $amount = (float) $this->getOrderFieldValue($orderId, "gift_card_amount");
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $amount = 0;
-        } finally {
-            return $amount;
-        }
+        $productId = $this->helperProduct->getId($sku);
+        $value = isset($productId) ? $this->helperProduct->getProductAttributeValue($productId, "b1g2f") : 0;
+        return $value;
     }
 
-    public function getGiftCreditAmount($orderId = 0)
+    public function getSkuB2G1F($sku = null)
     {
-        $amount = 0;
-        try {
-            $amount = (float) $this->getOrderFieldValue($orderId, "gift_credit_amount");
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $amount = 0;
-        } finally {
-            return $amount;
-        }
+        $productId = $this->helperProduct->getId($sku);
+        $value = isset($productId) ? $this->helperProduct->getProductAttributeValue($productId, "b2g1f") : 0;
+        return $value;
     }
 
-    public function getGrandTotal($orderId = 0)
+    public function getSkuSale($sku = null)
     {
-        $total = 0;
-        try {
-            $total = $this->getOrderFieldValue($orderId, "grand_total");
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $total = 0;
-        } finally {
-            return $total;
-        }
+        $productId = $this->helperProduct->getId($sku);
+        $value = isset($productId) ? $this->helperProduct->getProductAttributeValue($productId, "sale") : 0;
+        return $value;
     }
 
-    public function getIncrementId($orderId = 0)
+    public function getSkuProductId($sku = null)
     {
-        $incrementId = null;
-        try {
-            $incrementId = $this->getOrderFieldValue($orderId, "increment_id");
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $incrementId = null;
-        } finally {
-            return $incrementId;
-        }
+        $productId = $this->helperProduct->getId($sku);
+        return $productId;
     }
 
-    public function getOrderCustomerId($order = null)
+
+    public function getSkuStock($sku = null)
     {
-        $customerId = 0;
-        try {
-            $customerId = $order->getCustomer()->getId();
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $customerId = 0;
-        } finally {
-            return $customerId;
-        }
+        $productId = $this->helperProduct->getId($sku);
+        $stock = $this->helperProduct->getStockQty($productId);
+        //$stock = $this->helperProduct->getStockListedQty($productId);
+        return $stock;
     }
 
-    public function getIsVirtual($orderId = 0)
+    public function getSkuStockStatus($sku = null)
     {
-        $isVirtual = 0;
-        try {
-            $isVirtual = (int) $this->getOrderFieldValue($orderId, "is_virtual");
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $isVirtual = 0;
-        } finally {
-            return $isVirtual;
-        }
+        $productId = $this->helperProduct->getId($sku);
+        $status = $this->helperProduct->getStockStatus($productId);
+        //$status = $this->helperProduct->getStockListedStatus($productId);
+        return $status;
     }
 
-    public function getShippingAmount($orderId = 0)
+    public function getProductBySku($sku = null)
     {
-        $amount = 0;
-        try {
-            $amount = $this->getOrderFieldValue($orderId, "shipping_amount");
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $amount = 0;
-        } finally {
-            return $amount;
-        }
+        return $this->helperProduct->getBySku($sku);
     }
 
-    public function getShippingMethod($orderId = 0)
+    public function productSkuExists($sku = null)
     {
-        $method = null;
-        try {
-            $method = $this->getOrderFieldValue($orderId, "coupon_code");
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $method = null;
-        } finally {
-            return $method;
-        }
+        return $this->helperProduct->productSkuExists($sku);
     }
 
-    public function getState($orderId = 0)
+    public function getSkuCategories($sku = null)
     {
-        $state = null;
-        try {
-            $state = $this->getOrderFieldValue($orderId, "state");
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $state = null;
-        } finally {
-            return $state;
-        }
+        $productId = $this->helperProduct->getId($sku);
+        $product = $this->helperProduct->getProduct($productId);
+        $categories = $this->helperProduct->getProductCategories($productId);
+        //$categories = isset($product) ? $product->getCategoryIds() : []; /*will return category ids array*/
+        return $categories;
     }
 
-    public function getStatus($orderId = 0)
+    public function getSkuLink($sku = null)
     {
-        $status = null;
-        try {
-            $status = $this->getOrderFieldValue($orderId, "status");
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $status = null;
-        } finally {
-            return $status;
-        }
+        $productId = $this->helperProduct->getId($sku);
+        $url = $this->helperProduct->getUrl($productId);
+        return $url;
     }
 
-    public function getSubtotal($orderId = 0)
+    public function getSkuImages($sku = null)
     {
-        $total = 0;
-        try {
-            $total = $this->getOrderFieldValue($orderId, "subtotal");
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $total = 0;
-        } finally {
-            return $total;
-        }
+        $productId = $this->helperProduct->getId($sku);
+        $images = $this->helperProduct->getImages($productId);
+        return $images;
     }
 
-    public function getTaxAmount($orderId = 0)
+    public function getSkuPrice($sku = null)
     {
-        $amount = 0;
-        try {
-            $amount = $this->getOrderFieldValue($orderId, "tax_amount");
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $amount = 0;
-        } finally {
-            return $amount;
-        }
+        $productId = $this->helperProduct->getId($sku);
+        $price = $this->helperProduct->getPrice($productId);
+        return $price;
     }
 
-    public function getTotalPaid($orderId = 0)
+    public function getSkuSpecialPrice($sku = null)
     {
-        $amount = 0;
-        try {
-            $amount = $this->getOrderFieldValue($orderId, "total_paid");
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $amount = 0;
-        } finally {
-            return $amount;
-        }
+        $productId = $this->helperProduct->getId($sku);
+        $price = $this->helperProduct->getSpecialPrice($productId);
+        return $price;
     }
 
-    public function getTotalItemCount($orderId = 0)
+    public function getSkuSpecialPriceDateFrom($sku = null)
+    {
+        $productId = $this->helperProduct->getId($sku);
+        $date = $this->helperProduct->getSpecialDateFrom($productId);
+        return $date;
+    }
+
+    public function getSkuSpecialPriceDateTo($sku = null)
+    {
+        $productId = $this->helperProduct->getId($sku);
+        $date = $this->helperProduct->getSpecialDateTo($productId);
+        return $date;
+    }
+
+    public function getSkuName($sku = null)
+    {
+        $productId = $this->helperProduct->getId($sku);
+        $name = $this->helperProduct->getName($productId);
+        return $name;
+    }
+
+    public function getSkuProductType($sku = null)
+    {
+        $productId = $this->helperProduct->getId($sku);
+        $type = $this->helperProduct->getType($productId);
+        return $type;
+    }
+
+    public function getSkuOrdersCount($sku = null)
     {
         $count = 0;
-        try {
-            $count = (int) $this->getOrderFieldValue($orderId, "total_item_count");
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $count = 0;
-        } finally {
-            return $count;
-        }
+        $data = $this->getSkuOrderData($sku);
+        $count = count($data["orders"]);
+        return $count;
     }
 
-    public function getTotalQtyOrdered($orderId = 0)
+    public function getSkusOrdersBetweenDates($dateFrom = "2022-07-01", $dateTo = null)
     {
-        $count = 0;
-        try {
-            $count = (int) $this->getOrderFieldValue($orderId, "total_qty_ordered");
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $count = 0;
-        } finally {
-            return $count;
-        }
+        $skus = [];
+        $helperOrderItem = $this->generateClassObject(\Hapex\Core\Helper\OrderItemHelper::class);
+        $helperOrderGrid = $this->generateClassObject(\Hapex\Core\Helper\OrderGridHelper::class);
+        $helperOrder = $this->generateClassObject(\Hapex\Core\Helper\OrderHelper::class);
+
+        $orderIds = $helperOrder->getOrderIdsUpdatedBetweenDates($dateFrom, $dateTo);
+        $skus = $helperOrderItem->getItemSkusFromOrders($orderIds);
+        return $skus;
     }
 
-    public function getCustomerIsGuest($orderId = 0)
+    public function getSkuProductData($sku = null, &$entry = [], $mode = 1)
     {
-        $isGuest = 0;
-        try {
-            $isGuest = (int) $this->getOrderFieldValue($orderId, "customer_is_guest");
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $isGuest = 0;
-        } finally {
-            return $isGuest;
-        }
-    }
-
-    public function isGuestOrder($order = null)
-    {
-        $isGuestOrder = false;
-        try {
-            $isGuestOrder = $order->getCustomerIsGuest();
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $isGuestOrder = false;
-        } finally {
-            return $isGuestOrder;
-        }
-    }
-
-    public function getOrderCustomerName($order = null)
-    {
-        $name = null;
-        try {
-            $name = $this->helperData->getNameCase($this->helperAddress->getOrderCustomerName($order));
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $name = null;
-        } finally {
-            return $name;
-        }
-    }
-
-    public function getOrderCustomerEmail($order = null)
-    {
-        $email = null;
-        try {
-            $email = strtolower($this->helperAddress->getOrderCustomerEmail($order));
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $email = null;
-        } finally {
-            return $email;
-        }
-    }
-
-    protected function getOrderItems($order = null)
-    {
-        $items = [];
-        try {
-            $orderItems = $order->getItems();
-            $items = array_filter($orderItems, function ($item) {
-                return !$item->isDeleted() && !$item->getParentItem();
-            });
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $items = [];
-        } finally {
-            return $items;
-        }
-    }
-
-    protected function getOrderItemsMergeSku($order = null)
-    {
-        $orderItems  = $this->getOrderItems($order);
-        $items = [];
-        try {
-            array_walk($orderItems, function ($item) use (&$items) {
-                $itemSku = $item->getSku();
-                switch ($this->getArrayValue($items, $itemSku) !== null) {
-                    case true:
-                        $items[$itemSku]->setQtyInvoiced($items[$itemSku]->getQtyInvoiced() + $item->getQtyInvoiced());
+        $product = $this->helperProduct->getBySku($sku);
+        switch (isset($product)) {
+            case true:
+                switch ($mode) {
+                    case 1:
+                        $stockItem = $product->getExtensionAttributes()->getStockItem();
+                        switch (isset($stockItem)) {
+                            case true:
+                                $stockData = $stockItem->getData();
+                                $stock = (int)$stockData["qty"];
+                                $stockStatus = (int)$stockData["is_in_stock"];
+                                $price = (float)$product->getPrice();
+                                $priceSpecial = $product->getSpecialPrice();
+                                $priceSpecialDateFrom = $product->getSpecialFromDate();
+                                $priceSpecialDateTo = $product->getSpecialToDate();
+                                $name = $product->getName();
+                                $link = $this->getSkuLink($sku);
+                                //$link = $product->getProductUrl();
+                                $images = $this->getSkuImages($sku);
+                                $product_id = $product->getId();
+                                $categories = $product->getCategoryIds();
+                                $b1g1f = (int)$product->getData("b1g1f");
+                                $b1g2f = (int)$product->getData("b1g2f");
+                                $b2g1f = (int)$product->getData("b2g1f");
+                                $is_sale = (int)$product->getData("sale");
+                                $dateCreated = $this->getDateHelper()->getDateFormatted($product->getCreatedAt(), "Y-m-d H:i:s");
+                                $dateUpdated = $this->getDateHelper()->getDateFormatted($product->getUpdatedAt(), "Y-m-d H:i:s");
+                                break;
+                        }
                         break;
 
-                    default:
-                        $items[$itemSku] = $item;
+                    case 2:
+                        $stock = $this->getSkuStock($sku);
+                        $stockStatus = $this->getSkuStockStatus($sku);
+                        $price = $this->getSkuPrice($sku);
+                        $priceSpecial = $this->getSkuSpecialPrice($sku);
+                        $priceSpecialDateFrom = $this->getSkuSpecialPriceDateFrom($sku);
+                        $priceSpecialDateTo = $this->getSkuSpecialPriceDateTo($sku);
+                        $name = $this->getSkuName($sku);
+                        $link = $this->getSkuLink($sku);
+                        $images = $this->getSkuImages($sku);
+                        $product_id = $this->getSkuProductId($sku);
+                        $categories = $this->getSkuCategories($sku);
+                        $b1g1f = (int)$this->getSkuB1G1F($sku);
+                        $b1g2f = (int)$this->getSkuB1G2F($sku);
+                        $b2g1f = (int)$this->getSkuB2G1F($sku);
+                        $is_sale = (int)$this->getSkuSale($sku);
+                        $dateCreated = $this->getDateHelper()->getDateFormatted($this->helperProduct->getCreatedDate($product_id), "Y-m-d H:i:s");
+                        $dateUpdated = $this->getDateHelper()->getDateFormatted($this->helperProduct->getCreatedDate($product_id), "Y-m-d H:i:s");
                         break;
                 }
-            });
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $items = [];
-        } finally {
-            return $items;
+
+                $entry["stock"] = $stock;
+                $entry["stock_status"] = $stockStatus;
+                $entry["price"] = $price;
+                $entry["price_special"] = $priceSpecial;
+                $entry["price_special_date_from"] = $priceSpecialDateFrom;
+                $entry["price_special_date_to"] = $priceSpecialDateTo;
+                $entry["is_b1g1f"] = $b1g1f;
+                $entry["is_b1g2f"] = $b1g2f;
+                $entry["is_b2g1f"] = $b2g1f;
+                $entry["is_sale"] = $is_sale;
+                $entry["name"] = $name;
+                $entry["product_id"] = $product_id;
+                $entry["categories"] = is_array($categories) ? implode(",", $categories) : null;
+                $entry["link"] = $link;
+                $entry["images"] = $images;
+                $entry["product_type"] = $this->getSkuProductType($sku);
+                //$entry["date_created"] = $dateCreated;
+                //$entry["date_updated"] = $dateUpdated;
+
+                break;
         }
     }
 
-    protected function getById($orderId = 0)
+    public function getSkuOrderData($sku = null, &$entry = [])
     {
-        $order = null;
-        try {
-            $order = $this->orderRepository->get($orderId);
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $order = null;
-        } finally {
-            return $order;
+        $data = [];
+        $helperOrderItem = $this->generateClassObject(\Hapex\Core\Helper\OrderItemHelper::class);
+        $helperOrderGrid = $this->generateClassObject(\Hapex\Core\Helper\OrderGridHelper::class);
+        $helperOrderAddress = $this->generateClassObject(\Hapex\Core\Helper\OrderAddressHelper::class);
+        $helperOrder = $this->generateClassObject(\Hapex\Core\Helper\OrderHelper::class);
+        $helperCustomer = $this->generateClassObject(\Hapex\Core\Helper\CustomerHelper::class);
+
+        $data["orders"] = [];
+
+        /*$orderIds = $helperOrderItem->getOrderIdsWithSku($sku);
+        $orderIds = array_filter($orderIds, function ($id) use (&$helperOrder) {
+            $states = ["processing", "complete"];
+            $orderState = $helperOrder->getState($id);
+            return in_array($orderState, $states, true);
+        });*/
+        
+        $orders = $helperOrder->getOrderRowsWithSku($sku);
+        $orders = array_filter($orders, function ($order) use (&$helperOrder) {
+            $states = ["processing", "complete"];
+            return in_array($order["state"], $states, true);
+        });
+        
+
+        foreach ($orders as $order) {
+            //$order = $helperOrder->getOrderRow($orderId);
+            switch (isset($order)) {
+                case true:
+                    $items = $helperOrderItem->getItemsWithSku($order["entity_id"], $sku);
+                    switch (isset($items) && is_array($items)) {
+                        case true:
+                            foreach ($items as $item) {
+                                switch (isset($item)) {
+                                    case true:
+                                        $info = [];
+                                        $info["order_id"] = $order["entity_id"];
+                                        $info["order_increment_id"] = $order["increment_id"];
+
+                                        $info["subtotal"] = (float)$order["subtotal"];
+                                        $info["state"] = $order["state"];;
+                                        $info["status"] = $order["status"];
+                                        $info["grandtotal"] = (float)$order["grand_total"];
+                                        $info["item_id"] = $item["item_id"];
+                                        $info["price"] = (float)$item["price"];
+                                        $info["discount"] = (float)$item["discount_amount"];
+                                        $info["tax"] = (float)$item["tax_amount"];
+                                        $info["tax_refunded"] = (float)$item["tax_refunded"];
+                                        $info["discount_reward"] = (float)$item["mp_reward_discount"];
+                                        $info["discount_refunded"] = (float)$item["discount_refunded"];
+                                        $info["row_total"] = (float)$item["row_total"];
+                                        $info["amount_refunded"] = (float)$item["amount_refunded"];
+                                        $info["product_id"] = $item["product_id"];
+                                        $info["sku"] = $item["sku"];
+                                        $info["applied_rule_ids"] = $item["applied_rule_ids"];
+                                        $info["date_created"] = $this->getDateHelper()->getDateFormatted($item["created_at"], "Y-m-d H:i:s");
+                                        $info["date_updated"] = $this->getDateHelper()->getDateFormatted($item["updated_at"], "Y-m-d H:i:s");
+                                        $info["qty_ordered"] = (int)$item["qty_ordered"];
+                                        $info["qty_invoiced"] = (int)$item["qty_invoiced"];
+                                        $info["qty_refunded"] = (int)$item["qty_refunded"];
+                                        $info["qty_canceled"] = (int)$item["qty_canceled"];
+                                        $info["qty_shipped"] = (int)$item["qty_shipped"];
+                                        $info["qty"] = $info["qty_ordered"];
+                                        $info["qty"] -= $info["qty_refunded"];
+                                        $info["qty"] -= $info["qty_canceled"];
+                                        $info["total"] = 0;
+
+                                        $customerName = $helperOrderAddress->getOrderIdCustomerName($info["order_id"]);
+                                        $customerName = !empty($customerName) ? $customerName : $helperOrderGrid->getOrderName($info["order_id"]);
+                                        $info["fullname"] = $this->getNameCase($customerName);
+
+                                        $info["email"] = strtolower($helperOrderGrid->getCustomerEmail($info["order_id"]));
+                                        $info["customer_id"] = $order["customer_id"];
+                                        $info["customer_date_created"] = isset($info["customer_id"]) ? $this->getDateHelper()->getDateFormatted($helperCustomer->getCustomerCreatedDate($info["customer_id"]), "Y-m-d H:i:s") : null;
+                                        $info["customer_group_id"] = $order["customer_group_id"];
+
+                                        $orderItems = $helperOrderItem->getItemsFromOrder($info["order_id"]);
+                                        $zeroItemsTotal = 0;
+                                        switch (!empty($orderItems)) {
+                                            case true:
+                                                $zeroTotalItems = array_filter($orderItems, function ($item) {
+                                                    return isset($item["row_total"]) && $item["row_total"] == 0;
+                                                });
+                                                $zeroItemsTotal = !empty($zeroTotalItems) ? array_sum(array_column($zeroTotalItems, "qty_ordered")) : 0;
+                                                break;
+                                        }
+                                        $orderTotalQty = $order["total_qty_ordered"] - $zeroItemsTotal;
+
+                                        $ratio = $info["subtotal"] > 0 ? $info["row_total"] / $info["subtotal"] : 0;
+                                        $giftCardAmount = $info["row_total"] > 0 && $orderTotalQty > 0 ? $order["gift_card_amount"] * $ratio : 0;
+                                        $giftCreditAmount = $info["row_total"] > 0 && $orderTotalQty > 0 ? $order["gift_credit_amount"] * $ratio : 0;
+                                        $info["discount"] = $info["discount"] + abs($giftCardAmount) + abs($giftCreditAmount);
+
+                                        $orderRefund = $order["total_refunded"];
+
+                                        if ($info["amount_refunded"] == 0 && $orderRefund  > 0) {
+                                            $info["amount_refunded"] = $info["row_total"] > 0 && $orderTotalQty > 0 ? $orderRefund  * $ratio : 0;
+                                        }
+
+                                        if ($info["tax_refunded"] == 0 && $orderRefund  > 0) {
+                                            $info["tax_refunded"] = $info["tax"] > 0 && $orderTotalQty > 0 ? $info["tax"] * $ratio : 0;
+                                        }
+
+                                        if ($info["discount_refunded"] == 0 && $orderRefund  > 0) {
+                                            $info["discount_refunded"] = $info["discount"] > 0 && $orderTotalQty > 0 ? $info["discount"] * $ratio : 0;
+                                        }
+
+
+                                        if ($info["qty"] > 0) {
+                                            $info["total"] = ($info["row_total"] - $info["amount_refunded"]);
+                                            $info["total"] -= $info["discount_reward"];
+                                            $info["total"] -= ($info["discount"] - $info["discount_refunded"]);
+                                            $info["total"] += ($info["tax"] - $info["tax_refunded"]);
+                                            if ($info["total"] < 0) $info["total"] = 0;
+                                            array_push($data["orders"], $info);
+                                        }
+                                        break;
+                                }
+                            }
+                            break;
+                    }
+                    break;
+            }
         }
+        $entry["orders"] = $data["orders"];
+        $entry["qty_sold"] = array_sum(array_column($data["orders"], "qty"));
     }
 
-    protected function getOrderFieldValue($orderId = 0, $fieldName = null)
+    protected function log($filename, $message)
     {
-        try {
-            $sql = "SELECT $fieldName FROM " . $this->tableOrder . " where entity_id = $orderId";
-            $result = $this->helperDb->sqlQueryFetchOne($sql);
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
-            $result = null;
-        } finally {
-            return $result;
-        }
+        $this->getLogHelper()->printLog($filename, $message);
     }
 }
