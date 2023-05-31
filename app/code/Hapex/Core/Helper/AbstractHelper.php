@@ -105,11 +105,12 @@ abstract class AbstractHelper extends \Magento\Framework\App\Helper\AbstractHelp
         $line = $e->getLine();
         while (true) {
             $current = "$file:$line";
+            /*
             if (in_array($current, $seen)) {
                 $end = end($trace);
                 $result[] = sprintf(' ... %d more (main:  %s:%s)', count($trace) + 1, @$end['file'], @$end['line']);
                 break;
-            }
+            }*/
 
             $result[] = sprintf(
                 " at %s%s%s(%s%s%s)",
