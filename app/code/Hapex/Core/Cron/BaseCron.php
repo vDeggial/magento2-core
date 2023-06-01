@@ -19,4 +19,9 @@ class BaseCron
         $this->maintenanceMode = isset($this->helperData) ? $this->helperData->generateClassObject(\Magento\Framework\App\MaintenanceMode::class) : null;
         $this->isMaintenance = isset($this->maintenanceMode) ? $this->maintenanceMode->isOn() : true;
     }
+    
+    public function getExceptionTrace($e, $seen = null): ?string
+    {
+        return $this->helperData->getExceptionTrace($e);
+    }
 }

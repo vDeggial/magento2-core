@@ -32,6 +32,11 @@ class BaseObserver implements ObserverInterface
     {
         $this->event = $this->getEvent($observer);
     }
+    
+    public function getExceptionTrace($e, $seen = null): ?string
+    {
+        return $this->helperData->getExceptionTrace($e);
+    }
 
     protected function getEvent($observer = null)
     {
