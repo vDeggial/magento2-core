@@ -32,7 +32,7 @@ class QuoteHelper extends BaseHelper
             $result = $this->helperDb->sqlQueryFetchOne($sql);
             $exists = $result && !empty($result);
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $exists = false;
         } finally {
             return $exists;
@@ -45,7 +45,7 @@ class QuoteHelper extends BaseHelper
         try {
             $quote = $this->quoteExists($quoteId) ? $this->quoteFactory->load($quoteId) : null;
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $quote = null;
         } finally {
             return $quote;

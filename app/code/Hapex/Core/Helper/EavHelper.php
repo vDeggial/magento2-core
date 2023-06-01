@@ -30,7 +30,7 @@ class EavHelper extends DbHelper
             $result = (int) $this->sqlQueryFetchOne($sql);
             $attributeId = $result;
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $attributeId = 0;
         } finally {
             return $attributeId;
@@ -46,7 +46,7 @@ class EavHelper extends DbHelper
             $result = (int) $this->sqlQueryFetchOne($sql);
             $attributeSetId = $result;
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $attributeSetId = 0;
         } finally {
             return $attributeSetId;
@@ -62,7 +62,7 @@ class EavHelper extends DbHelper
             $result = (int) $this->sqlQueryFetchOne($sql);
             $attributeSetId = $result;
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $attributeSetId = 0;
         } finally {
             return $attributeSetId;
@@ -78,7 +78,7 @@ class EavHelper extends DbHelper
             $result = $this->sqlQueryFetchOne($sql);
             $attributeSetName = $result;
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $attributeSetName = null;
         } finally {
             return $attributeSetName;
@@ -92,7 +92,7 @@ class EavHelper extends DbHelper
             $tableName = $this->getSqlTableName($this->getEntityTable($attributeType));
             $this->setTableName($tableName, $backendType);
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $tableName = null;
         } finally {
             return $tableName;
@@ -116,7 +116,7 @@ class EavHelper extends DbHelper
             $result =  $this->sqlQueryFetchOne($sql);
             $backendType = $result;
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $backendType = null;
         } finally {
             return $backendType;
@@ -139,7 +139,7 @@ class EavHelper extends DbHelper
                     break;
             }
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $value = null;
         } finally {
             return $value;
@@ -160,7 +160,7 @@ class EavHelper extends DbHelper
             $result = $this->sqlQueryFetchOne($sql);
             $value = $result;
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $value = null;
         } finally {
             return $value;
@@ -175,7 +175,7 @@ class EavHelper extends DbHelper
             $result = $this->sqlQueryFetchOne($sql);
             $optionValue = $result;
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $optionValue = null;
         } finally {
             return $optionValue;
@@ -190,7 +190,7 @@ class EavHelper extends DbHelper
             $result = (int) $this->sqlQueryFetchOne($sql);
             $typeId = $result;
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $typeId = 0;
         } finally {
             return $typeId;
@@ -205,7 +205,7 @@ class EavHelper extends DbHelper
             $result = $this->sqlQueryFetchOne($sql);
             $typeCode = $result;
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $typeCode = null;
         } finally {
             return $typeCode;
@@ -221,7 +221,7 @@ class EavHelper extends DbHelper
             $result =  $this->sqlQueryFetchOne($sql);
             $entityTable = $result;
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $entityTable = null;
         } finally {
             return $entityTable;
@@ -237,7 +237,7 @@ class EavHelper extends DbHelper
             $result = $this->sqlQueryFetchOne($sql);
             $value = $result;
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $value = null;
         } finally {
             return $value;

@@ -13,7 +13,7 @@ class DataHelper extends BaseHelper
         try {
             $isSetFlag = $this->scopeConfig->isSetFlag($path, ScopeInterface::SCOPE_STORE, $scopeCode);
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $isSetFlag = false;
         } finally {
             return $isSetFlag;
@@ -26,7 +26,7 @@ class DataHelper extends BaseHelper
         try {
             $value = $this->scopeConfig->getValue($path, ScopeInterface::SCOPE_STORE, $scopeCode);
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $value = null;
         } finally {
             return $value;
@@ -79,7 +79,7 @@ class DataHelper extends BaseHelper
             // Trim and return normalized name
             $properName =  trim($name);
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $properName = $name;
         } finally {
             return $properName;

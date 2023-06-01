@@ -59,7 +59,7 @@ class BaseHelper extends AbstractHelper
         try {
             return parent::sendOutput($output);
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             return false;
         }
     }
@@ -69,7 +69,7 @@ class BaseHelper extends AbstractHelper
         try {
             $this->sendOutput($this->getBlockHtml($blockId));
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
         }
     }
 
@@ -81,7 +81,7 @@ class BaseHelper extends AbstractHelper
             $block->setBlockId($blockId);
             $html = $block->toHtml();
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $html = null;
         } finally {
             return $html;
@@ -94,7 +94,7 @@ class BaseHelper extends AbstractHelper
         try {
             $object = parent::generateClassObject($class);
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
         } finally {
             return $object;
         }

@@ -21,7 +21,7 @@ class SalesRuleCustomerHelper extends BaseHelper
         try {
             $uses = (int) $this->getRuleCustomerFieldValue($ruleId, $customerId, "times_used");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $uses = 0;
         } finally {
             return $uses;
@@ -34,7 +34,7 @@ class SalesRuleCustomerHelper extends BaseHelper
             $sql = "SELECT $fieldName FROM " . $this->tableRuleCustomer . " WHERE rule_id = $ruleId and customer_id = $customerId";
             $result = $this->helperDb->sqlQueryFetchOne($sql);
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $result = null;
         } finally {
             return $result;

@@ -27,7 +27,7 @@ class OrderAddressHelper extends BaseHelper
         try {
             $address = $order->getBillingAddress();
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $address = $this->address;
         } finally {
             return $address;
@@ -41,7 +41,7 @@ class OrderAddressHelper extends BaseHelper
             $customerName = $this->getOrderIdShippingName($orderId);
             $customerName = isset($customerName) && !empty(trim($customerName)) && strpos(trim($customerName), ' ') !== false ? trim($customerName) : trim($this->getOrderIdBillingName($orderId));
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $customerName = null;
         } finally {
             return $customerName;
@@ -56,7 +56,7 @@ class OrderAddressHelper extends BaseHelper
             $lastName = $this->getOrderAddressFieldValue($orderId, "lastname", "shipping");
             if (!empty($firstName) && !empty($lastName)) $name = "$firstName $lastName";
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $name = null;
         } finally {
             return $name;
@@ -71,7 +71,7 @@ class OrderAddressHelper extends BaseHelper
             $lastName = $this->getOrderAddressFieldValue($orderId, "lastname", "billing");
             if (!empty($firstName) && !empty($lastName)) $name = "$firstName $lastName";
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $name = null;
         } finally {
             return $name;
@@ -84,7 +84,7 @@ class OrderAddressHelper extends BaseHelper
         try {
             $address = $order->getShippingAddress();
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $address = $this->address;
         } finally {
             return $address;
@@ -98,7 +98,7 @@ class OrderAddressHelper extends BaseHelper
             $address = $this->getOrderShippingAddress($order);
             $customerName = isset($address) && !empty(trim($address->getName())) && strpos(trim($address->getName()), ' ') !== false ? trim($address->getName()) : trim($this->getOrderBillingAddress($order)->getName());
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $customerName = null;
         } finally {
             return $customerName;
@@ -111,7 +111,7 @@ class OrderAddressHelper extends BaseHelper
         try {
             $customerEmail = $this->getOrderBillingAddress($order)->getEmail();
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $customerEmail = null;
         } finally {
             return $customerEmail;
@@ -132,7 +132,7 @@ class OrderAddressHelper extends BaseHelper
                 $info["country"] = $this->getCountry($address->getCountryId());
             }
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $info = null;
         } finally {
             return $info;
@@ -148,7 +148,7 @@ class OrderAddressHelper extends BaseHelper
                 $name = $country->getName();
             }
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $name = null;
         } finally {
             return $name;
@@ -167,7 +167,7 @@ class OrderAddressHelper extends BaseHelper
             if (isset($type)) $sql .= " AND address_type = '$type'";
             $result = $this->helperDb->sqlQueryFetchOne($sql);
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $result = null;
         } finally {
             return $result;

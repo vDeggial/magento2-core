@@ -45,7 +45,7 @@ class EmailHelper extends BaseHelper
 
             return true;
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             return false;
         }
     }

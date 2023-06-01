@@ -59,7 +59,7 @@ class ProductHelper extends BaseHelper
         try {
             $productAttributeSet = (int)$this->helperEav->getProductEntityFieldValue($productId, "attribute_set_id");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $productAttributeSet = 0;
         } finally {
             return $productAttributeSet;
@@ -73,7 +73,7 @@ class ProductHelper extends BaseHelper
             $value = $this->helperEav->getProductAttributeValue($productId, $code);
             if (is_bool($value)) $value = null;
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $value = null;
         } finally {
             return $value;
@@ -132,7 +132,7 @@ class ProductHelper extends BaseHelper
                 }
             }
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $categories = [];
         } finally {
             return $categories;
@@ -145,7 +145,7 @@ class ProductHelper extends BaseHelper
         try {
             $productDate =  $this->helperEav->getProductEntityFieldValue($productId, "created_at");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $productDate = null;
         } finally {
             return $productDate;
@@ -158,7 +158,7 @@ class ProductHelper extends BaseHelper
         try {
             $productDate =  $this->helperEav->getProductEntityFieldValue($productId, "updated_at");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $productDate = null;
         } finally {
             return $productDate;
@@ -171,7 +171,7 @@ class ProductHelper extends BaseHelper
         try {
             $description = $this->helperEav->getProductAttributeValue($productId, "description");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $description = null;
         } finally {
             return $description;
@@ -184,7 +184,7 @@ class ProductHelper extends BaseHelper
         try {
             $description = $this->helperEav->getProductAttributeValue($productId, "short_description");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $description = null;
         } finally {
             return $description;
@@ -199,7 +199,7 @@ class ProductHelper extends BaseHelper
             $result = $this->helperDb->sqlQueryFetchOne($sql);
             $productId = (int)$result;
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $productId = 0;
         } finally {
             return $productId;
@@ -213,7 +213,7 @@ class ProductHelper extends BaseHelper
             $imageFilename = $this->getImageFilename($productId);
             $image = $this->getImageUrl($productId, $imageFilename, $width);
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $image = null;
         } finally {
             return $image;
@@ -229,7 +229,7 @@ class ProductHelper extends BaseHelper
                 array_push($imageList, $this->getImageUrl($productId, $imageFilename, $width));
             });
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $imageList = [];
         } finally {
             return $imageList;
@@ -242,7 +242,7 @@ class ProductHelper extends BaseHelper
         try {
             $cost = (float)$this->helperEav->getProductAttributeValue($productId, "cost");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $cost = 0;
         } finally {
             return $cost;
@@ -255,7 +255,7 @@ class ProductHelper extends BaseHelper
         try {
             $price = (float)$this->helperEav->getProductAttributeValue($productId, "price");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $price = 0;
         } finally {
             return $price;
@@ -269,7 +269,7 @@ class ProductHelper extends BaseHelper
             $price = $this->helperEav->getProductAttributeValue($productId, "special_price");
             if (is_bool($price)) $price = null;
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $price = null;
         } finally {
             return $price;
@@ -283,7 +283,7 @@ class ProductHelper extends BaseHelper
             $productDate =  $this->helperEav->getProductAttributeValue($productId, "special_from_date");
             if (is_bool($productDate)) $productDate = null;
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $productDate = null;
         } finally {
             return $productDate;
@@ -297,7 +297,7 @@ class ProductHelper extends BaseHelper
             $productDate =  $this->helperEav->getProductAttributeValue($productId, "special_to_date");
             if (is_bool($productDate)) $productDate = null;
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $productDate = null;
         } finally {
             return $productDate;
@@ -310,7 +310,7 @@ class ProductHelper extends BaseHelper
         try {
             $name = $this->helperEav->getProductAttributeValue($productId, "name");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $name = null;
         } finally {
             return $name;
@@ -323,7 +323,7 @@ class ProductHelper extends BaseHelper
         try {
             $productSku =  $this->helperEav->getProductEntityFieldValue($productId, "sku");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $productSku = null;
         } finally {
             return $productSku;
@@ -337,7 +337,7 @@ class ProductHelper extends BaseHelper
             $result = $this->helperEav->getProductAttributeValue($productId, "status");
             $status = isset($result) ? (int) $result : -1;
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $status = -1;
         } finally {
             return $status;
@@ -352,7 +352,7 @@ class ProductHelper extends BaseHelper
             $result = $this->helperDb->sqlQueryFetchOne($sql);
             $qty = isset($result) ? (int) $result : -1;
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $qty = -1;
         } finally {
             return $qty;
@@ -367,7 +367,7 @@ class ProductHelper extends BaseHelper
             $result = $this->helperDb->sqlQueryFetchOne($sql);
             $qty = isset($result) ? (int) $result : -1;
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $qty = -1;
         } finally {
             return $qty;
@@ -382,7 +382,7 @@ class ProductHelper extends BaseHelper
             $result = $this->helperDb->sqlQueryFetchOne($sql);
             $in_stock = isset($result) ? (int) $result : -1;
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $in_stock = -1;
         } finally {
             return $in_stock;
@@ -398,7 +398,7 @@ class ProductHelper extends BaseHelper
             $result = $this->helperDb->sqlQueryFetchOne($sql);
             $in_stock = isset($result) ? (int) $result : -1;
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $in_stock = -1;
         } finally {
             return $in_stock;
@@ -411,7 +411,7 @@ class ProductHelper extends BaseHelper
         try {
             $productType =  $this->helperEav->getProductEntityFieldValue($productId, "type_id");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $productType = null;
         } finally {
             return $productType;
@@ -425,7 +425,7 @@ class ProductHelper extends BaseHelper
             $urlKey = $this->getUrlKey($productId);
             $productUrl = $this->urlFramework->getUrl($urlKey);
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $productUrl = null;
         } finally {
             return $productUrl;
@@ -438,7 +438,7 @@ class ProductHelper extends BaseHelper
         try {
             $urlKey = $this->helperEav->getProductAttributeValue($productId, "url_key");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $urlKey = null;
         } finally {
             return $urlKey;
@@ -470,7 +470,7 @@ class ProductHelper extends BaseHelper
             $result = $this->helperDb->sqlQueryFetchOne($sql);
             $exists = $result && !empty($result);
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $exists = false;
         } finally {
             return $exists;
@@ -485,7 +485,7 @@ class ProductHelper extends BaseHelper
             $result = $this->helperDb->sqlQueryFetchOne($sql);
             $exists = $result && !empty($result);
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $exists = false;
         } finally {
             return $exists;
@@ -498,7 +498,7 @@ class ProductHelper extends BaseHelper
         try {
             $product = $this->productExists($productId) ? $this->objectManager->create('Magento\Catalog\Model\Product')->load($productId) : null;
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $product = null;
         } finally {
             return $product;
@@ -511,7 +511,7 @@ class ProductHelper extends BaseHelper
         try {
             $image = $this->helperEav->getProductAttributeValue($productId, "image");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $image = null;
         } finally {
             return $image;
@@ -528,7 +528,7 @@ class ProductHelper extends BaseHelper
                 array_push($images, $entry["fileName"]);
             });
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $images = [];
         } finally {
             return $images;
@@ -542,7 +542,7 @@ class ProductHelper extends BaseHelper
             $product = $this->getById($productId);
             $imageUrl = $this->imageHelper->init($product, 'product_page_image_large')->keepAspectRatio(true)->setImageFile($imageFilename)->resize($width, null)->getUrl();
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $imageUrl = null;
         } finally {
             return $imageUrl;

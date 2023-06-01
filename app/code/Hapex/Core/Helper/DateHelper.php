@@ -52,7 +52,7 @@ class DateHelper extends AbstractHelper
                 $dateAdjusted = $dateAdjusted->format($format);
             }
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $dateAdjusted = null;
         } finally {
             return $dateAdjusted;
@@ -69,7 +69,7 @@ class DateHelper extends AbstractHelper
             $isBefore = $this->isDateBefore($toDate);
             $isWithinRange = $isAfter && $isBefore;
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $isWithinRange = false;
         } finally {
             return $isWithinRange;

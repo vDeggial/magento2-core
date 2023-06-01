@@ -21,7 +21,7 @@ class OrderGridHelper extends BaseHelper
         try {
             $fullName = $this->getOrderGridFieldValue($orderId, "billing_name");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $fullName = null;
         } finally {
             return $fullName;
@@ -35,7 +35,7 @@ class OrderGridHelper extends BaseHelper
             $fullName = trim($this->getShippingName($orderId));
             if (empty($fullName) || strpos($fullName, ' ') === false) $fullName = trim($this->getBillingName($orderId));
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $fullName = null;
         } finally {
             return $fullName;
@@ -48,7 +48,7 @@ class OrderGridHelper extends BaseHelper
         try {
             $email = $this->getOrderGridFieldValue($orderId, "customer_email");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $email = null;
         } finally {
             return $email;
@@ -61,7 +61,7 @@ class OrderGridHelper extends BaseHelper
         try {
             $fullName = $this->getOrderGridFieldValue($orderId, "shipping_name");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $fullName = null;
         } finally {
             return $fullName;
@@ -74,7 +74,7 @@ class OrderGridHelper extends BaseHelper
             $sql = "SELECT $fieldName FROM " . $this->tableOrderGrid . " where entity_id = $orderId";
             $result = $this->helperDb->sqlQueryFetchOne($sql);
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $result = null;
         } finally {
             return $result;

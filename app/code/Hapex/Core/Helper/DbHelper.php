@@ -26,7 +26,7 @@ class DbHelper extends AbstractHelper
             $tableName = isset($name) ? $this->resource->getTableName($name) : $name;
             $tableExists = isset($tableName) ? $this->resource->getConnection()->isTableExists($tableName) : isset($name);
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $tableName = $name;
             $tableExists = false;
         } finally {
@@ -41,7 +41,7 @@ class DbHelper extends AbstractHelper
             $result = $this->resource->getConnection()->query($sql);
         } catch (\Throwable $e) {
             $result = null;
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
         } finally {
             return $result;
         }
@@ -55,7 +55,7 @@ class DbHelper extends AbstractHelper
             $result = $this->resource->getConnection()->fetchAll($sql);
         } catch (\Throwable $e) {
             $result = null;
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
         } finally {
             return $result;
         }
@@ -68,7 +68,7 @@ class DbHelper extends AbstractHelper
             $result = $this->resource->getConnection()->fetchOne($sql);
         } catch (\Throwable $e) {
             $result = null;
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
         } finally {
             return $result;
         }
@@ -81,7 +81,7 @@ class DbHelper extends AbstractHelper
             $result = $this->resource->getConnection()->fetchRow($sql);
         } catch (\Throwable $e) {
             $result = null;
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
         } finally {
             return $result;
         }

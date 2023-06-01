@@ -20,7 +20,7 @@ class FlagHelper extends BaseHelper
         try {
             $state = (int) $this->getFlagFieldValueByCode($flagCode, "state");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $state = 0;
         } finally {
             return $state;
@@ -33,7 +33,7 @@ class FlagHelper extends BaseHelper
             $sql = "SELECT $fieldName FROM " . $this->tableFlag . " where flag_id = $flagId";
             $result = $this->helperDb->sqlQueryFetchOne($sql);
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $result = null;
         } finally {
             return $result;
@@ -46,7 +46,7 @@ class FlagHelper extends BaseHelper
             $sql = "SELECT $fieldName FROM " . $this->tableFlag . " where flag_code LIKE '$flagCode'";
             $result = $this->helperDb->sqlQueryFetchOne($sql);
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $result = null;
         } finally {
             return $result;

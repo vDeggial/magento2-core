@@ -43,7 +43,7 @@ class CsvHelper extends BaseHelper
         try {
             $data = $this->getCsv($fileName);
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $data = [];
         } finally {
             $this->shiftData($data, $isFirstRowHeader);
@@ -70,7 +70,7 @@ class CsvHelper extends BaseHelper
             $this->csvProcessor->setEnclosure('"')->setDelimiter(',')->saveData($this->helperFile->getFilePath($path, $fileName), $data);
             $success = true;
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $success = false;
         } finally {
             return $success;

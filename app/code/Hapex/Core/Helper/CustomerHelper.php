@@ -70,7 +70,7 @@ class CustomerHelper extends BaseHelper
                     break;
             }
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $quantity = 0;
         } finally {
             return $quantity;
@@ -85,7 +85,7 @@ class CustomerHelper extends BaseHelper
             $result = $this->helperDb->sqlQueryFetchOne($sql);
             $exists = $result && !empty($result);
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $exists = false;
         } finally {
             return $exists;
@@ -98,7 +98,7 @@ class CustomerHelper extends BaseHelper
         try {
             $customerDob = $this->helperEav->getCustomerEntityFieldValue($customerId, "dob");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $customerDob = null;
         } finally {
             return $customerDob;
@@ -111,7 +111,7 @@ class CustomerHelper extends BaseHelper
         try {
             $date = $this->helperEav->getCustomerEntityFieldValue($customerId, "created_at");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $date = null;
         } finally {
             return $date;
@@ -124,7 +124,7 @@ class CustomerHelper extends BaseHelper
         try {
             $date = $this->helperEav->getCustomerEntityFieldValue($customerId, "updated_at");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $date = null;
         } finally {
             return $date;
@@ -137,7 +137,7 @@ class CustomerHelper extends BaseHelper
         try {
             $customerEmail = $this->helperEav->getCustomerEntityFieldValue($customerId, "email");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $customerEmail = null;
         } finally {
             return $customerEmail;
@@ -150,7 +150,7 @@ class CustomerHelper extends BaseHelper
         try {
             $customerGroup = (int) $this->helperEav->getCustomerEntityFieldValue($customerId, "group_id");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $customerGroup = 0;
         } finally {
             return $customerGroup;
@@ -163,7 +163,7 @@ class CustomerHelper extends BaseHelper
         try {
             $customerStatus = (int) $this->helperEav->getCustomerEntityFieldValue($customerId, "is_active");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $customerStatus = 0;
         } finally {
             return $customerStatus;
@@ -176,7 +176,7 @@ class CustomerHelper extends BaseHelper
         try {
             $customerGender = (int) $this->helperEav->getCustomerEntityFieldValue($customerId, "gender");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $customerGender = 0;
         } finally {
             return $customerGender;
@@ -189,7 +189,7 @@ class CustomerHelper extends BaseHelper
         try {
             $customerName = $this->helperEav->getCustomerEntityFieldValue($customerId, "firstname");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $customerName = null;
         } finally {
             return $customerName;
@@ -202,7 +202,7 @@ class CustomerHelper extends BaseHelper
         try {
             $customerName = $this->helperEav->getCustomerEntityFieldValue($customerId, "lastname");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $customerName = null;
         } finally {
             return $customerName;
@@ -216,7 +216,7 @@ class CustomerHelper extends BaseHelper
             $sql = "SELECT entity_id FROM " . $this->tableCustomer . " WHERE email like '$customerEmail'";
             $customerId = (int) $this->helperDb->sqlQueryFetchOne($sql);
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $customerId = 0;
         } finally {
             return $customerId;

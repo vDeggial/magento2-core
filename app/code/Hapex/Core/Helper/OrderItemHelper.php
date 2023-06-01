@@ -24,7 +24,7 @@ class OrderItemHelper extends BaseHelper
             $sql = "SELECT * FROM " . $this->tableOrderItem . " WHERE item_id = $itemId";
             $result = $this->helperDb->sqlQueryFetchRow($sql);
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $result = null;
         } finally {
             return $result;
@@ -39,7 +39,7 @@ class OrderItemHelper extends BaseHelper
             $sql = "SELECT order_id FROM " . $this->tableOrderItem . " WHERE sku LIKE '$productSku' GROUP BY order_id";
             $result = array_column($this->helperDb->sqlQueryFetchAll($sql), "order_id");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $result = null;
         } finally {
             return $result;
@@ -53,7 +53,7 @@ class OrderItemHelper extends BaseHelper
             $sql = "SELECT item_id FROM " . $this->tableOrderItem . " WHERE order_id = $orderId group by item_id";
             $ids = array_column($this->helperDb->sqlQueryFetchAll($sql), "item_id");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $ids = [];
         } finally {
             return $ids;
@@ -70,7 +70,7 @@ class OrderItemHelper extends BaseHelper
                 $ids = array_column($this->helperDb->sqlQueryFetchAll($sql), "item_id");
             }
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $ids = [];
         } finally {
             return $ids;
@@ -86,7 +86,7 @@ class OrderItemHelper extends BaseHelper
                 $items = $this->helperDb->sqlQueryFetchAll($sql);
             }
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $items = [];
         } finally {
             return $items;
@@ -103,7 +103,7 @@ class OrderItemHelper extends BaseHelper
                 $ids = array_column($this->helperDb->sqlQueryFetchAll($sql), "sku");
             }
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $ids = [];
         } finally {
             return $ids;
@@ -120,7 +120,7 @@ class OrderItemHelper extends BaseHelper
                 $ids = array_column($this->helperDb->sqlQueryFetchAll($sql), "sku");
             }
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $ids = [];
         } finally {
             return $ids;
@@ -133,7 +133,7 @@ class OrderItemHelper extends BaseHelper
         try {
             $date =  $this->getItemFieldValueById($itemId, "created_at");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $date = null;
         } finally {
             return $date;
@@ -146,7 +146,7 @@ class OrderItemHelper extends BaseHelper
         try {
             $date =  $this->getItemFieldValueById($itemId, "updated_at");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $date = null;
         } finally {
             return $date;
@@ -159,7 +159,7 @@ class OrderItemHelper extends BaseHelper
         try {
             $rules =  $this->getItemFieldValueById($itemId, "applied_rule_ids");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $rules = null;
         } finally {
             return $rules;
@@ -172,7 +172,7 @@ class OrderItemHelper extends BaseHelper
         try {
             $discount = (float) $this->getItemFieldValueById($itemId, "discount_amount");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $discount = 0;
         } finally {
             return $discount;
@@ -185,7 +185,7 @@ class OrderItemHelper extends BaseHelper
         try {
             $discount = (float) $this->getItemFieldValueById($itemId, "mp_reward_discount");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $discount = 0;
         } finally {
             return $discount;
@@ -198,7 +198,7 @@ class OrderItemHelper extends BaseHelper
         try {
             $discount = (float) $this->getItemFieldValueById($itemId, "discount_refunded");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $discount = 0;
         } finally {
             return $discount;
@@ -211,7 +211,7 @@ class OrderItemHelper extends BaseHelper
         try {
             $discount = (float) $this->getItemFieldValueById($itemId, "tax_amount");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $discount = 0;
         } finally {
             return $discount;
@@ -224,7 +224,7 @@ class OrderItemHelper extends BaseHelper
         try {
             $discount = (float) $this->getItemFieldValueById($itemId, "tax_refunded");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $discount = 0;
         } finally {
             return $discount;
@@ -237,7 +237,7 @@ class OrderItemHelper extends BaseHelper
         try {
             $total = (float) $this->getItemFieldValueById($itemId, "row_total");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $total = 0;
         } finally {
             return $total;
@@ -250,7 +250,7 @@ class OrderItemHelper extends BaseHelper
         try {
             $total = (float) $this->getItemFieldValueById($itemId, "amount_refunded");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $total = 0;
         } finally {
             return $total;
@@ -263,7 +263,7 @@ class OrderItemHelper extends BaseHelper
         try {
             $id = (int) $this->getItemFieldValueById($itemId, "parent_item_id");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $id = 0;
         } finally {
             return $id;
@@ -276,7 +276,7 @@ class OrderItemHelper extends BaseHelper
         try {
             $has_parent = (bool)$this->getItemParentItemId($itemId) > 0;
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $has_parent = false;
         } finally {
             return $has_parent;
@@ -291,7 +291,7 @@ class OrderItemHelper extends BaseHelper
         try {
             $qty = (int) $this->getItemFieldValueById($itemId, "qty_canceled");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $qty = 0;
         } finally {
             return $qty;
@@ -304,7 +304,7 @@ class OrderItemHelper extends BaseHelper
         try {
             $qty = (int) $this->getItemFieldValueById($itemId, "qty_ordered");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $qty = 0;
         } finally {
             return $qty;
@@ -317,7 +317,7 @@ class OrderItemHelper extends BaseHelper
         try {
             $qty = (int) $this->getItemFieldValueById($itemId, "qty_invoiced");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $qty = 0;
         } finally {
             return $qty;
@@ -330,7 +330,7 @@ class OrderItemHelper extends BaseHelper
         try {
             $qty = (int) $this->getItemFieldValueById($itemId, "qty_refunded");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $qty = 0;
         } finally {
             return $qty;
@@ -343,7 +343,7 @@ class OrderItemHelper extends BaseHelper
         try {
             $qty = (int) $this->getItemFieldValueById($itemId, "qty_shipped");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $qty = 0;
         } finally {
             return $qty;
@@ -355,7 +355,7 @@ class OrderItemHelper extends BaseHelper
         try {
             $qty = (int) $this->getItemFieldValueBySku($orderId, $productSku, "sum(qty_canceled)");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $qty = 0;
         } finally {
             return $qty;
@@ -368,7 +368,7 @@ class OrderItemHelper extends BaseHelper
         try {
             $qty = (int) $this->getItemFieldValueBySku($orderId, $productSku, "sum(qty_ordered)");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $qty = 0;
         } finally {
             return $qty;
@@ -381,7 +381,7 @@ class OrderItemHelper extends BaseHelper
         try {
             $qty = (int) $this->getItemFieldValueBySku($orderId, $productSku, "sum(qty_invoiced)");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $qty = 0;
         } finally {
             return $qty;
@@ -394,7 +394,7 @@ class OrderItemHelper extends BaseHelper
         try {
             $qty = (int) $this->getItemFieldValueBySku($orderId, $productSku, "sum(qty_refunded)");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $qty = 0;
         } finally {
             return $qty;
@@ -407,7 +407,7 @@ class OrderItemHelper extends BaseHelper
         try {
             $qty = (int) $this->getItemFieldValueBySku($orderId, $productSku, "sum(qty_shipped)");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $qty = 0;
         } finally {
             return $qty;
@@ -425,7 +425,7 @@ class OrderItemHelper extends BaseHelper
             $info["dateCreated"] = $this->helperDate->getCurrentDate()->format("Y-m-d H:i:s");
             $info["dateUpdated"] = $order->getUpdatedAt();
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $info = [];
         } finally {
             return $info;
@@ -438,7 +438,7 @@ class OrderItemHelper extends BaseHelper
         try {
             $itemId = (int) $this->getItemFieldValueBySku($orderId, $productSku, "item_id");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $itemId = 0;
         } finally {
             return $itemId;
@@ -454,7 +454,7 @@ class OrderItemHelper extends BaseHelper
                 $itemId = array_column($itemId, "item_id");
             }
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $itemId = [];
         } finally {
             return $itemId;
@@ -468,7 +468,7 @@ class OrderItemHelper extends BaseHelper
             $sql = "SELECT * FROM " . $this->tableOrderItem . " WHERE order_id = $orderId AND sku LIKE '$sku'";
             $result = $this->helperDb->sqlQueryFetchAll($sql);
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $result = [];
         } finally {
             return $result;
@@ -481,7 +481,7 @@ class OrderItemHelper extends BaseHelper
         try {
             $productId = (int) $this->getItemFieldValueById($itemId, "product_id");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $productId = 0;
         } finally {
             return $productId;
@@ -494,7 +494,7 @@ class OrderItemHelper extends BaseHelper
         try {
             $orderId = (int) $this->getItemFieldValueById($itemId, "order_id");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $orderId = 0;
         } finally {
             return $orderId;
@@ -507,7 +507,7 @@ class OrderItemHelper extends BaseHelper
         try {
             $isVirtual = (int) $this->getItemFieldValueById($itemId, "is_virtual");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $isVirtual = 0;
         } finally {
             return $isVirtual;
@@ -520,7 +520,7 @@ class OrderItemHelper extends BaseHelper
         try {
             $sku = $this->getItemFieldValueById($itemId, "sku");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $sku = null;
         } finally {
             return $sku;
@@ -533,7 +533,7 @@ class OrderItemHelper extends BaseHelper
         try {
             $price = (float) $this->getItemFieldValueById($itemId, "price");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $price = 0;
         } finally {
             return $price;
@@ -546,7 +546,7 @@ class OrderItemHelper extends BaseHelper
         try {
             $name = $this->getItemFieldValueByid($itemId, "name");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $name = null;
         } finally {
             return $name;
@@ -559,7 +559,7 @@ class OrderItemHelper extends BaseHelper
         try {
             $type = $this->getItemFieldValueById($itemId, "product_type");
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $type = null;
         } finally {
             return $type;
@@ -572,7 +572,7 @@ class OrderItemHelper extends BaseHelper
         try {
             $options = $this->getArrayValue(json_decode($this->getItemFieldValueById($itemId, "product_options"), true), "options", []);
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $options = [];
         } finally {
             return $options;
@@ -586,7 +586,7 @@ class OrderItemHelper extends BaseHelper
             $sql = "SELECT $fieldName FROM " . $this->tableOrderItem . " where order_id in($orderId) AND sku in('$productSku')";
             $result = $this->helperDb->sqlQueryFetchOne($sql);
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $result = null;
         } finally {
             return $result;
@@ -599,7 +599,7 @@ class OrderItemHelper extends BaseHelper
             $sql = "SELECT $fieldName FROM " . $this->tableOrderItem . " where order_id in($orderId) AND sku in('$productSku')";
             $result = $this->helperDb->sqlQueryFetchAll($sql);
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $result = [];
         } finally {
             return $result;
@@ -612,7 +612,7 @@ class OrderItemHelper extends BaseHelper
             $sql = "SELECT $fieldName FROM " . $this->tableOrderItem . " where item_id in($itemId)";
             $result = $this->helperDb->sqlQueryFetchOne($sql);
         } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $e->getMessage());
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $result = null;
         } finally {
             return $result;
