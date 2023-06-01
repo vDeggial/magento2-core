@@ -49,6 +49,11 @@ class BaseHelper extends AbstractHelper
         return $this->helperUrl;
     }
 
+    public function errorLog($method = null, $message = null)
+    {
+        $this->helperLog->errorLog($method, $message);
+    }
+
     public function sendOutput($output = null)
     {
         try {
