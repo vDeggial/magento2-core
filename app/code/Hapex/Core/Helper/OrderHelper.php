@@ -293,6 +293,19 @@ class OrderHelper extends BaseHelper
             return $customerId;
         }
     }
+    
+    public function getOrderCustomerGroupId($order = null)
+    {
+        $groupId = 0;
+        try {
+            $groupId = $order->getCustomer()->getGroupId();
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
+            $groupId = 0;
+        } finally {
+            return $groupId;
+        }
+    }
 
     public function getIsVirtual($orderId = 0)
     {
