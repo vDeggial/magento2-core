@@ -210,8 +210,8 @@ class ProductHelper extends BaseHelper
     {
         $image = null;
         try {
-            $imageFilename = $this->getImageFilename($productId);
-            $image = $this->getImageUrl($productId, $imageFilename, $width);
+            $images = $this->getImages($productId, $width);
+            $image = isset($images) && !empty($images) ? reset($images) : null;
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $image = null;
