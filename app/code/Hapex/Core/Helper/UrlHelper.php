@@ -71,6 +71,7 @@ class UrlHelper extends AbstractHelper
             $this->curl->get($url);
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $this->getExceptionTrace($e));
+            return $this->ping($url);
         } finally {
             return $this->curl;
         }
@@ -91,7 +92,7 @@ class UrlHelper extends AbstractHelper
             $this->curl->get($url);
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $this->getExceptionTrace($e));
-            //return $this->get($url);
+            return $this->get($url);
         } finally {
             return $this->curl;
         }
@@ -114,7 +115,7 @@ class UrlHelper extends AbstractHelper
             $this->curl->post($url, $data);
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $this->getExceptionTrace($e));
-            //return $this->post($url, $data, $contentType);
+            return $this->post($url, $data, $contentType);
         } finally {
             return $this->curl;
         }
