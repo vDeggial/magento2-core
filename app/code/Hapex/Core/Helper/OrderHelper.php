@@ -65,11 +65,11 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getOrderIdsByCustomerId($customerId = 0)
+    public function getOrdersByCustomerId($customerId = 0, $select = "*")
     {
         $result = [];
         try {
-            $sql = "SELECT entity_id FROM " . $this->tableOrder . " WHERE customer_id = $customerId GROUP BY entity_id ORDER BY created_at DESC";
+            $sql = "SELECT $select FROM " . $this->tableOrder . " WHERE customer_id = $customerId GROUP BY entity_id ORDER BY created_at DESC";
             $result = array_column($this->helperDb->sqlQueryFetchAll($sql), "entity_id");
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
@@ -77,6 +77,11 @@ class OrderHelper extends BaseHelper
         } finally {
             return $result;
         }
+    }
+
+    public function getOrderIdsByCustomerId($customerId = 0)
+    {
+        return $this->getOrdersByCustomerId($customerId, "entity_id");
     }
 
     public function getOrderIdsCreatedBetweenDates($dateFrom = "2022-07-01", $dateTo = null)
