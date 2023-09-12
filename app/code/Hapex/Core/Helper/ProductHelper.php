@@ -90,13 +90,10 @@ class ProductHelper extends BaseHelper
         $products = [];
         $tableStatus = $this->helperDb->getSqlTableName('catalog_product_entity_int');
         $tableAttribute = $this->helperDb->getSqlTableName("eav_attribute");
-        $sql = "SELECT entity_id FROM $tableStatus WHERE attribute_id = (SELECT attribute_id FROM $tableAttribute WHERE attribute_code LIKE 'status') AND $tableStatus.value = $status";
+        $sql = "SELECT sku from " . $this->tableProduct . " where entity_id in (SELECT entity_id FROM $tableStatus WHERE attribute_id = (SELECT attribute_id FROM $tableAttribute WHERE attribute_code LIKE 'status') AND $tableStatus.value = $status)";
         $result = $this->helperDb->sqlQueryFetchAll($sql);
         if ($result) {
-            foreach (array_column($result, "entity_id") as $entry) {
-                $sku = $this->getSku($entry);
-                if ($sku) $products[] = $sku;
-            }
+            $products = array_column($result, "sku");
         }
 
         return $products;
@@ -106,13 +103,10 @@ class ProductHelper extends BaseHelper
     {
         $products = [];
         $tableStockStatus = $this->helperDb->getSqlTableName('cataloginventory_stock_status');
-        $sql = "SELECT product_id FROM $tableStockStatus";
+        $sql = "SELECT sku from " . $this->tableProduct . " where entity_id in (select product_id FROM $tableStockStatus)";
         $result = $this->helperDb->sqlQueryFetchAll($sql);
         if ($result) {
-            foreach (array_column($result, "product_id") as $entry) {
-                $sku = $this->getSku($entry);
-                if ($sku) $products[] = $sku;
-            }
+            $products = array_column($result, "sku");
         }
 
         return $products;
