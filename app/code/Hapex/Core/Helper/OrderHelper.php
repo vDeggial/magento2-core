@@ -51,11 +51,11 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getOrderRowsWithSku($sku = null)
+    public function getOrderRowsWithSku($sku = null, $select = "*")
     {
         $result = [];
         try {
-            $sql = "SELECT * FROM " . $this->tableOrder . " WHERE entity_id IN(SELECT DISTINCT order_id FROM " . $this->tableOrderItem . " WHERE sku LIKE '$sku')";
+            $sql = "SELECT $select FROM " . $this->tableOrder . " WHERE entity_id IN(SELECT DISTINCT order_id FROM " . $this->tableOrderItem . " WHERE sku LIKE '$sku')";
             $result = $this->helperDb->sqlQueryFetchAll($sql);
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
@@ -293,7 +293,7 @@ class OrderHelper extends BaseHelper
             return $customerId;
         }
     }
-    
+
     public function getOrderCustomerGroupId($order = null)
     {
         $groupId = 0;
