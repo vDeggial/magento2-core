@@ -39,7 +39,8 @@ class OrderAddressHelper extends BaseHelper
         $customerName = null;
         try {
             $customerName = $this->getOrderIdShippingName($orderId);
-            $customerName = isset($customerName) && !empty(trim($customerName)) && strpos(trim($customerName), ' ') !== false ? trim($customerName) : trim($this->getOrderIdBillingName($orderId));
+            $billingName = $this->getOrderIdBillingName($orderId);
+            $customerName = isset($customerName) && !empty(trim($customerName)) && strpos(trim($customerName), ' ') !== false ? trim($customerName) : (isset($billingName) && !empty(trim($billingName)) && strpos(trim($billingName), ' ') !== false ? trim($billingName) : null);
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $customerName = null;
