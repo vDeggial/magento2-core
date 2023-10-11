@@ -99,4 +99,17 @@ class BaseHelper extends AbstractHelper
             return $object;
         }
     }
+
+    public function splitArray(array $array = [], bool $isChunksNum = true, int $num = 1, bool $preserve_keys = false): array
+    {
+        $arraySize = count($array);
+        switch (true) {
+            case $arraySize > 0 && $num > 0:
+                $size = (int)ceil(($arraySize / $num));
+                return array_chunk($array, ($isChunksNum ? $size : $num), $preserve_keys);
+
+            default:
+                return [];
+        }
+    }
 }
