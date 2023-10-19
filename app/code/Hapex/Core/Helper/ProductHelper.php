@@ -412,6 +412,20 @@ class ProductHelper extends BaseHelper
         }
     }
 
+    public function getVisibility($productId = 0)
+    {
+        $visibility = 0;
+        try {
+            $result = $this->helperEav->getProductAttributeValue($productId, "visibility");
+            $visibility = isset($result) ? (int) $result : -1;
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
+            $visibility = -1;
+        } finally {
+            return $visibility;
+        }
+    }
+
     public function getUrl($productId = 0)
     {
         $productUrl = null;
