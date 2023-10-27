@@ -230,6 +230,31 @@ class ProductHelper extends BaseHelper
         }
     }
 
+    public function getProductImages($productId = 0, $width = 500)
+    {
+        $allImages = [];
+        try {
+            $product = $this->getById($productId);
+            switch (isset($product)) {
+                case true:
+                    $images = $product->getMediaGalleryImages();
+                    foreach ($images as $image) {
+                        if (isset($image['url']) && $image['url'] !== '') {
+                            $imageUrl = $image['url'];
+                            $imageUrl = $this->imageHelper->init($product, 'product_page_image_large')->keepAspectRatio(true)->setImageFile($image["file"])->resize($width, null)->getUrl();
+                            $allImages[] = $imageUrl;
+                        }
+                    }
+                    break;
+            }
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
+            $allImages = [];
+        } finally {
+            return $allImages;
+        }
+    }
+
     public function getCost($productId = 0)
     {
         $cost = 0;
