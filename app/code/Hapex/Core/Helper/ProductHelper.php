@@ -200,33 +200,17 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    public function getImage($productId = 0, $width = 500)
+    public function getProductImage($productId = 0, $width = 500)
     {
         $image = null;
         try {
-            $images = $this->getImages($productId, $width);
+            $images = $this->getProductImages($productId, $width);
             $image = isset($images) && !empty($images) ? reset($images) : null;
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $image = null;
         } finally {
             return $image;
-        }
-    }
-
-    public function getImages($productId = 0, $width = 500)
-    {
-        $imageList = [];
-        try {
-            $images = $this->getImagesFilenames($productId);
-            array_walk($images, function ($imageFilename) use (&$imageList, &$productId, &$width) {
-                array_push($imageList, $this->getImageUrl($productId, $imageFilename, $width));
-            });
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
-            $imageList = [];
-        } finally {
-            return $imageList;
         }
     }
 
@@ -535,36 +519,6 @@ class ProductHelper extends BaseHelper
             $product = null;
         } finally {
             return $product;
-        }
-    }
-
-    protected function getImageFilename($productId = 0)
-    {
-        $image = null;
-        try {
-            $image = $this->helperEav->getProductAttributeValue($productId, "image");
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
-            $image = null;
-        } finally {
-            return $image;
-        }
-    }
-
-    protected function getImagesFilenames($productId = 0)
-    {
-        $images = [];
-        try {
-            $sql = "SELECT gal.value AS fileName FROM " . $this->tableGalleryToEntity . " ent LEFT JOIN " . $this->tableGalleryValue . " val ON ent.entity_id= val.entity_id LEFT JOIN " . $this->tableGallery . " gal ON val.value_id = gal.value_id WHERE ent.entity_id = $productId AND gal.media_type = 'image' AND val.disabled = 0 GROUP BY gal.value ORDER BY val.position";
-            $result = $this->helperDb->sqlQueryFetchAll($sql);
-            array_walk($result, function ($entry) use (&$images) {
-                array_push($images, $entry["fileName"]);
-            });
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
-            $images = [];
-        } finally {
-            return $images;
         }
     }
 
