@@ -358,6 +358,34 @@ class CreditMemoHelper extends BaseHelper
         }
     }
 
+    public function getMemoIdByOrderId($orderId = null)
+    {
+        $memoId = null;
+        switch (isset($orderId)) {
+            case true:
+                $sql = "SELECT entity_id FROM " . $this->tableCreditMemo . " where order_id = $orderId";
+                $result = $this->helperDb->sqlQueryFetchOne($sql);
+                return $result;
+                break;
+        }
+    }
+
+    public function getMemoByOrderId($orderId = null)
+    {
+        $memo = null;
+        switch (isset($orderId)) {
+            case true:
+                $memoId = $this->getMemoIdByOrderId($orderId);
+                switch (isset($memoId)) {
+                    case true:
+                        $memo = $this->getById($memoId);
+                        break;
+                }
+                break;
+        }
+        return $memo;
+    }
+
 
     protected function getById($memoId = 0)
     {
