@@ -365,9 +365,11 @@ class CreditMemoHelper extends BaseHelper
             case true:
                 $sql = "SELECT entity_id FROM " . $this->tableCreditMemo . " where order_id = $orderId";
                 $result = $this->helperDb->sqlQueryFetchOne($sql);
-                return $result;
+                $memoId = $result;
                 break;
         }
+
+        return $memoId;
     }
 
     public function getMemoByOrderId($orderId = null)
