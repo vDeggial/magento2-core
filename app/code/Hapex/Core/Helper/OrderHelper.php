@@ -147,7 +147,7 @@ class OrderHelper extends BaseHelper
     {
         $date = null;
         try {
-            $date =  (string) $this->getOrderFieldValue($orderId, "created_at");
+            $date = (string) $this->getOrderFieldValue($orderId, "created_at");
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $date = null;
@@ -160,7 +160,7 @@ class OrderHelper extends BaseHelper
     {
         $date = null;
         try {
-            $date =  (string) $this->getOrderFieldValue($orderId, "updated_at");
+            $date = (string) $this->getOrderFieldValue($orderId, "updated_at");
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $date = null;
@@ -283,6 +283,19 @@ class OrderHelper extends BaseHelper
             $incrementId = null;
         } finally {
             return $incrementId;
+        }
+    }
+
+    public function getRemoteIP($orderId = 0)
+    {
+        $ip = null;
+        try {
+            $ip = $this->getOrderFieldValue($orderId, "remote_ip");
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
+            $ip = null;
+        } finally {
+            return $ip;
         }
     }
 
@@ -513,7 +526,7 @@ class OrderHelper extends BaseHelper
 
     protected function getOrderItemsMergeSku($order = null)
     {
-        $orderItems  = $this->getOrderItems($order);
+        $orderItems = $this->getOrderItems($order);
         $items = [];
         try {
             array_walk($orderItems, function ($item) use (&$items) {
