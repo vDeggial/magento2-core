@@ -11,6 +11,7 @@ class UrlHelper extends AbstractHelper
     protected $objectManager;
     protected $helperLog;
     protected $curl;
+    protected $userAgent = "JRI/1.0";
 
     public function __construct(Context $context, ObjectManagerInterface $objectManager, Curl $curl, LogHelper $helperLog)
     {
@@ -84,7 +85,7 @@ class UrlHelper extends AbstractHelper
                 CURLOPT_RETURNTRANSFER => 1,
                 CURLOPT_HEADER => 0,
                 CURLOPT_FOLLOWLOCATION => 1,
-                CURLOPT_USERAGENT => "JRI cURL Request",
+                CURLOPT_USERAGENT => $this->userAgent,
                 CURLOPT_CONNECTTIMEOUT => 10,
                 CURLOPT_TIMEOUT => 20
             ];
@@ -105,7 +106,7 @@ class UrlHelper extends AbstractHelper
                 CURLOPT_RETURNTRANSFER => 1,
                 CURLOPT_HEADER => 0,
                 CURLOPT_FOLLOWLOCATION => 1,
-                CURLOPT_USERAGENT => "JRI cURL Request",
+                CURLOPT_USERAGENT => $this->userAgent,
                 CURLOPT_CONNECTTIMEOUT => 10,
                 CURLOPT_TIMEOUT => 20
             ];
