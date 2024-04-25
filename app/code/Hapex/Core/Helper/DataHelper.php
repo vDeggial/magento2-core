@@ -48,7 +48,7 @@ class DataHelper extends BaseHelper
             $name = preg_replace('/\s+/', ' ', $name) . ' ';
 
             // Break name up into parts split by name separators
-            $parts = preg_split('/( |-|O\'|l\'|d\'|St\\.|^Mc|\()/i', $name, -1, PREG_SPLIT_DELIM_CAPTURE);
+            $parts = preg_split('/( |-|O\'|l\'|d\'|St\\.|\()/i', $name, -1, PREG_SPLIT_DELIM_CAPTURE);
 
             // Chunk parts, use $properCases or uppercase first, remove unfinished chunks
             $parts = array_chunk($parts, 2);
