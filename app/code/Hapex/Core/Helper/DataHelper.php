@@ -39,16 +39,40 @@ class DataHelper extends BaseHelper
         try {
             // A list of properly cased parts
             $properCases = [
-                "O'", "l'", "d'", 'St.', 'Mc', 'the', 'van', 'het', 'in', "'t", 'ten',
-                'den', 'von', 'und', 'der', 'de', 'da', 'of', 'and', 'the', 'III', 'IV',
-                'VI', 'VII', 'VIII', 'IX',
+                "O'",
+                "l'",
+                "d'",
+                "St.",
+                "Mc",
+                "the",
+                "van",
+                "het",
+                "in",
+                "'t",
+                "ten",
+                "den",
+                "von",
+                "und",
+                "der",
+                "de",
+                "da",
+                "of",
+                "and",
+                "the",
+                "II",
+                "III",
+                "IV",
+                "VI",
+                "VII",
+                "VIII",
+                "IX",
             ];
 
             // Trim whitespace sequences to one space, append space to properly chunk
-            $name = preg_replace('/\s+/', ' ', $name) . ' ';
+            $name = preg_replace("/\s+/", " ", $name) . " ";
 
             // Break name up into parts split by name separators
-            $parts = preg_split('/( |-|O\'|l\'|d\'|St\\.|\()/i', $name, -1, PREG_SPLIT_DELIM_CAPTURE);
+            $parts = preg_split("/( |-|O\'|l\'|d\'|St\\.|Mc|\()/", $name, -1, PREG_SPLIT_DELIM_CAPTURE);
 
             // Chunk parts, use $properCases or uppercase first, remove unfinished chunks
             $parts = array_chunk($parts, 2);
@@ -57,7 +81,7 @@ class DataHelper extends BaseHelper
             });
             $parts = array_map(function ($part) use ($properCases) {
                 // Extract to name and separator part
-                list($name, $separator) = $part;
+                list ($name, $separator) = $part;
 
                 // Use specified case for separator if set
                 $cased = current(array_filter($properCases, function ($case) use ($separator) {
@@ -77,7 +101,7 @@ class DataHelper extends BaseHelper
             $name = implode($parts);
 
             // Trim and return normalized name
-            $properName =  trim($name);
+            $properName = trim($name);
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $properName = $name;
