@@ -12,6 +12,8 @@ class UrlHelper extends AbstractHelper
     protected $helperLog;
     protected $curl;
     protected $userAgent = "JRI/1.0";
+    protected $connectTimeout = 10;
+    protected $timeout = 20;
 
     public function __construct(Context $context, ObjectManagerInterface $objectManager, Curl $curl, LogHelper $helperLog)
     {
@@ -64,8 +66,8 @@ class UrlHelper extends AbstractHelper
                 CURLOPT_RETURNTRANSFER => 1,
                 CURLOPT_HEADER => 0,
                 CURLOPT_FOLLOWLOCATION => 1,
-                CURLOPT_CONNECTTIMEOUT => 10,
-                CURLOPT_TIMEOUT => 10,
+                CURLOPT_CONNECTTIMEOUT => $this->connectTimeout,
+                CURLOPT_TIMEOUT => $this->timeout,
                 CURLOPT_NOBODY => 1
             ];
             $this->curl->setOptions($options);
@@ -86,8 +88,8 @@ class UrlHelper extends AbstractHelper
                 CURLOPT_HEADER => 0,
                 CURLOPT_FOLLOWLOCATION => 1,
                 CURLOPT_USERAGENT => $this->userAgent,
-                CURLOPT_CONNECTTIMEOUT => 10,
-                CURLOPT_TIMEOUT => 20
+                CURLOPT_CONNECTTIMEOUT => $this->connectTimeout,
+                CURLOPT_TIMEOUT => $this->timeout
             ];
             $this->curl->setOptions($options);
             $this->curl->get($url);
@@ -107,8 +109,8 @@ class UrlHelper extends AbstractHelper
                 CURLOPT_HEADER => 0,
                 CURLOPT_FOLLOWLOCATION => 1,
                 CURLOPT_USERAGENT => $this->userAgent,
-                CURLOPT_CONNECTTIMEOUT => 10,
-                CURLOPT_TIMEOUT => 20
+                CURLOPT_CONNECTTIMEOUT => $this->connectTimeout,
+                CURLOPT_TIMEOUT => $this->timeout
             ];
             $headers = ["Content-Type" => $contentType];
             $this->curl->setOptions($options);
