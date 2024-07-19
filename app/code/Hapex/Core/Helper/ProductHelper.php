@@ -201,7 +201,7 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    public function getProductImageByIndex($productId = 0, $index = 1, $width = 500)
+    public function getProductImage($productId = 0, $index = 1, $width = 500)
     {
         $image = null;
         try {
@@ -213,11 +213,6 @@ class ProductHelper extends BaseHelper
         } finally {
             return $image;
         }
-    }
-
-    public function getProductImage($productId = 0, $width = 500)
-    {
-        return $this->getProductImageByIndex($productId, 1, $width);
     }
 
     public function getProductImages($productId = 0, $width = 500)
