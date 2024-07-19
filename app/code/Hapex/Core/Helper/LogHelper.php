@@ -16,7 +16,7 @@ class LogHelper extends AbstractHelper
         return $this->printLog("hapex_error_log", "$method :: $message");
     }
 
-    private function writeLogEntry($filename = null, $message = null)
+    public function writeLogEntry($filename = null, $message = null)
     {
         try {
             $currentDate = $this->objectManager->get(DateHelper::class)->getCurrentDate()->format("Y-m-d h:i:s A T");

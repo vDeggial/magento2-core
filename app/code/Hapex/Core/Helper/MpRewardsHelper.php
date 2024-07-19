@@ -14,7 +14,7 @@ class MpRewardsHelper extends BaseHelper
         $this->tableRewardTransactions = $this->helperDb->getSqlTableName("mageplaza_reward_transaction");
     }
 
-    public function getMpRewardTransactions($select = "*")
+    public function getMpRewards($select = "*")
     {
         $result = null;
         try {
@@ -28,7 +28,7 @@ class MpRewardsHelper extends BaseHelper
         }
     }
 
-    public function getMpRewardTransactionById($transactionId = 0, $select = "*")
+    public function getMpRewardById($transactionId = 0, $select = "*")
     {
         $result = null;
         try {
@@ -42,7 +42,7 @@ class MpRewardsHelper extends BaseHelper
         }
     }
 
-    public function getMpRewardTransactionByCustomerId($customerId = 0, $select = "*")
+    public function getMpRewardByCustomerId($customerId = 0, $select = "*")
     {
         $result = null;
         try {
@@ -56,7 +56,7 @@ class MpRewardsHelper extends BaseHelper
         }
     }
 
-    public function getMpRewardTransactionsByActionType($actionType = 0, $select = "*")
+    public function getMpRewardsByActionType($actionType = 0, $select = "*")
     {
         $result = null;
         try {
@@ -70,7 +70,7 @@ class MpRewardsHelper extends BaseHelper
         }
     }
 
-    public function getMpRewardTransactionsByActionCode($actionCode = null, $select = "*")
+    public function getMpRewardsByActionCode($actionCode = null, $select = "*")
     {
         $result = null;
         try {
@@ -84,7 +84,7 @@ class MpRewardsHelper extends BaseHelper
         }
     }
 
-    public function getMpRewardTransactionsByStatus($status = 0, $select = "*")
+    public function getMpRewardsByStatus($status = 0, $select = "*")
     {
         $result = null;
         try {
@@ -98,7 +98,7 @@ class MpRewardsHelper extends BaseHelper
         }
     }
 
-    public function getMpRewardTransactionsByDateCreated($dateCreated = null, $select = "*")
+    public function getMpRewardsByDateCreated($dateCreated = null, $select = "*")
     {
         $result = null;
         try {
@@ -112,7 +112,7 @@ class MpRewardsHelper extends BaseHelper
         }
     }
 
-    public function getMpRewardTransactionsByExtraContent($extraContent = null, $select = "*")
+    public function getMpRewardsByExtraContent($extraContent = null, $select = "*")
     {
         $result = null;
         try {

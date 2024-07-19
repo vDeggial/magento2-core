@@ -59,13 +59,13 @@ class DataHelper extends BaseHelper
                 "of",
                 "and",
                 "the",
-                "II",
-                "III",
-                "IV",
-                "VI",
-                "VII",
-                "VIII",
-                "IX",
+                " II",
+                " III",
+                " IV",
+                " VI",
+                " VI",
+                " VIII",
+                " IX",
             ];
 
             // Trim whitespace sequences to one space, append space to properly chunk

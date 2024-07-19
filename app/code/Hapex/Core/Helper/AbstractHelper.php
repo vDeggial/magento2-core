@@ -92,7 +92,7 @@ abstract class AbstractHelper extends \Magento\Framework\App\Helper\AbstractHelp
     {
         return number_format($number, $decimals, $decimal_separator, $thousands_separator);
     }
-
+    
     public function getExceptionTrace($e, $seen = null): ?string
     {
         $starter = $seen ? 'Caused by: ' : '';
