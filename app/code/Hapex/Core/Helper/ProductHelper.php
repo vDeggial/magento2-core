@@ -201,18 +201,23 @@ class ProductHelper extends BaseHelper
         }
     }
 
-    public function getProductImage($productId = 0, $width = 500)
+    public function getProductImageByIndex($productId = 0, $index = 1, $width = 500)
     {
         $image = null;
         try {
             $images = $this->getProductImages($productId, $width);
-            $image = isset($images) && !empty($images) ? reset($images) : null;
+            $image = isset($images) && !empty($images) && isset($images[$index - 1]) ? $images[$index - 1] : null;
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $image = null;
         } finally {
             return $image;
         }
+    }
+
+    public function getProductImage($productId = 0, $width = 500)
+    {
+        return $this->getProductImageByIndex($productId, 1, $width);
     }
 
     public function getProductImages($productId = 0, $width = 500)
