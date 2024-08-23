@@ -48,6 +48,23 @@ class CustomerHelper extends BaseHelper
         return $customers;
     }
 
+    public function getActiveStripeCustomers($group = 0, $select = "*", $limit = 0, $offset = 0)
+    {
+        $tableStripeSubscriptions = $this->helperDb->getSqlTableName('stripe_subscriptions');
+        $where = "customers.is_active = 1";
+        if (!empty($group)) {
+            $where .= " AND customers.group_id IN($group)";
+        }
+        $where .= " AND subs.status = 'active'";
+
+        $sql = "SELECT $select FROM " . $this->tableCustomer . " customers JOIN $tableStripeSubscriptions subs ON customers.entity_id = subs.magento_customer_id WHERE $where";
+
+        $result = $this->helperDb->sqlQueryFetchAll($sql);
+        $customers = $result;
+
+        return $customers;
+    }
+
     public function getCustomerOrderedQuantity($customerId = 0, $productSku = null)
     {
         $quantity = 0;
