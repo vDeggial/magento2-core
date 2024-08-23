@@ -36,16 +36,15 @@ class CustomerHelper extends BaseHelper
         return $this->getCustomerById($customerId);
     }
 
-    public function getActiveCustomers($limit = 0, $offset = 0)
+    public function getActiveCustomers($group = 0, $select = "*", $limit = 0, $offset = 0)
     {
-        $sql = "SELECT * FROM " . $this->tableCustomer . " WHERE is_active = 1";
-        $result = $this->helperDb->sqlQueryFetchAll($sql);
-        $customers = [];
-        if ($result) {
-            foreach ($result as $entry) {
-                array_push($customers, $this->getCustomer($entry["entity_id"]));
-            }
+        $where = "is_active = 1";
+        if (!empty($group)) {
+            $where .= " AND group_id IN($group)";
         }
+        $sql = "SELECT $select FROM " . $this->tableCustomer . " WHERE $where";
+        $result = $this->helperDb->sqlQueryFetchAll($sql);
+        $customers = $result;
         return $customers;
     }
 
