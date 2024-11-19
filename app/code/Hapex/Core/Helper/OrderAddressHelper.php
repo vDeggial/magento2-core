@@ -55,7 +55,8 @@ class OrderAddressHelper extends BaseHelper
         try {
             $firstName = $this->getOrderAddressFieldValue($orderId, "firstname", "shipping");
             $lastName = $this->getOrderAddressFieldValue($orderId, "lastname", "shipping");
-            if (!empty($firstName) && !empty($lastName)) $name = "$firstName $lastName";
+            if (!empty($firstName) && !empty($lastName))
+                $name = "$firstName $lastName";
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $name = null;
@@ -70,7 +71,8 @@ class OrderAddressHelper extends BaseHelper
         try {
             $firstName = $this->getOrderAddressFieldValue($orderId, "firstname", "billing");
             $lastName = $this->getOrderAddressFieldValue($orderId, "lastname", "billing");
-            if (!empty($firstName) && !empty($lastName)) $name = "$firstName $lastName";
+            if (!empty($firstName) && !empty($lastName))
+                $name = "$firstName $lastName";
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $name = null;
@@ -126,7 +128,7 @@ class OrderAddressHelper extends BaseHelper
             if (isset($address)) {
                 $info = [];
                 $info["name"] = $address->getName();
-                $info["street"] = $this->getStreet($address->getStreet());
+                $info["street"] = $this->getAddressStreet($address);
                 $info["city"] = $address->getCity();
                 $info["region"] = $address->getRegion();
                 $info["postCode"] = $address->getPostcode();
@@ -156,6 +158,15 @@ class OrderAddressHelper extends BaseHelper
         }
     }
 
+    private function getAddressStreet($address)
+    {
+        $street = $address->getStreetLine(1);
+        if (empty($street)) {
+            $street = $this->getStreet($address->getStreet());
+        }
+        return $street;
+    }
+
     private function getStreet($data = [])
     {
         return $this->getArrayValue($data, 0);
@@ -165,7 +176,8 @@ class OrderAddressHelper extends BaseHelper
     {
         try {
             $sql = "SELECT $fieldName FROM " . $this->tableOrderAddress . " where parent_id = $orderId";
-            if (isset($type)) $sql .= " AND address_type = '$type'";
+            if (isset($type))
+                $sql .= " AND address_type = '$type'";
             $result = $this->helperDb->sqlQueryFetchOne($sql);
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
