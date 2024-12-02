@@ -63,8 +63,6 @@ class CustomerHelper extends BaseHelper
         $where .= " AND subs.created_at = (SELECT MAX(created_at) FROM $tableStripeSubscriptions subs2 where subs2.stripe_customer_id = subs.stripe_customer_id AND subs2.status IN ('active', 'canceled', 'past_due', 'reactivated'))";
 
         $sql = "SELECT $select FROM " . $this->tableCustomer . " customers JOIN $tableStripeSubscriptions subs ON customers.entity_id = subs.magento_customer_id WHERE $where";
-        
-        $this->getLogHelper()->printLog("test", $sql);
 
         $result = $this->helperDb->sqlQueryFetchAll($sql);
         $customers = $result;
