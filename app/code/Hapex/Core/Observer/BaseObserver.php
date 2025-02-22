@@ -20,7 +20,7 @@ class BaseObserver implements ObserverInterface
     public function __construct(
         DataHelper $helperData,
         LogHelper $helperLog,
-        ManagerInterface $messageManager
+        ManagerInterface $messageManager,
     ) {
         $this->helperData = $helperData;
         $this->helperLog = $helperLog;
@@ -30,9 +30,16 @@ class BaseObserver implements ObserverInterface
 
     public function execute(Observer $observer)
     {
-        $this->event = $this->getEvent($observer);
+        try {
+            $this->event = $this->getEvent($observer);
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
+            $this->messageManager->addErrorMessage($e->getMessage());
+        } finally {
+            return $this;
+        }
     }
-    
+
     public function getExceptionTrace($e, $seen = null): ?string
     {
         return $this->helperData->getExceptionTrace($e);
