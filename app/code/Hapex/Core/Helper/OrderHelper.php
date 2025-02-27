@@ -10,6 +10,7 @@ class OrderHelper extends BaseHelper
 {
     protected $tableOrder;
     protected $tableOrderItem;
+    protected $tableOrderPayment;
     protected $orderRepository;
     protected $helperItem;
     protected $helperGrid;
@@ -21,7 +22,7 @@ class OrderHelper extends BaseHelper
         OrderItemHelper $helperItem,
         OrderGridHelper $helperGrid,
         OrderAddressHelper $helperAddress,
-        OrderRepository $orderRepository
+        OrderRepository $orderRepository,
     ) {
         parent::__construct($context, $objectManager);
         $this->helperItem = $helperItem;
@@ -30,6 +31,7 @@ class OrderHelper extends BaseHelper
         $this->orderRepository = $orderRepository;
         $this->tableOrder = $this->helperDb->getSqlTableName('sales_order');
         $this->tableOrderItem = $this->helperDb->getSqlTableName('sales_order_item');
+        $this->tableOrderPayment = $this->helperDb->getSqlTableName('sales_order_payment');
     }
 
     public function getOrder($orderId)
@@ -325,6 +327,39 @@ class OrderHelper extends BaseHelper
         }
     }
 
+    public function getOrderPaymentMethod($order)
+    {
+        $paymentMethod = null;
+        try {
+            $payment = $order->getPayment();
+            $paymentInstance = $payment->getMethodInstance();
+            $paymentMethod = $paymentInstance->getTitle();
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
+            $paymentMethod = null;
+        } finally {
+            return $paymentMethod;
+        }
+    }
+
+    public function getPaymentMethod($orderId = 0)
+    {
+        $paymentMethod = null;
+        try {
+            $order = $this->getById($orderId);
+            switch (isset($order)) {
+                case true:
+                    $paymentMethod = $this->getOrderPaymentMethod($order);
+                    break;
+            }
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
+            $paymentMethod = null;
+        } finally {
+            return $paymentMethod;
+        }
+    }
+
     public function getIsVirtual($orderId = 0)
     {
         $isVirtual = 0;
@@ -355,7 +390,7 @@ class OrderHelper extends BaseHelper
     {
         $method = null;
         try {
-            $method = $this->getOrderFieldValue($orderId, "coupon_code");
+            $method = $this->getOrderFieldValue($orderId, "shipping_method");
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $method = null;
