@@ -59,13 +59,13 @@ class DataHelper extends BaseHelper
                 "of",
                 "and",
                 "the",
-                " II",
-                " III",
-                " IV",
-                " VI",
-                " VI",
-                " VIII",
-                " IX",
+                "II",
+                "III",
+                "IV",
+                "VI",
+                "VII",
+                "VIII",
+                "IX",
             ];
 
             // Trim whitespace sequences to one space, append space to properly chunk
@@ -81,7 +81,7 @@ class DataHelper extends BaseHelper
             });
             $parts = array_map(function ($part) use ($properCases) {
                 // Extract to name and separator part
-                list ($name, $separator) = $part;
+                list($name, $separator) = $part;
 
                 // Use specified case for separator if set
                 $cased = current(array_filter($properCases, function ($case) use ($separator) {
