@@ -27,7 +27,7 @@ class ProductHelper extends BaseHelper
         ProductEavHelper $helperEav,
         ProductFactory $productFactory,
         ImageHelper $imageHelper,
-        Url $urlFramework
+        Url $urlFramework,
     ) {
         parent::__construct($context, $objectManager);
         $this->helperEav = $helperEav;
@@ -232,8 +232,9 @@ class ProductHelper extends BaseHelper
                     foreach ($images as $image) {
                         if (isset($image["url"]) && $image["url"] !== "") {
                             $imageUrl = $image["url"];
-                            $productImage = $this->imageHelper->init($product, "product_base_image")->keepAspectRatio(true)->setImageFile($image["file"]);
+                            $productImage = $this->imageHelper->init($product, "product_base_image")->setImageFile($image["file"]);
                             if (isset($width)) {
+                                $productImage->keepAspectRatio(true);
                                 $productImage->resize($width, null);
                             }
                             $imageUrl = $productImage->getUrl();
