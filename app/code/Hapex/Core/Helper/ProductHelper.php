@@ -232,12 +232,14 @@ class ProductHelper extends BaseHelper
                     foreach ($images as $image) {
                         if (isset($image["url"]) && $image["url"] !== "") {
                             $imageUrl = $image["url"];
-                            $productImage = $this->imageHelper->init($product, "product_base_image")->setImageFile($image["file"]);
+
                             if (isset($width)) {
+                                $productImage = $this->imageHelper->init($product, "product_base_image")->setImageFile($image["file"]);
                                 $productImage->keepAspectRatio(true);
                                 $productImage->resize($width, null);
+                                $imageUrl = $productImage->getUrl();
                             }
-                            $imageUrl = $productImage->getUrl();
+
                             $allImages[] = $imageUrl;
                         }
                     }
