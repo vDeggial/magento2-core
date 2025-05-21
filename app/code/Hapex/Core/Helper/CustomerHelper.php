@@ -185,8 +185,9 @@ class CustomerHelper extends BaseHelper
         $customerGroupName = null;
         try {
             $customerGroup = $this->getCustomerGroup($customerId);
-            $sql = "SELECT * FROM " . $this->tableCustomerGroup . " group where group.customer_group_id = $customerGroup";
+            $sql = "SELECT customer_group_code FROM " . $this->tableCustomerGroup . " group where group.customer_group_id = $customerGroup";
             $result = $this->helperDb->sqlQueryFetchOne($sql);
+            $customerGroupName = $result ?? null;
 
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
