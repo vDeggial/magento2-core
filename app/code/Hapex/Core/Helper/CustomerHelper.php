@@ -15,13 +15,14 @@ class CustomerHelper extends BaseHelper
     protected $customerRepository;
     protected $helperEav;
     protected $tableCustomer;
+    protected $tableCustomerGroup;
     public function __construct(
         Context $context,
         ObjectManagerInterface $objectManager,
         CustomerEavHelper $helperEav,
         SessionFactory $sessionFactory,
         CustomerFactory $customerFactory,
-        CustomerRepositoryInterface $customerRepository
+        CustomerRepositoryInterface $customerRepository,
     ) {
         parent::__construct($context, $objectManager);
         $this->helperEav = $helperEav;
@@ -29,6 +30,7 @@ class CustomerHelper extends BaseHelper
         $this->customerFactory = $customerFactory->create();
         $this->customerRepository = $customerRepository;
         $this->tableCustomer = $this->helperDb->getSqlTableName('customer_entity');
+        $this->tableCustomerGroup = $this->helperDb->getSqlTableName('customer_group');
     }
 
     public function getCustomer($customerId = 0)
@@ -52,7 +54,7 @@ class CustomerHelper extends BaseHelper
     {
         $tableStripeSubscriptions = $this->helperDb->getSqlTableName('stripe_subscriptions');
         $where = "customers.is_active = 1";
-        
+
         /*
         if (!empty($group)) {
             $where .= " AND customers.group_id IN($group)";
@@ -175,6 +177,22 @@ class CustomerHelper extends BaseHelper
             $customerGroup = 0;
         } finally {
             return $customerGroup;
+        }
+    }
+
+    public function getCustomerGroupName($customerId = 0)
+    {
+        $customerGroupName = null;
+        try {
+            $customerGroup = $this->getCustomerGroup($customerId);
+            $sql = "SELECT * FROM " . $this->tableCustomerGroup . " group where group.customer_group_id = $customerGroup";
+            $result = $this->helperDb->sqlQueryFetchOne($sql);
+
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
+            $customerGroupName = null;
+        } finally {
+            return $customerGroupName;
         }
     }
 
