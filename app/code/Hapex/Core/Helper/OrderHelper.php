@@ -288,6 +288,49 @@ class OrderHelper extends BaseHelper
         }
     }
 
+    public function getCustomerFirstName($orderId = 0)
+    {
+        $firstName = null;
+        try {
+            $firstName = $this->getOrderFieldValue($orderId, "customer_firstname");
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
+            $firstName = null;
+        } finally {
+            return $firstName;
+        }
+    }
+
+    public function getCustomerLastName($orderId = 0)
+    {
+        $lastName = null;
+        try {
+            $lastName = $this->getOrderFieldValue($orderId, "customer_lastname");
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
+            $lastName = null;
+        } finally {
+            return $lastName;
+        }
+    }
+
+    public function getCustomerFullName($orderId = 0)
+    {
+        $firstName = null;
+        $lastName = null;
+        $fullName = null;
+        try {
+            $firstName = $this->getCustomerFirstName($orderId);
+            $lastName = $this->getCustomerLastName($orderId);
+            $fullName = "$firstName $lastName";
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
+            $fullName = null;
+        } finally {
+            return $fullName;
+        }
+    }
+
     public function getRemoteIP($orderId = 0)
     {
         $ip = null;
