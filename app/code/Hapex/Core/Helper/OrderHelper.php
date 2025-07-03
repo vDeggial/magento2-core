@@ -559,7 +559,7 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getOrderCustomerName($order = null)
+    public function getOrderCustomerAddressName($order = null)
     {
         $name = null;
         try {
@@ -573,11 +573,37 @@ class OrderHelper extends BaseHelper
         }
     }
 
+    public function getOrderCustomerName($order = null)
+    {
+        return $this->getOrderCustomerAddressName($order);
+    }
+
+    public function getOrderCustomerFullName($order = null)
+    {
+        $name = null;
+        try {
+            $helperData = $this->generateClassObject(\Hapex\Core\Helper\DataHelper::class);
+            $firstName = $order->getCustomerFirstname();
+            $lastName = $order->getCustomerLastname();
+            $name = "$firstName $lastName";
+            $name = $helperData->getNameCase($name);
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
+            $name = null;
+        } finally {
+            return $name;
+        }
+    }
+
     public function getOrderCustomerEmail($order = null)
     {
         $email = null;
         try {
-            $email = strtolower($this->helperAddress->getOrderCustomerEmail($order));
+            $email = $order->getCustomerEmail();
+            if (empty($email)) {
+                $email = $this->helperAddress->getOrderCustomerEmail($order);
+            }
+            $email = strtolower($email);
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $email = null;
