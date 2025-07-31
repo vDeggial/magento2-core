@@ -331,6 +331,19 @@ class OrderHelper extends BaseHelper
         }
     }
 
+    public function getCustomerEmail($orderId = 0)
+    {
+        $email = null;
+        try {
+            $email = $this->getOrderFieldValue($orderId, "customer_email");
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
+            $email = null;
+        } finally {
+            return $email;
+        }
+    }
+
     public function getRemoteIP($orderId = 0)
     {
         $ip = null;
