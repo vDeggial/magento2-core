@@ -113,7 +113,7 @@ class EavHelper extends DbHelper
         try {
             $attributeTypeId = $this->getEntityTypeId($attributeType);
             $sql = "SELECT backend_type from " . $this->tableAttribute . " WHERE entity_type_id = $attributeTypeId AND attribute_id = $attributeId";
-            $result =  $this->sqlQueryFetchOne($sql);
+            $result = $this->sqlQueryFetchOne($sql);
             $backendType = $result;
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
@@ -129,12 +129,12 @@ class EavHelper extends DbHelper
         try {
             $attributeId = $this->getAttributeId($attributeCode, $attributeType);
             $backendType = $this->getBackendType($attributeId, $attributeType);
-            switch ($attributeId > 0 && $backendType !== "static") {
-                case true:
+            switch (true) {
+                case $attributeId > 0 && $backendType !== "static":
                     $value = $this->getValue($entityId, $attributeType, $attributeId, $backendType);
                     break;
 
-                default:
+                case $attributeId > 0 && $backendType === "static":
                     $value = $this->getEntityFieldValue($attributeType, $attributeCode, $entityId);
                     break;
             }
@@ -218,7 +218,7 @@ class EavHelper extends DbHelper
         try {
             $typeId = $this->getEntityTypeId($type);
             $sql = "SELECT entity_table FROM " . $this->tableEntityType . " WHERE entity_type_id = $typeId";
-            $result =  $this->sqlQueryFetchOne($sql);
+            $result = $this->sqlQueryFetchOne($sql);
             $entityTable = $result;
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
