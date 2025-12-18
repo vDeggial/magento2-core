@@ -11,6 +11,7 @@ class EavHelper extends DbHelper
     protected $tableAttribute;
     protected $tableAttributeSet;
     protected $tableAttributeOption;
+    protected $tableAttributeOptionValue;
     protected $tableEntityType;
     public function __construct(Context $context, ObjectManagerInterface $objectManager, ResourceConnection $resource, LogHelper $helperLog)
     {
@@ -18,7 +19,8 @@ class EavHelper extends DbHelper
         $this->tableAttribute = $this->getSqlTableName("eav_attribute");
         $this->tableAttributeSet = $this->getSqlTableName("eav_attribute_set");
         $this->tableEntityType = $this->getSqlTableName("eav_entity_type");
-        $this->tableAttributeOption = $this->getSqlTableName("eav_attribute_option_value");
+        $this->tableAttributeOption = $this->getSqlTableName("eav_attribute_option");
+        $this->tableAttributeOptionValue = $this->getSqlTableName("eav_attribute_option_value");
     }
 
     public function getAttributeId($attributeCode = null, $attributeType = null)
@@ -171,7 +173,7 @@ class EavHelper extends DbHelper
     {
         $optionValue = null;
         try {
-            $sql = "SELECT value from " . $this->tableAttributeOption . " WHERE option_id = $optionId";
+            $sql = "SELECT value from " . $this->tableAttributeOptionValue . " WHERE option_id = $optionId";
             $result = $this->sqlQueryFetchOne($sql);
             $optionValue = $result;
         } catch (\Throwable $e) {
@@ -179,6 +181,25 @@ class EavHelper extends DbHelper
             $optionValue = null;
         } finally {
             return $optionValue;
+        }
+    }
+
+    public function getAttributeOptionValues($attributeId = 0)
+    {
+        $optionValues = [];
+        try {
+            $sql = "SELECT option_id from " . $this->tableAttributeOption . " WHERE attribute_id = $attributeId";
+            $result = $this->sqlQueryFetchAll($sql);
+            $options = $result;
+            foreach ($options as $option) {
+                $optionValue = $this->getAttributeOptionValue($option["option_id"]);
+                $optionValues[] = $optionValue;
+            }
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
+            $optionValues = [];
+        } finally {
+            return $optionValues;
         }
     }
 
