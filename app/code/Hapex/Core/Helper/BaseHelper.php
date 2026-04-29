@@ -75,7 +75,7 @@ class BaseHelper extends AbstractHelper
 
     public function getBlockHtml($blockId = null)
     {
-        $html  = null;
+        $html = null;
         try {
             $block = $this->generateClassObject("Magento\Cms\Block\Block");
             $block->setBlockId($blockId);
@@ -105,11 +105,31 @@ class BaseHelper extends AbstractHelper
         $arraySize = count($array);
         switch (true) {
             case $arraySize > 0 && $num > 0:
-                $size = (int)ceil(($arraySize / $num));
+                $size = (int) ceil(($arraySize / $num));
                 return array_chunk($array, ($isChunksNum ? $size : $num), $preserve_keys);
 
             default:
                 return [];
         }
+    }
+
+    /**
+     * Finds the first string in an array that meets or exceeds a specified length.
+     *
+     * @param array $strings Array of strings to search. Defaults to an empty array.
+     * @param int $length The minimum character length required. Defaults to 0.
+     * @return string|null Returns the first matching string, or null if none match.
+     */
+    public function getFirstStringByLength(array $strings = [], int $length = 0): ?string
+    {
+        foreach ($strings as $string) {
+            // Any string will have a length >= 0, so this returns the first item 
+            // if no specific length is provided.
+            if (strlen($string) >= $length) {
+                return $string;
+            }
+        }
+
+        return null;
     }
 }
