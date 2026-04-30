@@ -53,11 +53,19 @@ class OrderHelper extends BaseHelper
         }
     }
 
-    public function getOrderRowsWithSku($sku = null, $select = "*")
+    public function getOrderRowsWithSku($sku = null, $select = "*", $states = [])
     {
         $result = [];
         try {
             $sql = "SELECT $select FROM " . $this->tableOrder . " WHERE entity_id IN(SELECT DISTINCT order_id FROM " . $this->tableOrderItem . " WHERE sku LIKE '$sku')";
+            if (!empty($states)) {
+                foreach ($states as &$state) {
+                    $state = "'$state'";
+                }
+
+                $sql .= " AND state IN (" . implode(",", $states) . ")";
+            }
+
             $result = $this->helperDb->sqlQueryFetchAll($sql);
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
