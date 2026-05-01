@@ -13,7 +13,7 @@ class UrlHelper extends AbstractHelper
     protected $curl;
     protected $userAgent = "JRI/1.0";
     protected $connectTimeout = 30;
-    protected $timeout = 60;
+    protected $timeout = 120;
 
     public function __construct(Context $context, ObjectManagerInterface $objectManager, Curl $curl, LogHelper $helperLog)
     {
