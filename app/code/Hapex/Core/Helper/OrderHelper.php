@@ -75,6 +75,58 @@ class OrderHelper extends BaseHelper
         }
     }
 
+    public function getOrderDataForSku($sku = null, $select = "*", $states = [])
+    {
+        $result = [];
+        try {
+            $sql = "SELECT $select FROM " . $this->tableOrder . " o JOIN " . $this->tableOrderItem . " i on o.entity_id = i.order_id WHERE i.sku LIKE '$sku'";
+            if (!empty($states)) {
+                foreach ($states as &$state) {
+                    $state = "'$state'";
+                }
+
+                $sql .= " AND o.state IN (" . implode(",", $states) . ")";
+            }
+
+            //$this->helperLog->errorLog(__METHOD__, $sql);
+
+            $result = $this->helperDb->sqlQueryFetchAll($sql);
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
+            $result = [];
+        } finally {
+            return $result;
+        }
+    }
+
+    public function getOrderDataForSkus($skus = [], $select = "*", $states = [])
+    {
+        $result = [];
+        try {
+            if (!empty($skus)) {
+                foreach ($skus as &$sku) {
+                    $sku = "'$sku'";
+                }
+            }
+
+            $sql = "SELECT $select FROM " . $this->tableOrder . " o JOIN " . $this->tableOrderItem . " i on o.entity_id = i.order_id WHERE i.sku IN (" . implode(",", $skus) . ")";
+            if (!empty($states)) {
+                foreach ($states as &$state) {
+                    $state = "'$state'";
+                }
+
+                $sql .= " AND o.state IN (" . implode(",", $states) . ")";
+            }
+
+            $result = $this->helperDb->sqlQueryFetchAll($sql);
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
+            $result = [];
+        } finally {
+            return $result;
+        }
+    }
+
     public function getOrdersByCustomerId($customerId = 0, $select = "*")
     {
         $result = [];
