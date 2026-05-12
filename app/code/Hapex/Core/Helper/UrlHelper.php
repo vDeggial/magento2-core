@@ -37,6 +37,11 @@ class UrlHelper extends AbstractHelper
         return $this->sendRemoteContent($webhookUrl, $message, $contentType)->getBody();
     }
 
+    public function sendCISWebhook($webhookUrl = null, $message = null)
+    {
+        return $this->sendWebhook($webhookUrl, $message, "text/plain");
+    }
+
     public function sendRemoteContent($url = null, $data = null, $contentType = null)
     {
         return $this->post($url, $data, $contentType);
