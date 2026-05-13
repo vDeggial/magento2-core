@@ -538,4 +538,20 @@ class ProductHelper extends BaseHelper
             return $product;
         }
     }
+
+    public function getProductsBySkuCollection(array $skuList)
+    {
+        $factory = $this->objectManager->create('Magento\Catalog\Model\ResourceModel\Product\CollectionFactory');
+        $collection = $factory->create();
+
+        // Filter by the list of SKUs
+        $collection->addAttributeToFilter('sku', ['in' => $skuList]);
+
+        // Add all attributes you need (use '*' for all, or specify specific ones for performance)
+        $collection->addAttributeToSelect('*');
+
+        $collection->load();
+
+        return $collection;
+    }
 }
