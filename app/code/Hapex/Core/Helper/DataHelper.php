@@ -35,21 +35,20 @@ class DataHelper extends BaseHelper
 
     public function getNameCase(?string $name = null): ?string
     {
-        // Return early if null or entirely whitespace
         if (trim((string) $name) === '') {
             return $name;
         }
 
         try {
-            // 1. Normalize spacing to a single space
+            // 1. Normalize spacing and mobile "smart" apostrophes
             $name = preg_replace('/\s+/', ' ', trim($name));
+            $name = str_replace(['’', '‘', '`'], "'", $name);
 
-            // 2. Native Capitalization
-            // ucwords natively capitalizes after spaces, hyphens, and apostrophes
-            $name = ucwords(strtolower($name), " '-");
+            // 2. Multi-byte Native Capitalization (Safe for Á, É, Ñ, etc.)
+            // MB_CASE_TITLE automatically capitalizes after spaces, hyphens, and apostrophes
+            $name = mb_convert_case($name, MB_CASE_TITLE, 'UTF-8');
 
-            // 3. Dictionary of special cases (O(1) lookups)
-            // Keys must be strictly lowercase for case-insensitive matching
+            // 3. Expanded Dictionary (O(1) lookups)
             $specialCases = [
                 // Lowercase particles
                 'van' => 'van',
@@ -66,7 +65,14 @@ class DataHelper extends BaseHelper
                 'of' => 'of',
                 'and' => 'and',
                 'the' => 'the',
-                // Roman Numerals
+                'la' => 'la',
+                'los' => 'los',
+                'las' => 'las',
+                'el' => 'el',
+                'del' => 'del',
+                'di' => 'di',
+                'della' => 'della',
+                // Suffixes & Roman Numerals
                 'ii' => 'II',
                 'iii' => 'III',
                 'iv' => 'IV',
@@ -75,47 +81,53 @@ class DataHelper extends BaseHelper
                 'vii' => 'VII',
                 'viii' => 'VIII',
                 'ix' => 'IX',
+                'jr' => 'Jr.',
+                'jr.' => 'Jr.',
+                'sr' => 'Sr.',
+                'sr.' => 'Sr.',
             ];
 
             // 4. Apply special cases to whole words
             $parts = explode(' ', $name);
             foreach ($parts as &$part) {
-                $lowerPart = strtolower($part);
+                $lowerPart = mb_strtolower($part, 'UTF-8');
                 if (isset($specialCases[$lowerPart])) {
                     $part = $specialCases[$lowerPart];
                 }
             }
             $name = implode(' ', $parts);
 
-            // 5. Target specific prefixes (Mc, Mac, O', d', l')
+            // 5. Target prefixes using Unicode regex modifier (u) and letter property (\p{L})
             $name = preg_replace_callback(
-                '/\b(mc|mac|o\'|d\'|l\')([a-z]+)/i',
+                '/\b(mc|o\'|d\'|l\')([\p{L}]+)/iu',
                 function ($matches) {
-                    $prefix = strtolower($matches[1]);
+                    $prefix = mb_strtolower($matches[1], 'UTF-8');
 
-                    // Set exact casing for the prefix
                     if ($prefix === 'mc')
                         $prefix = 'Mc';
-                    elseif ($prefix === 'mac')
-                        $prefix = 'Mac';
                     elseif ($prefix === "o'")
                         $prefix = "O'";
-                    // d' and l' remain lowercase as expected
+                    // d' and l' remain lowercase
     
-                    // Re-attach prefix to the capitalized next letter
-                    return $prefix . ucfirst(strtolower($matches[2]));
+                    // Capitalize the first multi-byte character of the remainder
+                    $firstLetter = mb_substr($matches[2], 0, 1, 'UTF-8');
+                    $rest = mb_substr($matches[2], 1, null, 'UTF-8');
+
+                    $capitalizedRemainder = mb_convert_case($firstLetter, MB_CASE_UPPER, 'UTF-8')
+                        . mb_strtolower($rest, 'UTF-8');
+
+                    return $prefix . $capitalizedRemainder;
                 },
                 $name
             );
 
             // 6. Enforce "St." formatting
-            $name = preg_replace('/\bst\b\.?/i', 'St.', $name);
+            $name = preg_replace('/\bst\b\.?/iu', 'St.', $name);
 
             return $name;
 
         } catch (\Throwable $ex) {
             $this->errorHandleException($ex);
-            // Fallback to the original unformatted string if something fails
             return $name;
         }
     }
