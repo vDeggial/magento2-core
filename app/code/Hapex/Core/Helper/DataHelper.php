@@ -127,7 +127,7 @@ class DataHelper extends BaseHelper
             return $name;
 
         } catch (\Throwable $ex) {
-            $this->errorHandleException($ex);
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($ex));
             return $name;
         }
     }
