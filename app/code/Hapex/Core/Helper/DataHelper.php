@@ -33,80 +33,90 @@ class DataHelper extends BaseHelper
         }
     }
 
-    public function getNameCase($name = null)
+    public function getNameCase(?string $name = null): ?string
     {
-        $properName = $name;
+        // Return early if null or entirely whitespace
+        if (trim((string) $name) === '') {
+            return $name;
+        }
+
         try {
-            // A list of properly cased parts
-            $properCases = [
-                "O'",
-                "l'",
-                "d'",
-                "St.",
-                "Mc",
-                "the",
-                "van",
-                "het",
-                "in",
-                "'t",
-                "ten",
-                "den",
-                "von",
-                "und",
-                "der",
-                "de",
-                "da",
-                "of",
-                "and",
-                "the",
-                "II",
-                "III",
-                "IV",
-                "VI",
-                "VII",
-                "VIII",
-                "IX",
+            // 1. Normalize spacing to a single space
+            $name = preg_replace('/\s+/', ' ', trim($name));
+
+            // 2. Native Capitalization
+            // ucwords natively capitalizes after spaces, hyphens, and apostrophes
+            $name = ucwords(strtolower($name), " '-");
+
+            // 3. Dictionary of special cases (O(1) lookups)
+            // Keys must be strictly lowercase for case-insensitive matching
+            $specialCases = [
+                // Lowercase particles
+                'van' => 'van',
+                'het' => 'het',
+                'in' => 'in',
+                "'t" => "'t",
+                'ten' => 'ten',
+                'den' => 'den',
+                'von' => 'von',
+                'und' => 'und',
+                'der' => 'der',
+                'de' => 'de',
+                'da' => 'da',
+                'of' => 'of',
+                'and' => 'and',
+                'the' => 'the',
+                // Roman Numerals
+                'ii' => 'II',
+                'iii' => 'III',
+                'iv' => 'IV',
+                'v' => 'V',
+                'vi' => 'VI',
+                'vii' => 'VII',
+                'viii' => 'VIII',
+                'ix' => 'IX',
             ];
 
-            // Trim whitespace sequences to one space, append space to properly chunk
-            $name = preg_replace("/\s+/", " ", $name) . " ";
+            // 4. Apply special cases to whole words
+            $parts = explode(' ', $name);
+            foreach ($parts as &$part) {
+                $lowerPart = strtolower($part);
+                if (isset($specialCases[$lowerPart])) {
+                    $part = $specialCases[$lowerPart];
+                }
+            }
+            $name = implode(' ', $parts);
 
-            // Break name up into parts split by name separators
-            $parts = preg_split("/( |-|O\'|l\'|d\'|St\\.|Mc|\()/", $name, -1, PREG_SPLIT_DELIM_CAPTURE);
+            // 5. Target specific prefixes (Mc, Mac, O', d', l')
+            $name = preg_replace_callback(
+                '/\b(mc|mac|o\'|d\'|l\')([a-z]+)/i',
+                function ($matches) {
+                    $prefix = strtolower($matches[1]);
 
-            // Chunk parts, use $properCases or uppercase first, remove unfinished chunks
-            $parts = array_chunk($parts, 2);
-            $parts = array_filter($parts, function ($part) {
-                return count($part) == 2;
-            });
-            $parts = array_map(function ($part) use ($properCases) {
-                // Extract to name and separator part
-                list($name, $separator) = $part;
+                    // Set exact casing for the prefix
+                    if ($prefix === 'mc')
+                        $prefix = 'Mc';
+                    elseif ($prefix === 'mac')
+                        $prefix = 'Mac';
+                    elseif ($prefix === "o'")
+                        $prefix = "O'";
+                    // d' and l' remain lowercase as expected
+    
+                    // Re-attach prefix to the capitalized next letter
+                    return $prefix . ucfirst(strtolower($matches[2]));
+                },
+                $name
+            );
 
-                // Use specified case for separator if set
-                $cased = current(array_filter($properCases, function ($case) use ($separator) {
-                    return strcasecmp($case, $separator) == 0;
-                }));
-                $separator = $cased ? $cased : $separator;
+            // 6. Enforce "St." formatting
+            $name = preg_replace('/\bst\b\.?/i', 'St.', $name);
 
-                // Choose specified part case, or uppercase first as default
-                $cased = current(array_filter($properCases, function ($case) use ($name) {
-                    return strcasecmp($case, $name) == 0;
-                }));
-                return [$cased ? $cased : ucfirst(strtolower($name)), $separator];
-            }, $parts);
-            $parts = array_map(function ($part) {
-                return implode($part);
-            }, $parts);
-            $name = implode($parts);
+            return $name;
 
-            // Trim and return normalized name
-            $properName = trim($name);
-        } catch (\Throwable $e) {
-            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
-            $properName = $name;
-        } finally {
-            return $properName;
+        } catch (\Throwable $ex) {
+            $this->errorHandleException($ex);
+            // Fallback to the original unformatted string if something fails
+            return $name;
         }
     }
 }
