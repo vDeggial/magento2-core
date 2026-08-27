@@ -361,6 +361,19 @@ class OrderHelper extends BaseHelper
         }
     }
 
+    public function getCustomerMiddleName($orderId = 0)
+    {
+        $middleName = null;
+        try {
+            $middleName = $this->getOrderFieldValue($orderId, "customer_middlename");
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
+            $middleName = null;
+        } finally {
+            return $middleName;
+        }
+    }
+
     public function getCustomerLastName($orderId = 0)
     {
         $lastName = null;
@@ -377,12 +390,24 @@ class OrderHelper extends BaseHelper
     public function getCustomerFullName($orderId = 0)
     {
         $firstName = null;
+        $middleName = null;
         $lastName = null;
         $fullName = null;
         try {
             $firstName = $this->getCustomerFirstName($orderId);
+            $middleName = $this->getCustomerMiddleName($orderId);
             $lastName = $this->getCustomerLastName($orderId);
-            $fullName = "$firstName $lastName";
+
+            $fullName = $firstName;
+
+            if (!empty($middleName)) {
+                $fullName .= " $middleName";
+            }
+
+            if (!empty($lastName)) {
+                $fullName .= " $lastName";
+            }
+
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $fullName = null;
