@@ -223,11 +223,50 @@ class CustomerHelper extends BaseHelper
         }
     }
 
+    public function getCustomerFullName($customerId = 0)
+    {
+        $customerName = null;
+        try {
+            $firstName = $this->getCustomerFirstName($customerId);
+            $middleName = $this->getCustomerMiddleName($customerId);
+            $lastName = $this->getCustomerLastName($customerId);
+
+            $customerName = $firstName;
+
+            if (!empty($middleName)) {
+                $customerName .= " $middleName";
+            }
+
+            if (!empty($lastName)) {
+                $customerName .= " $lastName";
+            }
+
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
+            $customerName = null;
+        } finally {
+            return $customerName;
+        }
+    }
+
     public function getCustomerFirstName($customerId = 0)
     {
         $customerName = null;
         try {
             $customerName = $this->helperEav->getCustomerEntityFieldValue($customerId, "firstname");
+        } catch (\Throwable $e) {
+            $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
+            $customerName = null;
+        } finally {
+            return $customerName;
+        }
+    }
+
+    public function getCustomerMiddleName($customerId = 0)
+    {
+        $customerName = null;
+        try {
+            $customerName = $this->helperEav->getCustomerEntityFieldValue($customerId, "middlename");
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $customerName = null;

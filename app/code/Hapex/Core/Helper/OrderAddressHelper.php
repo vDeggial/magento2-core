@@ -54,9 +54,19 @@ class OrderAddressHelper extends BaseHelper
         $name = null;
         try {
             $firstName = $this->getOrderAddressFieldValue($orderId, "firstname", "shipping");
+            $middleName = $this->getOrderAddressFieldValue($orderId, "middlename", "shipping");
             $lastName = $this->getOrderAddressFieldValue($orderId, "lastname", "shipping");
-            if (!empty($firstName) && !empty($lastName))
-                $name = "$firstName $lastName";
+
+            $name = $firstName;
+
+            if (!empty($middleName)) {
+                $name .= " $middleName";
+            }
+
+            if (!empty($lastName)) {
+                $name .= " $lastName";
+            }
+
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $name = null;
@@ -70,9 +80,19 @@ class OrderAddressHelper extends BaseHelper
         $name = null;
         try {
             $firstName = $this->getOrderAddressFieldValue($orderId, "firstname", "billing");
+            $middleName = $this->getOrderAddressFieldValue($orderId, "middlename", "billing");
             $lastName = $this->getOrderAddressFieldValue($orderId, "lastname", "billing");
-            if (!empty($firstName) && !empty($lastName))
-                $name = "$firstName $lastName";
+
+            $name = $firstName;
+
+            if (!empty($middleName)) {
+                $name .= " $middleName";
+            }
+
+            if (!empty($lastName)) {
+                $name .= " $lastName";
+            }
+
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
             $name = null;

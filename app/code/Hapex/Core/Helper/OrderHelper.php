@@ -657,8 +657,19 @@ class OrderHelper extends BaseHelper
         try {
             $helperData = $this->generateClassObject(\Hapex\Core\Helper\DataHelper::class);
             $firstName = $order->getCustomerFirstname();
+            $middleName = $order->getCustomerMiddlename();
             $lastName = $order->getCustomerLastname();
-            $name = "$firstName $lastName";
+
+            $name = $firstName;
+
+            if (!empty($middleName)) {
+                $name .= " $middleName";
+            }
+
+            if (!empty($lastName)) {
+                $name .= " $lastName";
+            }
+
             $name = $helperData->getNameCase($name);
         } catch (\Throwable $e) {
             $this->helperLog->errorLog(__METHOD__, $this->helperLog->getExceptionTrace($e));
